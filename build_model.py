@@ -1,4 +1,5 @@
 import torch
+import os
 import pandas as pd
 import numpy as np
 import time
@@ -8,6 +9,31 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 from torch.utils.data import Dataset
 from transformers import set_seed, TrainingArguments, AdapterTrainer, Trainer, EvalPrediction, AutoModelWithHeads, AdapterConfig, AutoTokenizer
 
+
+
+""" # Load the training and evaluation data
+
+# List of [model_name, adapter_name, column_name] combinations
+combinations = [
+    ['bert-base-uncased', 'sst-2', 'Analyst Note'],
+    # Add more combinations as needed
+]
+
+# Load the training and evaluation data
+train_df = pd.read_csv('1. data/final/train.csv')
+eval_df = pd.read_csv('1. data/final/eval.csv')
+
+for model_name, adapter_name, column_name in combinations:
+    # Create an instance of CustomTransformerModel
+    model = CustomTransformerModel(model_name=model_name, adapter_name=adapter_name, column_name=column_name)
+
+    # Build the model
+    model.build_model()
+
+    # Train the model
+    model.train(train_df, eval_df, epochs=3, batch_size=32, learning_rate=2e-5, seed=42, save_model=False)
+
+"""
 
 class TextDataset(Dataset):
     def __init__(self, texts, labels, tokenizer):
@@ -124,8 +150,15 @@ class CustomTransformerModel:
             'batch_size': [batch_size],
             'num_epochs': [epochs],
         }
-        df = pd.DataFrame(data)
-        df.to_csv('2. models/runtimes/training/training_info.csv', index=False)
+        
+        data_frame = pd.DataFrame(data)
+
+        if os.path.exists('2. models/runtimes/training/training_info.csv'):
+            # If the file exists, load it and append the new data
+            existing_df = pd.read_csv('2. models/runtimes/training/training_info.csv')
+            data_frame = pd.concat([existing_df, data_frame])
+
+        data_frame.to_csv('2. models/runtimes/training/training_info.csv', index=False)
 
         # Make predictions
         predictions = trainer.predict(eval_dataset)
@@ -139,27 +172,3 @@ class CustomTransformerModel:
             model_dir = '2. models/adapters' if self.adapter_name else '2. models'
             self.model.save_pretrained(f'{model_dir}/{self.model_name}')
 
-
-""" # Load the training and evaluation data
-
-# List of [model_name, adapter_name, column_name] combinations
-combinations = [
-    ['bert-base-uncased', 'sst-2', 'Analyst Note'],
-    # Add more combinations as needed
-]
-
-# Load the training and evaluation data
-train_df = pd.read_csv('1. data/final/train.csv')
-eval_df = pd.read_csv('1. data/final/eval.csv')
-
-for model_name, adapter_name, column_name in combinations:
-    # Create an instance of CustomTransformerModel
-    model = CustomTransformerModel(model_name=model_name, adapter_name=adapter_name, column_name=column_name)
-
-    # Build the model
-    model.build_model()
-
-    # Train the model
-    model.train(train_df, eval_df, epochs=3, batch_size=32, learning_rate=2e-5, seed=42, save_model=False)
-
-"""
