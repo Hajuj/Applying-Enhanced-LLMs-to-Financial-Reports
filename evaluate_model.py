@@ -75,4 +75,6 @@ class ModelEvaluator:
 
         # Save the results to a CSV file
         results_df.to_csv('3. evaluation/auc_scores.csv', index=False)
+
+##TODO: Add method to build a ROC curve for the top n models in the list
         
