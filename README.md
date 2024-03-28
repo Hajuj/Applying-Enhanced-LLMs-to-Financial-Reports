@@ -21,7 +21,7 @@ Use the various text elements to fine-tune different transformer models (maybe m
 	- Use huggingface sst2 to demonstrate (ROC curves + training time)
 	- Use various models and compare with the same model incl dedicated adapter
 - Then curate a list of good models/adapters that could be used for financial texts/classification of sentiment
-- Re-run for analyst note and other text columns
+- Re-run for analyst note and other text columns and use as label to predict the moving average (see old project)
 ### Prio 3: Features (parallel)
 - Single out best model/adapters, discard efficiency and try to optimize
 - Explore with feature attribution methods for the best performing model to gain deeper insights: what part of the input text is the reason for the prediction? (Focus on interpretability and explainable AI) (Use e.g. Captum to find important parts of text that lead to the highest probabilities of classifiers)
