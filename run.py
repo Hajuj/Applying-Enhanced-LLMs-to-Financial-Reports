@@ -1,6 +1,6 @@
 import pandas as pd
 from custom_transformer_model import CustomTransformerModel
-from model_evaluator import ModelEvaluator
+from evaluate_model import ModelEvaluator
 
 # Load the training and evaluation data
 
