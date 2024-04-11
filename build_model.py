@@ -7,7 +7,8 @@ import platform
 from datetime import datetime
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from torch.utils.data import Dataset
-from transformers import set_seed, TrainingArguments, AdapterTrainer, Trainer, EvalPrediction, AutoModelWithHeads, AdapterConfig, AutoTokenizer
+from transformers import set_seed, TrainingArguments, Trainer, EvalPrediction, AutoTokenizer
+# from transformers import set_seed, TrainingArguments, AdapterTrainer, Trainer, EvalPrediction, AutoModelWithHeads, AdapterConfig, AutoTokenizer
 
 
 
