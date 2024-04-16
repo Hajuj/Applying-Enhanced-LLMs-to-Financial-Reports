@@ -7,6 +7,23 @@ Analyst reports from Morningstar: contain both a subjective analyst report (text
 ## Scope 
 Use the various text elements to fine-tune different transformer models (maybe modify some parts with adapters from https://docs.adapterhub.ml) and compare to the predictive qualities from the analysts themselves. 
 
+## List of models
+Find dedicated adapters via https://docs.adapterhub.ml/loading.html and chose some of the following models.
+### Finance
+- https://huggingface.co/nickmuchi/sec-bert-finetuned-finance-classification
+- https://huggingface.co/ProsusAI/finbert
+- https://huggingface.co/ahmedrachid/FinancialBERT-Sentiment-Analysis
+- https://huggingface.co/yiyanghkust/finbert-tone
+- https://huggingface.co/nickmuchi/deberta-v3-base-finetuned-finance-text-classification
+- https://huggingface.co/soleimanian/financial-roberta-large-sentiment
+- https://huggingface.co/bardsai/finance-sentiment-pl-fast
+- https://huggingface.co/RashidNLP/Finance-Sentiment-Classification
+
+### Sentiment
+- https://huggingface.co/siebert/sentiment-roberta-large-english
+- https://huggingface.co/kwang123/bert-sentiment-analysis
+- https://huggingface.co/distilbert/distilbert-base-uncased-finetuned-sst-2-english
+
 ## ToDos
 ### Prio 1: Basic Model Pipeline (ensemble)
 - ~~Incorporate an easy swap of text fields (and include multiple text fields at once)~~
@@ -21,10 +38,9 @@ Use the various text elements to fine-tune different transformer models (maybe m
 - ~~Build custom ROC curves on top of confusion matrix/other evaluation methods and save all metrics~~
 - ~~Show why adapters are useful: no (huge) loss in quality while training time is significantly reduced~~
 	- ~~Use huggingface sst2 to demonstrate (ROC curves + training time)~~
-	- (Only if lots of time: Use various models and compare with the same model incl dedicated adapter)
-- Run for analyst note and other text columns and use as label to predict the moving average (see old project) (Deadline: 22.04.2024)
+- Run for analyst note and use as label the moving average (see old project) (Deadline: 22.04.2024)
 ### Prio 3: Features (parallel)
-- Single out best model/adapters, discard efficiency and try to optimize
+- Single out best model/adapters, discard efficiency and try to optimize and run for other text columns
 - Finish automated evaluation plots for top $n$ models
 - Benchmarking:
 	- Add xgBoost based on sector, author name etc
@@ -32,11 +48,12 @@ Use the various text elements to fine-tune different transformer models (maybe m
 - Explore with feature attribution methods for the best performing model to gain deeper insights: what part of the input text is the reason for the prediction? (Focus on interpretability and explainable AI) (Use e.g. Captum to find important parts of text that lead to the highest probabilities of classifiers)
 
 ### Report, presentation & Markdown file
-- Visualize Training/inference times
-- ROC/Evaluation
-- Visualize important input features
-- Explain transformers
 - Explain data set
+- Explain transformers and adapters
+- ROC/Evaluation
+- Visualize Training/inference times
+- Visualize important input features
+- ...
 
 ### Prio 4: If lots of time
 - Build portfolio backtesting: Returns, Sharpe Ratio and max draw down and include weights based on normalized probabilities for portfolio
