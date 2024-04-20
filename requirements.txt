@@ -13,3 +13,4 @@ yfinance==0.2.38
 matplotlib==3.8.3
 requests==2.31.0
 accelerate==0.29.2
+evaluate==0.4.1
