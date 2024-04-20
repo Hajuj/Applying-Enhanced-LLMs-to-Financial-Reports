@@ -17,7 +17,7 @@ from torch.utils.data import Dataset
 
 # Transformers library imports
 import adapters
-from adapters import ConfigUnion, PrefixTuningConfig, SeqBnConfig, LoRAConfig
+from adapters import ConfigUnion, PrefixTuningConfig, SeqBnConfig, LoRAConfig, MAMConfig, BnConfig, UniPELTConfig
 from transformers import (
     AutoModelForSequenceClassification,
     TrainingArguments,
@@ -111,7 +111,9 @@ class CustomTransformerModel:
             #                             )
 
             self.model.add_adapter(self.adapter_name, 
-            config="lora", 
+            #config="lora",
+            config=UniPELTConfig(),
+            #config=adapter_config,
             set_active=True)
             self.model.train_adapter(self.adapter_name)
 
@@ -140,8 +142,10 @@ class CustomTransformerModel:
             per_device_train_batch_size=batch_size,
             per_device_eval_batch_size=batch_size,
             learning_rate=learning_rate,
-            evaluation_strategy="epoch",
-            save_strategy="epoch",           # now matches evaluation_strategy            logging_dir='./logs',
+            evaluation_strategy="steps",
+            save_strategy="steps",
+            save_safetensors=False,           # now matches evaluation_strategy            
+            logging_dir='./logs',
             load_best_model_at_end=True,
             metric_for_best_model='accuracy',
         )
@@ -202,10 +206,12 @@ class CustomTransformerModel:
 
         # Make predictions
         predictions = trainer.predict(eval_dataset)
+        logits = predictions.predictions
+        probabilities = torch.softmax(torch.tensor(logits), dim=-1).numpy()
 
         # Save predictions to a CSV file
         filename = f'{self.model_name.replace("/", "-")}_{str(self.adapter)}_{self.column_name}_predictions.csv'
-        predictions_df = pd.DataFrame(predictions.predictions, columns=['prediction', 'label', 'metrics'])
+        predictions_df = pd.DataFrame(probabilities, columns=['prediction_0','prediction_1'])
         predictions_df.to_csv(f'2. models/predictions/{filename}', index=False)
 
 

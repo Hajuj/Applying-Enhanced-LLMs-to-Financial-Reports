@@ -38,13 +38,13 @@ class ModelEvaluator:
             predictions_df = pd.read_csv(f'2. models/predictions/{filename}')
 
             # Calculate the AUC score
-            auc_score = roc_auc_score(self.true_labels, predictions_df['prediction'])
+            auc_score = roc_auc_score(self.true_labels, predictions_df['prediction_1'])
 
             # Save the results
             self.results.append([model_name, adapter, column_name, auc_score])
 
             # Generate the ROC curve
-            fpr, tpr, _ = roc_curve(self.true_labels, predictions_df['prediction'])
+            fpr, tpr, _ = roc_curve(self.true_labels, predictions_df['prediction_1'])
             plt.figure()
             plt.plot(fpr, tpr, label='ROC curve (AUC = %0.2f)' % auc_score)
             plt.plot([0, 1], [0, 1], 'k--')
