@@ -1,0 +1,2 @@
+model_name,adapter,column_name,auc_score
+bardsai/finance-sentiment-pl-fast,True,BullsList,0.5493083444890674
