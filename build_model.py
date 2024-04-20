@@ -105,15 +105,15 @@ class CustomTransformerModel:
             adapters.init(self.model)
             # Load and activate the adapter
             # Create an adapter configuration
-            #adapter_config = ConfigUnion(LoRAConfig(r=8, use_gating=True), 
-            #                             PrefixTuningConfig(prefix_length=10, use_gating=True), 
-            #                             SeqBnConfig(reduction_factor=16, use_gating=True)
-            #                             )
+            adapter_config = ConfigUnion(LoRAConfig(r=8, use_gating=True), 
+                                         PrefixTuningConfig(prefix_length=10, use_gating=True), 
+                                         SeqBnConfig(reduction_factor=16, use_gating=True)
+                                         )
 
             self.model.add_adapter(self.adapter_name, 
             #config="lora",
-            config=UniPELTConfig(),
-            #config=adapter_config,
+            #config=UniPELTConfig(),
+            config=adapter_config,
             set_active=True)
             self.model.train_adapter(self.adapter_name)
 
@@ -211,7 +211,7 @@ class CustomTransformerModel:
 
         # Save predictions to a CSV file
         filename = f'{self.model_name.replace("/", "-")}_{str(self.adapter)}_{self.column_name}_predictions.csv'
-        predictions_df = pd.DataFrame(probabilities, columns=['prediction_0','prediction_1'])
+        predictions_df = pd.DataFrame(probabilities)
         predictions_df.to_csv(f'2. models/predictions/{filename}', index=False)
 
 
