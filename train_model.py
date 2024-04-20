@@ -14,7 +14,7 @@ TASK = "sst2"
 MODEL_CHECKPOINT = "distilbert-base-uncased"
 BATCH_SIZE = 16
 OUTPUT_DIR = "./training_output"
-FAST_TESTING = False  # Toggle for quick testing or full training
+FAST_TESTING = True  # Toggle for quick testing or full training
 
 
 def load_data(fast_testing=False):
@@ -42,29 +42,30 @@ def encode_data(tokenizer, dataset):
     return dataset
 
 
-def get_training_arguments(model_type):
+def get_training_arguments(model_type, fast_testing=False):
     """Returns tailored training arguments for adapter and LLM."""
-    common_args = {
-        "learning_rate": 1e-4 if model_type == "adapter" else 2e-5,
-        "num_train_epochs": 1 if FAST_TESTING else 6,
-        "per_device_train_batch_size": BATCH_SIZE,
-        "per_device_eval_batch_size": BATCH_SIZE,
-        "logging_steps": 500 if FAST_TESTING else 200,
-        "evaluation_strategy": "no" if FAST_TESTING else "epoch",
-        "save_strategy": "no" if FAST_TESTING else "epoch",
-        "overwrite_output_dir": True,
-        "remove_unused_columns": False,
-        "load_best_model_at_end": True,
-        "metric_for_best_model": 'accuracy',
-        "output_dir": OUTPUT_DIR,
-        "weight_decay": 0.01 if model_type == "llm" else 0  # Typically, no weight decay for adapters
-    }
-    return TrainingArguments(**common_args)
+    suffix = "_fast" if fast_testing else ""
+    base_output_dir = f"{OUTPUT_DIR}/{model_type}{suffix}"
+    return TrainingArguments(
+        learning_rate=1e-4 if model_type == "adapter" else 2e-5,
+        num_train_epochs=1 if fast_testing else 6,
+        per_device_train_batch_size=BATCH_SIZE,
+        per_device_eval_batch_size=BATCH_SIZE,
+        logging_steps=500 if fast_testing else 200,
+        evaluation_strategy="no" if fast_testing else "epoch",
+        save_strategy="no" if fast_testing else "epoch",
+        overwrite_output_dir=True,
+        remove_unused_columns=False,
+        load_best_model_at_end=True,
+        metric_for_best_model='accuracy',
+        output_dir=base_output_dir,
+        weight_decay=0.01 if model_type == "llm" else 0  # Typically, no weight decay for adapters
+    )
 
 
 def train_model(model, dataset, tokenizer, model_type):
     """Generic function to train a model, used for both adapters and LLMs."""
-    args = get_training_arguments(model_type)
+    args = get_training_arguments(model_type, fast_testing=FAST_TESTING)
     if model_type == "adapter":
         trainer = AdapterTrainer(model=model, args=args, train_dataset=dataset["train"],
                                  eval_dataset=dataset["validation"], compute_metrics=compute_metrics)
@@ -106,8 +107,10 @@ def main(train_type):
     results = train_model(model, dataset, tokenizer, train_type)
 
     # Save results to CSV
-    pd.DataFrame([results]).to_csv(f"{OUTPUT_DIR}/{train_type}_results.csv", index=False)
+    suffix = "_fast" if FAST_TESTING else ""
+    file_path = f"{OUTPUT_DIR}/{train_type}{suffix}/{train_type}_results{suffix}.csv"
+    pd.DataFrame([results]).to_csv(file_path, index=False)
 
 
 if __name__ == "__main__":
-    main("llm")  # 'adapter' or 'llm'
+    main("adapter")  # 'adapter' or 'llm'
