@@ -105,6 +105,9 @@ instance/
 # Scrapy stuff:
 .scrapy
 
+# Model save files
+results/
+
 # Sphinx documentation
 docs/_build/
 

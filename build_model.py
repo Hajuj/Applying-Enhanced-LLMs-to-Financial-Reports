@@ -1,20 +1,38 @@
-import torch
+# Standard library imports
 import os
-import pandas as pd
-import numpy as np
 import time
 import platform
 from datetime import datetime
+
+# Third-party imports for data handling and mathematics
+import torch
+import pandas as pd
+import numpy as np
+
+# Machine learning and metrics
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
+# PyTorch utility for data handling
 from torch.utils.data import Dataset
-from transformers import set_seed, TrainingArguments, Trainer, EvalPrediction, AutoTokenizer
+
+# Transformers library imports
+import adapters
+from adapters import ConfigUnion, PrefixTuningConfig, SeqBnConfig, LoRAConfig
+from transformers import (
+    AutoModelForSequenceClassification,
+    TrainingArguments,
+    Trainer,
+    EvalPrediction,
+    AutoTokenizer,
+    set_seed
+)
 
 
 """ # Load the training and evaluation data
 
-# List of [model_name, adapter_name, column_name] combinations
+# List of [model_name, adapter(bool), column_name] combinations
 combinations = [
-    ['bert-base-uncased', 'sst-2', 'Analyst Note'],
+    ['bert-base-uncased', True, 'Analyst Note'],
     # Add more combinations as needed
 ]
 
@@ -22,9 +40,9 @@ combinations = [
 train_df = pd.read_csv('1. data/final/train.csv')
 eval_df = pd.read_csv('1. data/final/eval.csv')
 
-for model_name, adapter_name, column_name in combinations:
+for model_name, adapter, column_name in combinations:
     # Create an instance of CustomTransformerModel
-    model = CustomTransformerModel(model_name=model_name, adapter_name=adapter_name, column_name=column_name)
+    model = CustomTransformerModel(model_name=model_name, adapter=adapter, column_name=column_name)
 
     # Build the model
     model.build_model()
@@ -34,84 +52,107 @@ for model_name, adapter_name, column_name in combinations:
 
 """
 
+
 class TextDataset(Dataset):
-    def __init__(self, texts, labels, tokenizer):
+    def __init__(self, texts, labels, tokenizer, max_length=512):
         self.texts = texts
         self.labels = labels
         self.tokenizer = tokenizer
+        self.max_length = max_length
 
     def __len__(self):
         return len(self.texts)
 
     def __getitem__(self, idx):
         text = self.texts[idx]
-        inputs = self.tokenizer(text, padding='max_length', truncation=True, max_length=512, return_tensors='pt')
-        label = torch.tensor(self.labels[idx])
-        return inputs, label
-
-class CustomTransformerModel:
-    def __init__(self, model_name: str, adapter_name: str = None, column_name: str = 'text'):
-        self.model_name = model_name
-        self.adapter_name = adapter_name
-        self.column_name = column_name
-        self.model = None
-        self.tokenizer = None
-
-    def build_model(self):
-        self.model = AutoModelWithHeads.from_pretrained(self.model_name)
-        self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
-
-        if self.adapter_name:
-            # Add a new adapter
-            self.model.add_adapter(self.adapter_name, AdapterConfig())
-
-    def compute_metrics(self, eval_pred: EvalPrediction):
-        predictions, labels = eval_pred
-        predictions = np.argmax(predictions, axis=1)
+        label = self.labels[idx]
+        
+        # Tokenize the text
+        encoding = self.tokenizer.encode_plus(
+            text,
+            add_special_tokens=True,
+            max_length=self.max_length,
+            return_token_type_ids=False,
+            padding='max_length',
+            truncation=True,
+            return_attention_mask=True,
+            return_tensors='pt',  # Return PyTorch tensors
+        )
+        
         return {
-            'accuracy': accuracy_score(labels, predictions),
-            'precision': precision_score(labels, predictions, average='weighted'),
-            'recall': recall_score(labels, predictions, average='weighted'),
-            'f1': f1_score(labels, predictions, average='weighted'),
+            'input_ids': encoding['input_ids'].flatten(),
+            'attention_mask': encoding['attention_mask'].flatten(),
+            'labels': torch.tensor(label, dtype=torch.long)
         }
 
 
-    def train(self, df: pd.DataFrame, eval_df: pd.DataFrame, epochs: int = 1, batch_size: int = 32, learning_rate: float = 1e-4, seed: int = 42, save_model: bool = False):
+class CustomTransformerModel:
+
+    def __init__(self, model_name: str, adapter: bool = False, column_name: str = 'text'):
+        self.model_name = model_name
+        self.adapter = adapter
+        self.column_name = column_name
+        self.model = None
+        self.tokenizer = None
+        self.adapter_name = f"{self.model_name}_adapter"
+
+
+    def build_model(self):
+        self.model = AutoModelForSequenceClassification.from_pretrained(self.model_name)
+        self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+
+        if self.adapter:
+            adapters.init(self.model)
+            # Load and activate the adapter
+            # Create an adapter configuration
+            #adapter_config = ConfigUnion(LoRAConfig(r=8, use_gating=True), 
+            #                             PrefixTuningConfig(prefix_length=10, use_gating=True), 
+            #                             SeqBnConfig(reduction_factor=16, use_gating=True)
+            #                             )
+
+            self.model.add_adapter(self.adapter_name, 
+            config="lora", 
+            set_active=True)
+            self.model.train_adapter(self.adapter_name)
+
+    def compute_metrics(self, p: EvalPrediction):
+        predictions = np.argmax(p.predictions, axis=1)
+        return {
+            "accuracy": accuracy_score(p.label_ids, predictions),
+            "precision": precision_score(p.label_ids, predictions, average='weighted'),
+            "recall": recall_score(p.label_ids, predictions, average='weighted'),
+            "f1": f1_score(p.label_ids, predictions, average='weighted')
+        }
+
+
+    def train(self, df: pd.DataFrame, eval_df: pd.DataFrame, epochs: int = 3, batch_size: int = 32, learning_rate: float = 2e-5, seed: int = 42, save_model: bool = False):
         set_seed(seed)
         if self.model is None or self.tokenizer is None:
             raise Exception("Model is not built. Call build_model first.")
 
         # Assume that the DataFrame has a 'label' column for labels
-        train_dataset = TextDataset(df[self.column_name], df['label'], self.tokenizer)
-        eval_dataset = TextDataset(eval_df[self.column_name], eval_df['label'], self.tokenizer)
-
+        train_dataset = TextDataset(df[self.column_name], df['Label'], self.tokenizer)
+        eval_dataset = TextDataset(eval_df[self.column_name], eval_df['Label'], self.tokenizer)
 
         training_args = TrainingArguments(
-            output_dir='./results',          # output directory
-            num_train_epochs=epochs,              # total number of training epochs
-            per_device_train_batch_size=batch_size,  # batch size per device during training
-            learning_rate=learning_rate,               # learning rate
-            weight_decay=0.01,               # strength of weight decay
-            logging_dir='2. models/logs',            # directory for storing logs
+            output_dir='./results',
+            num_train_epochs=epochs,
+            per_device_train_batch_size=batch_size,
+            per_device_eval_batch_size=batch_size,
+            learning_rate=learning_rate,
+            evaluation_strategy="epoch",
+            save_strategy="epoch",           # now matches evaluation_strategy            logging_dir='./logs',
+            load_best_model_at_end=True,
+            metric_for_best_model='accuracy',
         )
 
-        
-        if self.adapter_name:
-            trainer = AdapterTrainer(
-                model=self.model,   # the instantiated 🤗 Transformers model to be trained
-                args=training_args, # training arguments, defined above
-                train_dataset=train_dataset,
-                eval_dataset=eval_dataset,
-                compute_metrics=self.compute_metrics,
-            )
-        else:
-            trainer = Trainer(
-                model=self.model,
-                args=training_args,
-                train_dataset=train_dataset,
-                eval_dataset=eval_dataset,
-                compute_metrics=self.compute_metrics,
-            )
+        trainer = Trainer(
+            model=self.model,
+            args=training_args,
+            train_dataset=train_dataset,
+            eval_dataset=eval_dataset,
+            compute_metrics=self.compute_metrics
+        )
 
         start_time = time.time()
         train_result = trainer.train()
@@ -163,11 +204,12 @@ class CustomTransformerModel:
         predictions = trainer.predict(eval_dataset)
 
         # Save predictions to a CSV file
-        filename = f'{self.model_name}_{self.adapter_name or "no_adapter"}_{self.column_name}_predictions.csv'
-        predictions_df = pd.DataFrame(predictions.predictions, columns=['prediction'])
+        filename = f'{self.model_name.replace("/", "-")}_{str(self.adapter)}_{self.column_name}_predictions.csv'
+        predictions_df = pd.DataFrame(predictions.predictions, columns=['prediction', 'label', 'metrics'])
         predictions_df.to_csv(f'2. models/predictions/{filename}', index=False)
 
+
         if save_model:
-            model_dir = '2. models/adapters' if self.adapter_name else '2. models'
+            model_dir = '2. models/adapters' if self.adapter else '2. models'
             self.model.save_pretrained(f'{model_dir}/{self.model_name}')
 

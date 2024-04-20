@@ -16,7 +16,7 @@ eval_df = pd.read_csv('1. data/final/eval.csv')
 
 for model_name, adapter_name, column_name in combinations:
     # Create an instance of CustomTransformerModel
-    model = CustomTransformerModel(model_name=model_name, adapter_name=adapter_name, column_name=column_name)
+    model = CustomTransformerModel(model_name=model_name, adapter=adapter_name, column_name=column_name)
 
     # Build the model
     model.build_model()

@@ -8,7 +8,7 @@ Analyst reports from Morningstar: contain both a subjective analyst report (text
 Use the various text elements to fine-tune different transformer models (maybe modify some parts with adapters from https://docs.adapterhub.ml) and compare to the predictive qualities from the analysts themselves. 
 
 ## List of models
-Find dedicated adapters via https://docs.adapterhub.ml/loading.html and chose some of the following models.
+[How to configure the adapters](https://github.com/adapter-hub/adapters/blob/main/notebooks/07_Complex_Adapter_Configuration.ipynb)
 ### Finance
 - https://huggingface.co/nickmuchi/sec-bert-finetuned-finance-classification
 - https://huggingface.co/ProsusAI/finbert
@@ -30,9 +30,9 @@ Find dedicated adapters via https://docs.adapterhub.ml/loading.html and chose so
 - ~~Incorporate an easy swap of huggingface models (Bert, FinBERT, ...)~~
 - ~~Incorporate an easy way to include adapters [Adapterhub](https://adapterhub.ml)~~
 - ~~Save all models (if fine-tuned) and basic metrics (training times, etc)~~
-- Data Preprocessing: non-deterministic reproducible train test split (Deadline: 17.04.2024)
-- Incorporate current version of Jupyter Notebook in python code and update requirements if necessary + Debug with distilbert and adapter and make sure all exports, files and models are saved in a organized manner (incl predictions as probabilities for ROC curves) (Deadline: 20.04.2024)
-- Create a list of potential models/adapters that could be used for financial texts/classification of sentiment (Deadline: 21.04.2024)
+- ~~Data Preprocessing: non-deterministic reproducible train test split (Deadline: 17.04.2024)~~
+- Incorporate current version of Jupyter Notebook in python code and update requirements if necessary + ~~Debug with distilbert and adapter and make sure all exports, files and models are saved in a organized manner (incl predictions as probabilities for ROC curves)~~ (Deadline: 20.04.2024)
+- ~~Create a list of potential models/adapters that could be used for financial texts/classification of sentiment (Deadline: 21.04.2024)~~
 
 ### Prio 2: Automated Evaluation (parallel)
 - ~~Build custom ROC curves on top of confusion matrix/other evaluation methods and save all metrics~~
