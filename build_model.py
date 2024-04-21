@@ -17,7 +17,7 @@ from torch.utils.data import Dataset
 
 # Transformers library imports
 import adapters
-from adapters import ConfigUnion, PrefixTuningConfig, SeqBnConfig, LoRAConfig, MAMConfig, BnConfig, UniPELTConfig
+from adapters import LoRAConfig
 from transformers import (
     AutoModelForSequenceClassification,
     TrainingArguments,
@@ -88,13 +88,14 @@ class TextDataset(Dataset):
 
 class CustomTransformerModel:
 
-    def __init__(self, model_name: str, adapter: bool = False, column_name: str = 'text'):
+    def __init__(self, model_name: str, adapter: bool = False, column_name: str = 'text', adapter_config=LoRAConfig()):
         self.model_name = model_name
         self.adapter = adapter
         self.column_name = column_name
         self.model = None
         self.tokenizer = None
         self.adapter_name = f"{self.model_name}_adapter"
+        self.adapter_config = adapter_config
 
 
     def build_model(self):
@@ -105,15 +106,8 @@ class CustomTransformerModel:
             adapters.init(self.model)
             # Load and activate the adapter
             # Create an adapter configuration
-            adapter_config = ConfigUnion(LoRAConfig(r=8, use_gating=True), 
-                                         PrefixTuningConfig(prefix_length=10, use_gating=True), 
-                                         SeqBnConfig(reduction_factor=16, use_gating=True)
-                                         )
-
             self.model.add_adapter(self.adapter_name, 
-            #config="lora",
-            #config=UniPELTConfig(),
-            config=adapter_config,
+            config=self.adapter_config,
             set_active=True)
             self.model.train_adapter(self.adapter_name)
 
@@ -127,14 +121,15 @@ class CustomTransformerModel:
         }
 
 
-    def train(self, df: pd.DataFrame, eval_df: pd.DataFrame, epochs: int = 3, batch_size: int = 32, learning_rate: float = 2e-5, seed: int = 42, save_model: bool = False):
+    def train(self, df: pd.DataFrame, eval_df: pd.DataFrame, test_df: pd.DataFrame, epochs: int = 3, batch_size: int = 32, learning_rate: float = 2e-5, seed: int = 42, save_model: bool = False):
         set_seed(seed)
         if self.model is None or self.tokenizer is None:
             raise Exception("Model is not built. Call build_model first.")
 
         # Assume that the DataFrame has a 'label' column for labels
         train_dataset = TextDataset(df[self.column_name], df['Label'], self.tokenizer)
-        eval_dataset = TextDataset(eval_df[self.column_name], eval_df['Label'], self.tokenizer)
+        dev_dataset = TextDataset(eval_df[self.column_name], eval_df['Label'], self.tokenizer)
+        test_dataset = TextDataset(test_df[self.column_name], test_df['Label'], self.tokenizer)
 
         training_args = TrainingArguments(
             output_dir='./results',
@@ -154,7 +149,7 @@ class CustomTransformerModel:
             model=self.model,
             args=training_args,
             train_dataset=train_dataset,
-            eval_dataset=eval_dataset,
+            eval_dataset=dev_dataset,
             compute_metrics=self.compute_metrics
         )
 
@@ -176,9 +171,10 @@ class CustomTransformerModel:
         data = {
             'model_name': [self.model_name],
             'adapter_name': [self.adapter_name],
+            'adapter_config': [self.adapter_config],
             'column_name': [self.column_name],
             'training_data_length': [len(train_dataset)],
-            'test_data_length': [len(eval_dataset)],
+            'test_data_length': [len(dev_dataset)],
             'training_time': [training_time],
             'evaluation_time': [evaluation_time],
             'num_params': [num_params],
@@ -205,7 +201,7 @@ class CustomTransformerModel:
         data_frame.to_csv('2. models/runtimes/training/training_info.csv', index=False)
 
         # Make predictions
-        predictions = trainer.predict(eval_dataset)
+        predictions = trainer.predict(test_dataset)
         logits = predictions.predictions
         probabilities = torch.softmax(torch.tensor(logits), dim=-1).numpy()
 

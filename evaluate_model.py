@@ -30,7 +30,7 @@ class ModelEvaluator:
         self.results = []
 
     def evaluate(self):
-        for model_name, adapter, column_name in self.combinations:
+        for model_name, adapter, column_name, _ in self.combinations:
             # Construct the filename
             filename = f'{model_name.replace("/", "-")}_{str(adapter)}_{column_name}_predictions.csv'
 
