@@ -1,0 +1,21 @@
+{
+  "config": {
+    "activation_function": "tanh",
+    "bias": true,
+    "dropout_prob": null,
+    "head_type": "classification",
+    "label2id": {
+      "\ud83d\udc4d": 1,
+      "\ud83d\udc4e": 0
+    },
+    "layers": 2,
+    "num_labels": 2,
+    "use_pooler": false
+  },
+  "hidden_size": 768,
+  "model_class": "DistilBertAdapterModel",
+  "model_name": "distilbert-base-uncased",
+  "model_type": "distilbert",
+  "name": "sst2",
+  "version": "0.1.2"
+}
