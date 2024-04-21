@@ -14,7 +14,7 @@ TASK = "sst2"
 MODEL_CHECKPOINT = "distilbert-base-uncased"
 BATCH_SIZE = 16
 OUTPUT_DIR = "./training_output"
-FAST_TESTING = True  # Toggle for quick testing or full training
+FAST_TESTING = False  # Toggle for quick testing or full training
 
 
 def load_data(fast_testing=False):
@@ -113,4 +113,4 @@ def main(train_type):
 
 
 if __name__ == "__main__":
-    main("adapter")  # 'adapter' or 'llm'
+    main("llm")  # 'adapter' or 'llm'
