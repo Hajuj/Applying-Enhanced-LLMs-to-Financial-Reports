@@ -1,0 +1,6 @@
+model_name,adapter,adapter_config,column_name,auc_score,date
+bardsai/finance-sentiment-pl-fast,True,<adapters.configuration.adapter_config.UniPELTConfig object at 0x1510e3c70>,AnalystNoteList,0.5,2024-04-21
+bardsai/finance-sentiment-pl-fast,True,<adapters.configuration.adapter_config.UniPELTConfig object at 0x13991e5e0>,AnalystNoteList,0.5,2024-04-21
+bardsai/finance-sentiment-pl-fast,True,<adapters.configuration.adapter_config.UniPELTConfig object at 0x129723c40>,BullsList,0.5,2024-04-21
+bardsai/finance-sentiment-pl-fast,True,<adapters.configuration.adapter_config.ConfigUnion object at 0x17b8aa8b0>,BearsList,0.5,2024-04-21
+bardsai/finance-sentiment-pl-fast,True,<adapters.configuration.adapter_config.ConfigUnion object at 0x17b8aa8b0>,BearsList,0.5,2024-04-21

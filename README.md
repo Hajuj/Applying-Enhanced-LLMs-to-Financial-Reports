@@ -31,7 +31,7 @@ Use the various text elements to fine-tune different transformer models (maybe m
 - ~~Incorporate an easy way to include adapters [Adapterhub](https://adapterhub.ml)~~
 - ~~Save all models (if fine-tuned) and basic metrics (training times, etc)~~
 - ~~Data Preprocessing: non-deterministic reproducible train test split (Deadline: 17.04.2024)~~
-- Incorporate current version of Jupyter Notebook in python code and update requirements if necessary + ~~Debug with distilbert and adapter and make sure all exports, files and models are saved in a organized manner (incl predictions as probabilities for ROC curves)~~ (Deadline: 20.04.2024)
+- ~~Incorporate current version of Jupyter Notebook in python code and update requirements if necessary +~~ ~~Debug with distilbert and adapter and make sure all exports, files and models are saved in a organized manner (incl predictions as probabilities for ROC curves)~~ (Deadline: 20.04.2024)
 - ~~Create a list of potential models/adapters that could be used for financial texts/classification of sentiment (Deadline: 21.04.2024)~~
 
 ### Prio 2: Automated Evaluation (parallel)
@@ -41,7 +41,7 @@ Use the various text elements to fine-tune different transformer models (maybe m
 - Run for analyst note and use as label the moving average (see old project) (Deadline: 22.04.2024)
 ### Prio 3: Features (parallel)
 - Single out best model/adapters, discard efficiency and try to optimize and run for other text columns
-- Finish automated evaluation plots for top $n$ models
+- ~~Finish automated evaluation plots for top $n$ models~~
 - Benchmarking:
 	- Add xgBoost based on sector, author name etc
 	- Add xgBoost based on analysts fairprice (baseline)

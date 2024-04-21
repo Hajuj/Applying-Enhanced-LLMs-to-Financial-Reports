@@ -32,7 +32,7 @@ from transformers import (
 
 # List of [model_name, adapter(bool), column_name] combinations
 combinations = [
-    ['bert-base-uncased', True, 'Analyst Note'],
+    ['bert-base-uncased', True, 'Analyst Note', 'adapter_config'],
     # Add more combinations as needed
 ]
 
@@ -139,7 +139,7 @@ class CustomTransformerModel:
             learning_rate=learning_rate,
             evaluation_strategy="steps",
             save_strategy="steps",
-            save_safetensors=False,           # now matches evaluation_strategy            
+            save_safetensors=False,             
             logging_dir='./logs',
             load_best_model_at_end=True,
             metric_for_best_model='accuracy',
@@ -166,6 +166,9 @@ class CustomTransformerModel:
 
         # Get the hardware information
         hardware_info = platform.uname()
+        
+        date = datetime.now()
+
 
         # Create a DataFrame and save it as a CSV file
         data = {
@@ -178,7 +181,7 @@ class CustomTransformerModel:
             'training_time': [training_time],
             'evaluation_time': [evaluation_time],
             'num_params': [num_params],
-            'date': [datetime.now()],
+            'date': [date.strftime("%Y-%m-%d_%H-%M-%S")],
             'accuracy': [eval_metrics['eval_accuracy']],
             'precision': [eval_metrics['eval_precision']],
             'recall': [eval_metrics['eval_recall']],
@@ -189,6 +192,7 @@ class CustomTransformerModel:
             'learning_rate': [learning_rate],
             'batch_size': [batch_size],
             'num_epochs': [epochs],
+            'seed': [seed],
         }
         
         data_frame = pd.DataFrame(data)
@@ -206,7 +210,7 @@ class CustomTransformerModel:
         probabilities = torch.softmax(torch.tensor(logits), dim=-1).numpy()
 
         # Save predictions to a CSV file
-        filename = f'{self.model_name.replace("/", "-")}_{str(self.adapter)}_{self.column_name}_predictions.csv'
+        filename = f'{self.model_name.replace("/", "-")}_{str(self.adapter)}_{self.column_name}_{date.strftime("%Y-%m-%d")}_predictions.csv'
         predictions_df = pd.DataFrame(probabilities)
         predictions_df.to_csv(f'2. models/predictions/{filename}', index=False)
 
