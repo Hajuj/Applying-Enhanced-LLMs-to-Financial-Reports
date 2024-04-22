@@ -89,7 +89,7 @@ class ModelEvaluator:
         # Save the results to a CSV file
         results_df.to_csv('3. evaluation/auc_scores/auc_scores.csv', index=False)
 
-    def build_roc_curve(self, n):
+    def build_roc_curve(self, n=5, include_baseline=True):
         top_models = pd.read_csv('3. evaluation/auc_scores/auc_scores.csv').head(n)
         plt.figure(figsize=(10, 8))
 
@@ -104,6 +104,16 @@ class ModelEvaluator:
             fpr, tpr, _ = roc_curve(self.true_labels, predictions_df.iloc[:, 1])
             plt.plot(fpr, tpr, label=f'{model_name} (AUC = {auc_score:.2f})')
 
+        if include_baseline:
+            single_predictions_df = pd.read_csv('2. models/predictions/single_input_predictions_benchmark.csv')
+            multiple_predictions_df = pd.read_csv('2. models/predictions/multiple_input_predictions_benchmark.csv')
+            auc_score = roc_auc_score(self.true_labels, single_predictions_df.iloc[:, 1])
+            fpr, tpr, _ = roc_curve(self.true_labels, single_predictions_df.iloc[:, 1])
+            plt.plot(fpr, tpr, label=f'Benchmark (Analyst Prediction) (AUC = {auc_score:.2f})')
+            auc_score = roc_auc_score(self.true_labels, multiple_predictions_df.iloc[:, 1])
+            fpr, tpr, _ = roc_curve(self.true_labels, multiple_predictions_df.iloc[:, 1])
+            plt.plot(fpr, tpr, label=f'Benchmark (XGBoost) (AUC = {auc_score:.2f})')
+
         plt.plot([0, 1], [0, 1], 'k--')
         plt.xlim([0.0, 1.0])
         plt.ylim([0.0, 1.05])
@@ -112,3 +122,4 @@ class ModelEvaluator:
         plt.title('Receiver Operating Characteristic')
         plt.legend(loc="lower right")
         plt.savefig(f'3. evaluation/roc_curves/top_{n}_models.png')
+        
