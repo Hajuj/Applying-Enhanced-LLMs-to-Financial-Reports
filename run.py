@@ -8,18 +8,39 @@ from evaluate_model import ModelEvaluator
 
 warnings.filterwarnings('ignore')
 
-models_to_test = ["nickmuchi/sec-bert-finetuned-finance-classification", "ProsusAI/finbert", "ahmedrachid/FinancialBERT-Sentiment-Analysis", "yiyanghkust/finbert-tone", "nickmuchi/deberta-v3-base-finetuned-finance-text-classification", "soleimanian/financial-roberta-large-sentiment", "bardsai/finance-sentiment-pl-fast", "RashidNLP/Finance-Sentiment-Classification", "siebert/sentiment-roberta-large-english", "kwang123/bert-sentiment-analysis", "distilbert/distilbert-base-uncased-finetuned-sst-2-english"]
+models_to_test = ["nickmuchi/sec-bert-finetuned-finance-classification",
+                  "ProsusAI/finbert",
+                  "ahmedrachid/FinancialBERT-Sentiment-Analysis",
+                  "yiyanghkust/finbert-tone",
+                  "nickmuchi/deberta-v3-base-finetuned-finance-text-classification",
+                  "soleimanian/financial-roberta-large-sentiment",
+                  "bardsai/finance-sentiment-pl-fast",
+                  "RashidNLP/Finance-Sentiment-Classification",
+                  "siebert/sentiment-roberta-large-english",
+                  "kwang123/bert-sentiment-analysis",
+                  "distilbert/distilbert-base-uncased-finetuned-sst-2-english"]
 
 adapter_config_list = [LoRAConfig(), UniPELTConfig(), MAMConfig(), ConfigUnion(LoRAConfig(r=8, use_gating=True), PrefixTuningConfig(prefix_length=10, use_gating=True), SeqBnConfig(reduction_factor=16, use_gating=True)), ]
 
 # Load the training and evaluation data
 
 # List of [model_name, adapter_name, column_name] combinations
+# combinations = [
+#     ["bardsai/finance-sentiment-pl-fast", True, 'AnalystNoteList', adapter_config_list[0]],
+#     ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'AnalystNoteList', adapter_config_list[0]],
+#     ["yiyanghkust/finbert-tone", True, 'AnalystNoteList', adapter_config_list[0]],
+#     ["nickmuchi/deberta-v3-base-finetuned-finance-text-classification", True, 'AnalystNoteList', adapter_config_list[0]],
+#     ["ProsusAI/finbert", True, 'AnalystNoteList', adapter_config_list[0]],
+#     ["ahmedrachid/FinancialBERT-Sentiment-Analysis", True, 'AnalystNoteList', adapter_config_list[0]],
+#     # Add more combinations as needed
+# ]
+
 combinations = [
-    ["bardsai/finance-sentiment-pl-fast", True, 'AnalystNoteList', adapter_config_list[0]],
-    ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'AnalystNoteList', adapter_config_list[0]],
-    ["yiyanghkust/finbert-tone", True, 'AnalystNoteList', adapter_config_list[0]],
-    # Add more combinations as needed
+    ["soleimanian/financial-roberta-large-sentiment", True, 'AnalystNoteList', adapter_config_list[0]],
+    ["RashidNLP/Finance-Sentiment-Classification", True, 'AnalystNoteList', adapter_config_list[0]],
+    ["siebert/sentiment-roberta-large-english", True, 'AnalystNoteList', adapter_config_list[0]],
+    ["kwang123/bert-sentiment-analysis", True, 'AnalystNoteList', adapter_config_list[0]],
+    ["distilbert/distilbert-base-uncased-finetuned-sst-2-english", True, 'AnalystNoteList', adapter_config_list[0]],
 ]
 
 # Load the training and evaluation data

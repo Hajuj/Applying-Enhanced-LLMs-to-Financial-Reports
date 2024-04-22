@@ -1,0 +1,88 @@
+{
+  "best_metric": 0.6303030303030303,
+  "best_model_checkpoint": "./results/nickmuchi-deberta-v3-base-finetuned-finance-text-classification/checkpoint-276",
+  "epoch": 5.0,
+  "eval_steps": 500,
+  "global_step": 345,
+  "is_hyper_param_search": false,
+  "is_local_process_zero": true,
+  "is_world_process_zero": true,
+  "log_history": [
+    {
+      "epoch": 1.0,
+      "eval_accuracy": 0.5878787878787879,
+      "eval_f1": 0.4352995604904002,
+      "eval_loss": 0.6717809438705444,
+      "eval_precision": 0.34560146923783286,
+      "eval_recall": 0.5878787878787879,
+      "eval_runtime": 9.6272,
+      "eval_samples_per_second": 17.139,
+      "eval_steps_per_second": 1.143,
+      "step": 69
+    },
+    {
+      "epoch": 2.0,
+      "eval_accuracy": 0.5696969696969697,
+      "eval_f1": 0.5623083518107909,
+      "eval_loss": 0.672306478023529,
+      "eval_precision": 0.5599178923740328,
+      "eval_recall": 0.5696969696969697,
+      "eval_runtime": 9.3472,
+      "eval_samples_per_second": 17.652,
+      "eval_steps_per_second": 1.177,
+      "step": 138
+    },
+    {
+      "epoch": 2.9,
+      "grad_norm": 2.3368234634399414,
+      "learning_rate": 4.202898550724638e-05,
+      "loss": 0.7394,
+      "step": 200
+    },
+    {
+      "epoch": 3.0,
+      "eval_accuracy": 0.5454545454545454,
+      "eval_f1": 0.5475013560119943,
+      "eval_loss": 0.6807435750961304,
+      "eval_precision": 0.5505306188748713,
+      "eval_recall": 0.5454545454545454,
+      "eval_runtime": 9.6935,
+      "eval_samples_per_second": 17.022,
+      "eval_steps_per_second": 1.135,
+      "step": 207
+    },
+    {
+      "epoch": 4.0,
+      "eval_accuracy": 0.6303030303030303,
+      "eval_f1": 0.6011967291967292,
+      "eval_loss": 0.6679201126098633,
+      "eval_precision": 0.6216548935298936,
+      "eval_recall": 0.6303030303030303,
+      "eval_runtime": 9.6169,
+      "eval_samples_per_second": 17.157,
+      "eval_steps_per_second": 1.144,
+      "step": 276
+    },
+    {
+      "epoch": 5.0,
+      "eval_accuracy": 0.6303030303030303,
+      "eval_f1": 0.5783733620401649,
+      "eval_loss": 0.661956250667572,
+      "eval_precision": 0.6332813852813853,
+      "eval_recall": 0.6303030303030303,
+      "eval_runtime": 9.4803,
+      "eval_samples_per_second": 17.405,
+      "eval_steps_per_second": 1.16,
+      "step": 345
+    }
+  ],
+  "logging_steps": 200,
+  "max_steps": 345,
+  "num_input_tokens_seen": 0,
+  "num_train_epochs": 5,
+  "save_steps": 500,
+  "total_flos": 1456092944501760.0,
+  "train_batch_size": 16,
+  "trial_name": null,
+  "trial_params": null
+}

@@ -1,0 +1,45 @@
+{
+  "best_metric": 0.5575757575757576,
+  "best_model_checkpoint": "./results/ahmedrachid-FinancialBERT-Sentiment-Analysis/checkpoint-69",
+  "epoch": 2.0,
+  "eval_steps": 500,
+  "global_step": 138,
+  "is_hyper_param_search": false,
+  "is_local_process_zero": true,
+  "is_world_process_zero": true,
+  "log_history": [
+    {
+      "epoch": 1.0,
+      "eval_accuracy": 0.5575757575757576,
+      "eval_f1": 0.48389682643960236,
+      "eval_loss": 0.9500370025634766,
+      "eval_precision": 0.49992784992784994,
+      "eval_recall": 0.5575757575757576,
+      "eval_runtime": 3.9566,
+      "eval_samples_per_second": 41.702,
+      "eval_steps_per_second": 2.78,
+      "step": 69
+    },
+    {
+      "epoch": 2.0,
+      "eval_accuracy": 0.5515151515151515,
+      "eval_f1": 0.49641284641284644,
+      "eval_loss": 0.7147140502929688,
+      "eval_precision": 0.5051916453376307,
+      "eval_recall": 0.5515151515151515,
+      "eval_runtime": 3.8357,
+      "eval_samples_per_second": 43.017,
+      "eval_steps_per_second": 2.868,
+      "step": 138
+    }
+  ],
+  "logging_steps": 200,
+  "max_steps": 345,
+  "num_input_tokens_seen": 0,
+  "num_train_epochs": 5,
+  "save_steps": 500,
+  "total_flos": 582426768586752.0,
+  "train_batch_size": 16,
+  "trial_name": null,
+  "trial_params": null
+}

@@ -1,0 +1,45 @@
+{
+  "best_metric": 0.5757575757575758,
+  "best_model_checkpoint": "./results/ProsusAI-finbert/checkpoint-138",
+  "epoch": 2.0,
+  "eval_steps": 500,
+  "global_step": 138,
+  "is_hyper_param_search": false,
+  "is_local_process_zero": true,
+  "is_world_process_zero": true,
+  "log_history": [
+    {
+      "epoch": 1.0,
+      "eval_accuracy": 0.49696969696969695,
+      "eval_f1": 0.5178631349485621,
+      "eval_loss": 0.8287611603736877,
+      "eval_precision": 0.5566637648716992,
+      "eval_recall": 0.49696969696969695,
+      "eval_runtime": 3.9436,
+      "eval_samples_per_second": 41.84,
+      "eval_steps_per_second": 2.789,
+      "step": 69
+    },
+    {
+      "epoch": 2.0,
+      "eval_accuracy": 0.5757575757575758,
+      "eval_f1": 0.43982460261530026,
+      "eval_loss": 0.6947726607322693,
+      "eval_precision": 0.44626388104648973,
+      "eval_recall": 0.5757575757575758,
+      "eval_runtime": 3.7701,
+      "eval_samples_per_second": 43.765,
+      "eval_steps_per_second": 2.918,
+      "step": 138
+    }
+  ],
+  "logging_steps": 200,
+  "max_steps": 345,
+  "num_input_tokens_seen": 0,
+  "num_train_epochs": 5,
+  "save_steps": 500,
+  "total_flos": 582426768586752.0,
+  "train_batch_size": 16,
+  "trial_name": null,
+  "trial_params": null
+}
