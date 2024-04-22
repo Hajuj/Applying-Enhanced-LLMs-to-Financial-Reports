@@ -1,9 +1,0 @@
-model_name,adapter,adapter_config,column_name,auc_score,date
-bardsai/finance-sentiment-pl-fast,True,"LoRAConfig(architecture='lora', selfattn_lora=True, intermediate_lora=False, output_lora=False, leave_out=[], r=8, alpha=8, dropout=0.0, attn_matrices=['q', 'v'], composition_mode='add', init_weights='lora', use_gating=False)",AnalystNoteList,0.5207168224680573,2024-04-21
-bardsai/finance-sentiment-pl-fast,True,"LoRAConfig(architecture='lora', selfattn_lora=True, intermediate_lora=False, output_lora=False, leave_out=[], r=8, alpha=8, dropout=0.0, attn_matrices=['q', 'v'], composition_mode='add', init_weights='lora', use_gating=False)",AnalystNoteList,0.5189002735028778,2024-04-21
-bardsai/finance-sentiment-pl-fast,True,"LoRAConfig(architecture='lora', selfattn_lora=True, intermediate_lora=False, output_lora=False, leave_out=[], r=8, alpha=8, dropout=0.0, attn_matrices=['q', 'v'], composition_mode='add', init_weights='lora', use_gating=False)",AnalystNoteList,0.5189002735028778,2024-04-21
-bardsai/finance-sentiment-pl-fast,True,<adapters.configuration.adapter_config.UniPELTConfig object at 0x1510e3c70>,AnalystNoteList,0.5,2024-04-21
-bardsai/finance-sentiment-pl-fast,True,<adapters.configuration.adapter_config.UniPELTConfig object at 0x13991e5e0>,AnalystNoteList,0.5,2024-04-21
-bardsai/finance-sentiment-pl-fast,True,<adapters.configuration.adapter_config.UniPELTConfig object at 0x129723c40>,BullsList,0.5,2024-04-21
-bardsai/finance-sentiment-pl-fast,True,<adapters.configuration.adapter_config.ConfigUnion object at 0x17b8aa8b0>,BearsList,0.5,2024-04-21
-bardsai/finance-sentiment-pl-fast,True,<adapters.configuration.adapter_config.ConfigUnion object at 0x17b8aa8b0>,BearsList,0.5,2024-04-21

@@ -137,12 +137,13 @@ class CustomTransformerModel:
             per_device_train_batch_size=batch_size,
             per_device_eval_batch_size=batch_size,
             learning_rate=learning_rate,
-            evaluation_strategy="steps",
-            save_strategy="steps",
+            evaluation_strategy="epoch",
+            save_strategy="epoch",
             save_safetensors=False,             
             logging_dir='./logs',
             load_best_model_at_end=True,
             metric_for_best_model='accuracy',
+            logging_steps=200,
         )
 
         trainer = Trainer(
