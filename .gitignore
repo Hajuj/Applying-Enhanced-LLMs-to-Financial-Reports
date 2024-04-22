@@ -106,7 +106,10 @@ instance/
 .scrapy
 
 # Model save files
-results/
+*.pt
+*.pth
+*.bin
+*.safetensors
 
 # Sphinx documentation
 docs/_build/

@@ -13,7 +13,7 @@ from transformers import (
 TASK = "sst2"
 MODEL_CHECKPOINT = "distilbert-base-uncased"
 BATCH_SIZE = 16
-OUTPUT_DIR = "./training_output"
+OUTPUT_DIR = "results/test_adapter_llm_output"
 FAST_TESTING = False  # Toggle for quick testing or full training
 
 

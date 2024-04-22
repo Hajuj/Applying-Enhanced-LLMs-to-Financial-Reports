@@ -1,23 +1,20 @@
 # Standard library imports
 import os
-import time
 import platform
+import time
 from datetime import datetime
 
 # Third-party imports for data handling and mathematics
-import torch
-import pandas as pd
+import adapters
 import numpy as np
-
+import pandas as pd
+import torch
+# Transformers library imports
+from adapters import LoRAConfig
 # Machine learning and metrics
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-
 # PyTorch utility for data handling
 from torch.utils.data import Dataset
-
-# Transformers library imports
-import adapters
-from adapters import LoRAConfig
 from transformers import (
     AutoModelForSequenceClassification,
     TrainingArguments,
@@ -26,7 +23,6 @@ from transformers import (
     AutoTokenizer,
     set_seed
 )
-
 
 """ # Load the training and evaluation data
 
@@ -66,7 +62,7 @@ class TextDataset(Dataset):
     def __getitem__(self, idx):
         text = self.texts[idx]
         label = self.labels[idx]
-        
+
         # Tokenize the text
         encoding = self.tokenizer.encode_plus(
             text,
@@ -78,7 +74,7 @@ class TextDataset(Dataset):
             return_attention_mask=True,
             return_tensors='pt',  # Return PyTorch tensors
         )
-        
+
         return {
             'input_ids': encoding['input_ids'].flatten(),
             'attention_mask': encoding['attention_mask'].flatten(),
@@ -97,7 +93,6 @@ class CustomTransformerModel:
         self.adapter_name = f"{self.model_name}_adapter"
         self.adapter_config = adapter_config
 
-
     def build_model(self):
         self.model = AutoModelForSequenceClassification.from_pretrained(self.model_name)
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
@@ -106,9 +101,9 @@ class CustomTransformerModel:
             adapters.init(self.model)
             # Load and activate the adapter
             # Create an adapter configuration
-            self.model.add_adapter(self.adapter_name, 
-            config=self.adapter_config,
-            set_active=True)
+            self.model.add_adapter(self.adapter_name,
+                                   config=self.adapter_config,
+                                   set_active=True)
             self.model.train_adapter(self.adapter_name)
 
     def compute_metrics(self, p: EvalPrediction):
@@ -120,8 +115,8 @@ class CustomTransformerModel:
             "f1": f1_score(p.label_ids, predictions, average='weighted')
         }
 
-
-    def train(self, df: pd.DataFrame, eval_df: pd.DataFrame, test_df: pd.DataFrame, epochs: int = 3, batch_size: int = 32, learning_rate: float = 2e-5, seed: int = 42, save_model: bool = False):
+    def train(self, df: pd.DataFrame, eval_df: pd.DataFrame, test_df: pd.DataFrame, epochs: int = 3,
+              batch_size: int = 32, learning_rate: float = 2e-5, seed: int = 42, save_model: bool = False):
         set_seed(seed)
         if self.model is None or self.tokenizer is None:
             raise Exception("Model is not built. Call build_model first.")
@@ -132,14 +127,14 @@ class CustomTransformerModel:
         test_dataset = TextDataset(test_df[self.column_name], test_df['Label'], self.tokenizer)
 
         training_args = TrainingArguments(
-            output_dir='./results',
+            output_dir=f'./results/{self.model_name.replace("/", "-")}',
             num_train_epochs=epochs,
             per_device_train_batch_size=batch_size,
             per_device_eval_batch_size=batch_size,
             learning_rate=learning_rate,
             evaluation_strategy="epoch",
             save_strategy="epoch",
-            save_safetensors=False,             
+            save_safetensors=False,
             logging_dir='./logs',
             load_best_model_at_end=True,
             metric_for_best_model='accuracy',
@@ -167,9 +162,8 @@ class CustomTransformerModel:
 
         # Get the hardware information
         hardware_info = platform.uname()
-        
-        date = datetime.now()
 
+        date = datetime.now()
 
         # Create a DataFrame and save it as a CSV file
         data = {
@@ -195,7 +189,7 @@ class CustomTransformerModel:
             'num_epochs': [epochs],
             'seed': [seed],
         }
-        
+
         data_frame = pd.DataFrame(data)
 
         if os.path.exists('2. models/runtimes/training/training_info.csv'):
@@ -215,8 +209,6 @@ class CustomTransformerModel:
         predictions_df = pd.DataFrame(probabilities)
         predictions_df.to_csv(f'2. models/predictions/{filename}', index=False)
 
-
         if save_model:
             model_dir = '2. models/adapters' if self.adapter else '2. models'
             self.model.save_pretrained(f'{model_dir}/{self.model_name}')
-

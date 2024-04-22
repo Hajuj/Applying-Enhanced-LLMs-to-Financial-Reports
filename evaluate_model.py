@@ -1,10 +1,10 @@
-from datetime import datetime
-import os
 import glob
+import os
+from datetime import datetime
+
+import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.metrics import roc_curve, roc_auc_score
-import matplotlib.pyplot as plt
-
 
 """
 import pandas as pd
@@ -26,12 +26,12 @@ evaluator = ModelEvaluator(true_labels, combinations)
 evaluator.evaluate()
 """
 
+
 class ModelEvaluator:
     def __init__(self, true_labels, combinations):
         self.true_labels = true_labels
         self.combinations = combinations
         self.results = []
-
 
     def evaluate(self):
         for model_name, adapter, column_name, adapter_config in self.combinations:
@@ -51,7 +51,8 @@ class ModelEvaluator:
                 auc_score = roc_auc_score(self.true_labels, predictions_df.iloc[:, 1])
 
                 # Save the results
-                self.results.append([model_name, adapter, str(adapter_config), column_name, auc_score, date.strftime("%Y-%m-%d")])
+                self.results.append(
+                    [model_name, adapter, str(adapter_config), column_name, auc_score, date.strftime("%Y-%m-%d")])
 
                 # Generate the ROC curve
                 fpr, tpr, _ = roc_curve(self.true_labels, predictions_df.iloc[:, 1])
@@ -65,11 +66,14 @@ class ModelEvaluator:
                 plt.title('Receiver Operating Characteristic')
                 plt.legend(loc="lower right")
                 #filename = f'{model_name.replace("/", "-")}_{str(adapter)}_{column_name}'
-                plt.savefig(f'3. evaluation/roc_curves/{model_name.replace("/", "-")}_{str(adapter)}_{column_name}_{date.strftime("%Y-%m-%d")}.png')
+                plt.savefig(
+                    f'3. evaluation/roc_curves/{model_name.replace("/", "-")}_{str(adapter)}_{column_name}_{date.strftime("%Y-%m-%d")}.png')
 
         # Save the results to a CSV file    
         # Create a DataFrame with the results
-        results_df = pd.DataFrame(self.results, columns=['model_name', 'adapter', 'adapter_config', 'column_name', 'auc_score', 'date'])
+        results_df = pd.DataFrame(self.results,
+                                  columns=['model_name', 'adapter', 'adapter_config', 'column_name', 'auc_score',
+                                           'date'])
 
         # Check if the CSV file already exists
         if os.path.exists('3. evaluation/auc_scores/auc_scores.csv'):
