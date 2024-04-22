@@ -1,0 +1,64 @@
+{
+  "best_metric": 0.5212121212121212,
+  "best_model_checkpoint": "./results/nickmuchi-sec-bert-finetuned-finance-classification/checkpoint-138",
+  "epoch": 3.0,
+  "eval_steps": 500,
+  "global_step": 207,
+  "is_hyper_param_search": false,
+  "is_local_process_zero": true,
+  "is_world_process_zero": true,
+  "log_history": [
+    {
+      "epoch": 1.0,
+      "eval_accuracy": 0.509090909090909,
+      "eval_f1": 0.505889614624127,
+      "eval_loss": 0.7312264442443848,
+      "eval_precision": 0.5035876977053448,
+      "eval_recall": 0.509090909090909,
+      "eval_runtime": 4.2601,
+      "eval_samples_per_second": 38.732,
+      "eval_steps_per_second": 2.582,
+      "step": 69
+    },
+    {
+      "epoch": 2.0,
+      "eval_accuracy": 0.5212121212121212,
+      "eval_f1": 0.4596613390342394,
+      "eval_loss": 0.6977775692939758,
+      "eval_precision": 0.4543893036646659,
+      "eval_recall": 0.5212121212121212,
+      "eval_runtime": 3.9765,
+      "eval_samples_per_second": 41.494,
+      "eval_steps_per_second": 2.766,
+      "step": 138
+    },
+    {
+      "epoch": 2.9,
+      "grad_norm": 2.861940383911133,
+      "learning_rate": 4.202898550724638e-05,
+      "loss": 0.8716,
+      "step": 200
+    },
+    {
+      "epoch": 3.0,
+      "eval_accuracy": 0.45454545454545453,
+      "eval_f1": 0.45454545454545453,
+      "eval_loss": 0.7020878791809082,
+      "eval_precision": 0.45454545454545453,
+      "eval_recall": 0.45454545454545453,
+      "eval_runtime": 3.951,
+      "eval_samples_per_second": 41.762,
+      "eval_steps_per_second": 2.784,
+      "step": 207
+    }
+  ],
+  "logging_steps": 200,
+  "max_steps": 345,
+  "num_input_tokens_seen": 0,
+  "num_train_epochs": 5,
+  "save_steps": 500,
+  "total_flos": 873640152880128.0,
+  "train_batch_size": 16,
+  "trial_name": null,
+  "trial_params": null
+}

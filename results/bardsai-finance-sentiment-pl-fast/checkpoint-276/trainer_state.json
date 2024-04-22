@@ -1,0 +1,76 @@
+{
+  "best_metric": 0.5878787878787879,
+  "best_model_checkpoint": "./results/bardsai-finance-sentiment-pl-fast/checkpoint-138",
+  "epoch": 4.0,
+  "eval_steps": 500,
+  "global_step": 276,
+  "is_hyper_param_search": false,
+  "is_local_process_zero": true,
+  "is_world_process_zero": true,
+  "log_history": [
+    {
+      "epoch": 1.0,
+      "eval_accuracy": 0.4909090909090909,
+      "eval_f1": 0.4972698455748987,
+      "eval_loss": 0.8550912737846375,
+      "eval_precision": 0.5186190397624154,
+      "eval_recall": 0.4909090909090909,
+      "eval_runtime": 2.1353,
+      "eval_samples_per_second": 77.273,
+      "eval_steps_per_second": 5.152,
+      "step": 69
+    },
+    {
+      "epoch": 2.0,
+      "eval_accuracy": 0.5878787878787879,
+      "eval_f1": 0.4369673748984094,
+      "eval_loss": 0.6972062587738037,
+      "eval_precision": 0.34770879526977083,
+      "eval_recall": 0.5878787878787879,
+      "eval_runtime": 2.2338,
+      "eval_samples_per_second": 73.866,
+      "eval_steps_per_second": 4.924,
+      "step": 138
+    },
+    {
+      "epoch": 2.9,
+      "grad_norm": 1.0743712186813354,
+      "learning_rate": 4.202898550724638e-05,
+      "loss": 1.113,
+      "step": 200
+    },
+    {
+      "epoch": 3.0,
+      "eval_accuracy": 0.5757575757575758,
+      "eval_f1": 0.5554950425918168,
+      "eval_loss": 0.6930549144744873,
+      "eval_precision": 0.5592194674012856,
+      "eval_recall": 0.5757575757575758,
+      "eval_runtime": 2.1473,
+      "eval_samples_per_second": 76.84,
+      "eval_steps_per_second": 5.123,
+      "step": 207
+    },
+    {
+      "epoch": 4.0,
+      "eval_accuracy": 0.5878787878787879,
+      "eval_f1": 0.4369673748984094,
+      "eval_loss": 0.6816660761833191,
+      "eval_precision": 0.34770879526977083,
+      "eval_recall": 0.5878787878787879,
+      "eval_runtime": 2.0883,
+      "eval_samples_per_second": 79.012,
+      "eval_steps_per_second": 5.267,
+      "step": 276
+    }
+  ],
+  "logging_steps": 200,
+  "max_steps": 345,
+  "num_input_tokens_seen": 0,
+  "num_train_epochs": 5,
+  "save_steps": 500,
+  "total_flos": 586455154716672.0,
+  "train_batch_size": 16,
+  "trial_name": null,
+  "trial_params": null
+}
