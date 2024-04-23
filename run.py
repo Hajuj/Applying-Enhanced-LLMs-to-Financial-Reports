@@ -27,20 +27,47 @@ adapter_config_list = [LoRAConfig(), UniPELTConfig(), MAMConfig(), ConfigUnion(L
                                                                                            use_gating=True)), ]
 
 # List of [model_name, adapter_name, column_name] combinations
+# combinations = [
+#     ["bardsai/finance-sentiment-pl-fast", True, 'AnalystNoteList', adapter_config_list[0]],
+#     ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'AnalystNoteList', adapter_config_list[0]],
+#     ["yiyanghkust/finbert-tone", True, 'AnalystNoteList', adapter_config_list[0]],
+#     ["nickmuchi/deberta-v3-base-finetuned-finance-text-classification", True, 'AnalystNoteList',
+#      adapter_config_list[0]],
+#     ["ProsusAI/finbert", True, 'AnalystNoteList', adapter_config_list[0]],
+#     ["ahmedrachid/FinancialBERT-Sentiment-Analysis", True, 'AnalystNoteList', adapter_config_list[0]],
+#     ["soleimanian/financial-roberta-large-sentiment", True, 'AnalystNoteList', adapter_config_list[0]],
+#     ["RashidNLP/Finance-Sentiment-Classification", True, 'AnalystNoteList', adapter_config_list[0]],
+#     ["siebert/sentiment-roberta-large-english", True, 'AnalystNoteList', adapter_config_list[0]],
+#     ["kwang123/bert-sentiment-analysis", True, 'AnalystNoteList', adapter_config_list[0]],
+#     ["distilbert/distilbert-base-uncased-finetuned-sst-2-english", True, 'AnalystNoteList', adapter_config_list[0]],
+# ]
+
+# Fine-tuning adapter for best two models
 combinations = [
-    ["bardsai/finance-sentiment-pl-fast", True, 'AnalystNoteList', adapter_config_list[0]],
-    ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'AnalystNoteList', adapter_config_list[0]],
-    ["yiyanghkust/finbert-tone", True, 'AnalystNoteList', adapter_config_list[0]],
-    ["nickmuchi/deberta-v3-base-finetuned-finance-text-classification", True, 'AnalystNoteList',
-     adapter_config_list[0]],
-    ["ProsusAI/finbert", True, 'AnalystNoteList', adapter_config_list[0]],
-    ["ahmedrachid/FinancialBERT-Sentiment-Analysis", True, 'AnalystNoteList', adapter_config_list[0]],
-    ["soleimanian/financial-roberta-large-sentiment", True, 'AnalystNoteList', adapter_config_list[0]],
-    ["RashidNLP/Finance-Sentiment-Classification", True, 'AnalystNoteList', adapter_config_list[0]],
-    ["siebert/sentiment-roberta-large-english", True, 'AnalystNoteList', adapter_config_list[0]],
-    ["kwang123/bert-sentiment-analysis", True, 'AnalystNoteList', adapter_config_list[0]],
-    ["distilbert/distilbert-base-uncased-finetuned-sst-2-english", True, 'AnalystNoteList', adapter_config_list[0]],
+    ["yiyanghkust/finbert-tone", True, 'AnalystNoteList', adapter_config_list[1]],
+    ["yiyanghkust/finbert-tone", True, 'AnalystNoteList', adapter_config_list[2]],
+    ["yiyanghkust/finbert-tone", True, 'AnalystNoteList', adapter_config_list[3]],
+    ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'AnalystNoteList', adapter_config_list[1]],
+    ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'AnalystNoteList', adapter_config_list[2]],
+    ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'AnalystNoteList', adapter_config_list[3]],
 ]
+
+# List for different input columns, for the best model with best adapterconfig:
+# BullsList, BearsList, ResearchThesisList, MoatAnalysis, RiskAnalysis, CapitalAllocation, Profile, FinancialStrengthText
+# combinations = [
+#     ["yiyanghkust/finbert-tone", True, 'AnalystNoteList', adapter_config_list[1]],
+#     ["yiyanghkust/finbert-tone", True, 'AnalystNoteList', adapter_config_list[2]],
+#     ["yiyanghkust/finbert-tone", True, 'AnalystNoteList', adapter_config_list[3]],
+#     ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'AnalystNoteList', adapter_config_list[1]],
+#     ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'AnalystNoteList', adapter_config_list[2]],
+#     ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'AnalystNoteList', adapter_config_list[3]],
+# ]
+
+# List for fine-tuning LLM
+# combinations = [
+#     ["yiyanghkust/finbert-tone", False, 'AnalystNoteList'],
+#     ["nickmuchi/sec-bert-finetuned-finance-classification", False, 'AnalystNoteList'],
+# ]
 
 # Load the training and evaluation data
 train_df = pd.read_csv('1. data/final/train.csv')
