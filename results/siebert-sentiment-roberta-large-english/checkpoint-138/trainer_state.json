@@ -1,0 +1,45 @@
+{
+  "best_metric": 0.5696969696969697,
+  "best_model_checkpoint": "./results/siebert-sentiment-roberta-large-english/checkpoint-138",
+  "epoch": 2.0,
+  "eval_steps": 500,
+  "global_step": 138,
+  "is_hyper_param_search": false,
+  "is_local_process_zero": true,
+  "is_world_process_zero": true,
+  "log_history": [
+    {
+      "epoch": 1.0,
+      "eval_accuracy": 0.509090909090909,
+      "eval_f1": 0.4794592420173903,
+      "eval_loss": 0.6980167031288147,
+      "eval_precision": 0.5961454545454545,
+      "eval_recall": 0.509090909090909,
+      "eval_runtime": 12.6837,
+      "eval_samples_per_second": 13.009,
+      "eval_steps_per_second": 0.867,
+      "step": 69
+    },
+    {
+      "epoch": 2.0,
+      "eval_accuracy": 0.5696969696969697,
+      "eval_f1": 0.4784771770187115,
+      "eval_loss": 0.6889474391937256,
+      "eval_precision": 0.5097373737373737,
+      "eval_recall": 0.5696969696969697,
+      "eval_runtime": 12.2043,
+      "eval_samples_per_second": 13.52,
+      "eval_steps_per_second": 0.901,
+      "step": 138
+    }
+  ],
+  "logging_steps": 200,
+  "max_steps": 345,
+  "num_input_tokens_seen": 0,
+  "num_train_epochs": 5,
+  "save_steps": 500,
+  "total_flos": 2061170105044992.0,
+  "train_batch_size": 16,
+  "trial_name": null,
+  "trial_params": null
+}

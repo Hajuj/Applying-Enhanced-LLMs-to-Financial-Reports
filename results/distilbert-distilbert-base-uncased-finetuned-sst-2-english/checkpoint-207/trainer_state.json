@@ -1,0 +1,64 @@
+{
+  "best_metric": 0.593939393939394,
+  "best_model_checkpoint": "./results/distilbert-distilbert-base-uncased-finetuned-sst-2-english/checkpoint-138",
+  "epoch": 3.0,
+  "eval_steps": 500,
+  "global_step": 207,
+  "is_hyper_param_search": false,
+  "is_local_process_zero": true,
+  "is_world_process_zero": true,
+  "log_history": [
+    {
+      "epoch": 1.0,
+      "eval_accuracy": 0.5878787878787879,
+      "eval_f1": 0.4352995604904002,
+      "eval_loss": 0.6736161708831787,
+      "eval_precision": 0.34560146923783286,
+      "eval_recall": 0.5878787878787879,
+      "eval_runtime": 2.0955,
+      "eval_samples_per_second": 78.74,
+      "eval_steps_per_second": 5.249,
+      "step": 69
+    },
+    {
+      "epoch": 2.0,
+      "eval_accuracy": 0.593939393939394,
+      "eval_f1": 0.4489129172787344,
+      "eval_loss": 0.6772477626800537,
+      "eval_precision": 0.759830007390983,
+      "eval_recall": 0.593939393939394,
+      "eval_runtime": 2.0818,
+      "eval_samples_per_second": 79.26,
+      "eval_steps_per_second": 5.284,
+      "step": 138
+    },
+    {
+      "epoch": 2.9,
+      "grad_norm": 1.333243489265442,
+      "learning_rate": 4.202898550724638e-05,
+      "loss": 0.7702,
+      "step": 200
+    },
+    {
+      "epoch": 3.0,
+      "eval_accuracy": 0.5818181818181818,
+      "eval_f1": 0.5614215644475422,
+      "eval_loss": 0.6734123229980469,
+      "eval_precision": 0.564006734006734,
+      "eval_recall": 0.5818181818181818,
+      "eval_runtime": 2.1272,
+      "eval_samples_per_second": 77.567,
+      "eval_steps_per_second": 5.171,
+      "step": 207
+    }
+  ],
+  "logging_steps": 200,
+  "max_steps": 345,
+  "num_input_tokens_seen": 0,
+  "num_train_epochs": 5,
+  "save_steps": 500,
+  "total_flos": 439833548961792.0,
+  "train_batch_size": 16,
+  "trial_name": null,
+  "trial_params": null
+}

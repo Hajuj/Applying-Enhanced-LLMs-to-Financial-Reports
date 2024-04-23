@@ -1,0 +1,33 @@
+{
+  "best_metric": 0.5212121212121212,
+  "best_model_checkpoint": "./results/kwang123-bert-sentiment-analysis/checkpoint-69",
+  "epoch": 1.0,
+  "eval_steps": 500,
+  "global_step": 69,
+  "is_hyper_param_search": false,
+  "is_local_process_zero": true,
+  "is_world_process_zero": true,
+  "log_history": [
+    {
+      "epoch": 1.0,
+      "eval_accuracy": 0.5212121212121212,
+      "eval_f1": 0.49156062641382153,
+      "eval_loss": 0.9830741286277771,
+      "eval_precision": 0.624398086124402,
+      "eval_recall": 0.5212121212121212,
+      "eval_runtime": 4.0649,
+      "eval_samples_per_second": 40.591,
+      "eval_steps_per_second": 2.706,
+      "step": 69
+    }
+  ],
+  "logging_steps": 200,
+  "max_steps": 345,
+  "num_input_tokens_seen": 0,
+  "num_train_epochs": 5,
+  "save_steps": 500,
+  "total_flos": 291218595677184.0,
+  "train_batch_size": 16,
+  "trial_name": null,
+  "trial_params": null
+}

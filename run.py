@@ -20,22 +20,21 @@ models_to_test = ["nickmuchi/sec-bert-finetuned-finance-classification",
                   "kwang123/bert-sentiment-analysis",
                   "distilbert/distilbert-base-uncased-finetuned-sst-2-english"]
 
-adapter_config_list = [LoRAConfig(), UniPELTConfig(), MAMConfig(), ConfigUnion(LoRAConfig(r=8, use_gating=True), PrefixTuningConfig(prefix_length=10, use_gating=True), SeqBnConfig(reduction_factor=16, use_gating=True)), ]
-
-# Load the training and evaluation data
+adapter_config_list = [LoRAConfig(), UniPELTConfig(), MAMConfig(), ConfigUnion(LoRAConfig(r=8, use_gating=True),
+                                                                               PrefixTuningConfig(prefix_length=10,
+                                                                                                  use_gating=True),
+                                                                               SeqBnConfig(reduction_factor=16,
+                                                                                           use_gating=True)), ]
 
 # List of [model_name, adapter_name, column_name] combinations
-# combinations = [
-#     ["bardsai/finance-sentiment-pl-fast", True, 'AnalystNoteList', adapter_config_list[0]],
-#     ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'AnalystNoteList', adapter_config_list[0]],
-#     ["yiyanghkust/finbert-tone", True, 'AnalystNoteList', adapter_config_list[0]],
-#     ["nickmuchi/deberta-v3-base-finetuned-finance-text-classification", True, 'AnalystNoteList', adapter_config_list[0]],
-#     ["ProsusAI/finbert", True, 'AnalystNoteList', adapter_config_list[0]],
-#     ["ahmedrachid/FinancialBERT-Sentiment-Analysis", True, 'AnalystNoteList', adapter_config_list[0]],
-#     # Add more combinations as needed
-# ]
-
 combinations = [
+    ["bardsai/finance-sentiment-pl-fast", True, 'AnalystNoteList', adapter_config_list[0]],
+    ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'AnalystNoteList', adapter_config_list[0]],
+    ["yiyanghkust/finbert-tone", True, 'AnalystNoteList', adapter_config_list[0]],
+    ["nickmuchi/deberta-v3-base-finetuned-finance-text-classification", True, 'AnalystNoteList',
+     adapter_config_list[0]],
+    ["ProsusAI/finbert", True, 'AnalystNoteList', adapter_config_list[0]],
+    ["ahmedrachid/FinancialBERT-Sentiment-Analysis", True, 'AnalystNoteList', adapter_config_list[0]],
     ["soleimanian/financial-roberta-large-sentiment", True, 'AnalystNoteList', adapter_config_list[0]],
     ["RashidNLP/Finance-Sentiment-Classification", True, 'AnalystNoteList', adapter_config_list[0]],
     ["siebert/sentiment-roberta-large-english", True, 'AnalystNoteList', adapter_config_list[0]],
@@ -48,10 +47,10 @@ train_df = pd.read_csv('1. data/final/train.csv')
 dev_df = pd.read_csv('1. data/final/dev.csv')
 test_df = pd.read_csv('1. data/final/test.csv')
 
-
 for model_name, adapter, column_name, adapter_config in combinations:
     # Create an instance of CustomTransformerModel
-    model = CustomTransformerModel(model_name=model_name, adapter=adapter, column_name=column_name, adapter_config=adapter_config)
+    model = CustomTransformerModel(model_name=model_name, adapter=adapter, column_name=column_name,
+                                   adapter_config=adapter_config)
 
     # Build the model
     model.build_model()

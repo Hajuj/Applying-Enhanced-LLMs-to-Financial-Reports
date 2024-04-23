@@ -1,0 +1,33 @@
+{
+  "best_metric": 0.6242424242424243,
+  "best_model_checkpoint": "./results/RashidNLP-Finance-Sentiment-Classification/checkpoint-69",
+  "epoch": 1.0,
+  "eval_steps": 500,
+  "global_step": 69,
+  "is_hyper_param_search": false,
+  "is_local_process_zero": true,
+  "is_world_process_zero": true,
+  "log_history": [
+    {
+      "epoch": 1.0,
+      "eval_accuracy": 0.6242424242424243,
+      "eval_f1": 0.5780756280756281,
+      "eval_loss": 0.6798421144485474,
+      "eval_precision": 0.6192498499067842,
+      "eval_recall": 0.6242424242424243,
+      "eval_runtime": 9.6855,
+      "eval_samples_per_second": 17.036,
+      "eval_steps_per_second": 1.136,
+      "step": 69
+    }
+  ],
+  "logging_steps": 200,
+  "max_steps": 345,
+  "num_input_tokens_seen": 0,
+  "num_train_epochs": 5,
+  "save_steps": 500,
+  "total_flos": 291218588900352.0,
+  "train_batch_size": 16,
+  "trial_name": null,
+  "trial_params": null
+}

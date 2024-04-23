@@ -1,0 +1,88 @@
+{
+  "best_metric": 0.5212121212121212,
+  "best_model_checkpoint": "./results/kwang123-bert-sentiment-analysis/checkpoint-69",
+  "epoch": 5.0,
+  "eval_steps": 500,
+  "global_step": 345,
+  "is_hyper_param_search": false,
+  "is_local_process_zero": true,
+  "is_world_process_zero": true,
+  "log_history": [
+    {
+      "epoch": 1.0,
+      "eval_accuracy": 0.5212121212121212,
+      "eval_f1": 0.49156062641382153,
+      "eval_loss": 0.9830741286277771,
+      "eval_precision": 0.624398086124402,
+      "eval_recall": 0.5212121212121212,
+      "eval_runtime": 4.0649,
+      "eval_samples_per_second": 40.591,
+      "eval_steps_per_second": 2.706,
+      "step": 69
+    },
+    {
+      "epoch": 2.0,
+      "eval_accuracy": 0.48484848484848486,
+      "eval_f1": 0.4397691469245295,
+      "eval_loss": 0.7785441279411316,
+      "eval_precision": 0.427046287046287,
+      "eval_recall": 0.48484848484848486,
+      "eval_runtime": 3.9453,
+      "eval_samples_per_second": 41.822,
+      "eval_steps_per_second": 2.788,
+      "step": 138
+    },
+    {
+      "epoch": 2.9,
+      "grad_norm": 2.283903121948242,
+      "learning_rate": 4.202898550724638e-05,
+      "loss": 1.7198,
+      "step": 200
+    },
+    {
+      "epoch": 3.0,
+      "eval_accuracy": 0.48484848484848486,
+      "eval_f1": 0.45972221707305916,
+      "eval_loss": 0.7259281277656555,
+      "eval_precision": 0.4515488215488216,
+      "eval_recall": 0.48484848484848486,
+      "eval_runtime": 3.9582,
+      "eval_samples_per_second": 41.686,
+      "eval_steps_per_second": 2.779,
+      "step": 207
+    },
+    {
+      "epoch": 4.0,
+      "eval_accuracy": 0.48484848484848486,
+      "eval_f1": 0.4244006366036364,
+      "eval_loss": 0.7192014455795288,
+      "eval_precision": 0.40514168049665,
+      "eval_recall": 0.48484848484848486,
+      "eval_runtime": 4.435,
+      "eval_samples_per_second": 37.204,
+      "eval_steps_per_second": 2.48,
+      "step": 276
+    },
+    {
+      "epoch": 5.0,
+      "eval_accuracy": 0.48484848484848486,
+      "eval_f1": 0.4244006366036364,
+      "eval_loss": 0.7048812508583069,
+      "eval_precision": 0.40514168049665,
+      "eval_recall": 0.48484848484848486,
+      "eval_runtime": 5.1953,
+      "eval_samples_per_second": 31.759,
+      "eval_steps_per_second": 2.117,
+      "step": 345
+    }
+  ],
+  "logging_steps": 200,
+  "max_steps": 345,
+  "num_input_tokens_seen": 0,
+  "num_train_epochs": 5,
+  "save_steps": 500,
+  "total_flos": 1456092978385920.0,
+  "train_batch_size": 16,
+  "trial_name": null,
+  "trial_params": null
+}
