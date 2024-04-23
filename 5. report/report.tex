@@ -44,57 +44,60 @@ LLMs, PEFT, Adapters, Hugging Face, Finance
 Motivation and hypothesis \cite{Poth2023,Kokhlikyan2020,Russell2021,Kauermann2021}
 
 Why are we doing this and what doe we hope will be the results
-\section{Data}
+\section{Data} %Jonas
 Report and financial market data.
 Where does the report come from? How does it look like (JSON preview)? What is the most important information?
 How do we merge the market data? Where does it come from?
-\subsection{Data Preprocessing}
+\subsection{Data Preprocessing}%Jonas
 How do we preprocess the data? What are the challenges?
 Why do we process it that way?
 
-\section{Methodology and Foundations}
+\section{Foundations} %Mohamad
 What are the foundations of our approach? What is the goal? Sentiment Classification.
-\subsection{Transformer models}
+\subsection{Transformer models}%Mohamad
 What are transformer models? 
 Build an intuition on self-attention and multi-head attention. 
 Use the presentation pictures (youtube video) and reproduce the images quickly in a sketch style on iPad.
-\subsection{Parameter efficient fine tuning (PEFT)}
+\subsection{Parameter efficient fine tuning (PEFT)}%Mohamad
 We want to explore many models and fine-tune them on our data. So we need a more efficient approach: PEFT.
 What are adapters? Why do we use them? How do we use them?
 What is so effficient about it? How does it work?
 Show image from IntSys lecture (incl sources)
-Quickly describe own experiment and results as table for SST2.
-\subsection{Hugging Face}
+\subsection{Hugging Face}%Mohamad
 What is Hugging Face? Why do we use it? What are the benefits?
-\subsection{Evaluation}
+
+
+\section{Approach}%Jonas
+Model building and training and Evaluation pipeline.
+Quickly describe own experiment and results as table for SST2.
+
+\subsection{Model selection}%Jonas
+How did we select the models? What are the models?
+(all relevant to sentiment and finance)
+\subsection{Adapter configuration}%Mohamad
+How can adapters be configured? What are the options? What is the industry standard for our problem and what did we use?
+\subsection{Exploration to Exploitation}%Jonas
+How do we explore the models? Just run them all on the same configuration and compare them.
+How do we exploit the best model? We try to optimize it further and let it run for all the different text columns.
+\subsection{Evaluation} %Jonas
 How do we evaluate the models? What are the metrics? What is the baseline?
 What is ROC (build intuition).
 Why ROC AUC and not F1 score?
 
-\section{Approach}
-Model building and training and Evaluation pipeline.
-\subsection{Model selection}
-How did we select the models? What are the models?
-(all relevant to sentiment and finance)
-\subsection{Adapter configuration}
-How can adapters be configured? What are the options? What is the industry standard for our problem and what did we use?
-\subsection{Exploration to Exploitation}
-How do we explore the models? Just run them all on the same configuration and compare them.
-How do we exploit the best model? We try to optimize it further and let it run for all the different text columns.
-\subsection{Benchmarking}
+\section{Results}%Jonas
+Show the results of the models.  Show top 5 models and their ROC AUC after initial runs.
+Show the results of the top 5 ROC after optimization.
+\subsection{Models in comparison}%Jonas
+Discuss results and wheather the performance is enough to outperform the analysts.
+\subsection{Benchmarking}%Jonas
 What are our benchmarks? What are the results?
 We use the analysts own predictions as input for a logistic regression model as benchmark.
 And we use all the categorial information from the results and yahoo finance as input for a XGBoost random forest model as benchmark.
 Results: show \texttt{build\_roc} for n=0 and baseline=True
 
-\section{Results}
-Show the results of the models.  Show top 5 models and their ROC AUC after initial runs.
-Show the results of the top 5 ROC after optimization.
-\subsection{Models in comparison}
-Discuss results and wheather the performance is enough to outperform the analysts.
-\subsection{Insights via CAPTUM}
+\subsection{Insights via CAPTUM}%Mohamad
 What are the models using as input? Use CAPTUM and quickly describe the gradient approach to obtain feature attribution.
-\subsection{Training analysis}
+\subsection{Training analysis}%Mohamad
 Show some plots about runtime and training time. Compare with Loss, Accuracy etc
 
 \section{Conclusion}
