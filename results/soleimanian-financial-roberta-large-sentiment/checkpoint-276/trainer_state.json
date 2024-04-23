@@ -1,0 +1,76 @@
+{
+  "best_metric": 0.6181818181818182,
+  "best_model_checkpoint": "./results/soleimanian-financial-roberta-large-sentiment/checkpoint-138",
+  "epoch": 4.0,
+  "eval_steps": 500,
+  "global_step": 276,
+  "is_hyper_param_search": false,
+  "is_local_process_zero": true,
+  "is_world_process_zero": true,
+  "log_history": [
+    {
+      "epoch": 1.0,
+      "eval_accuracy": 0.6,
+      "eval_f1": 0.6025089605734767,
+      "eval_loss": 0.6743155717849731,
+      "eval_precision": 0.607806031933767,
+      "eval_recall": 0.6,
+      "eval_runtime": 11.5027,
+      "eval_samples_per_second": 14.344,
+      "eval_steps_per_second": 0.956,
+      "step": 69
+    },
+    {
+      "epoch": 2.0,
+      "eval_accuracy": 0.6181818181818182,
+      "eval_f1": 0.5995588197129733,
+      "eval_loss": 0.6719573736190796,
+      "eval_precision": 0.6061784511784511,
+      "eval_recall": 0.6181818181818182,
+      "eval_runtime": 11.4654,
+      "eval_samples_per_second": 14.391,
+      "eval_steps_per_second": 0.959,
+      "step": 138
+    },
+    {
+      "epoch": 2.9,
+      "grad_norm": 3.901796817779541,
+      "learning_rate": 4.202898550724638e-05,
+      "loss": 0.7852,
+      "step": 200
+    },
+    {
+      "epoch": 3.0,
+      "eval_accuracy": 0.5757575757575758,
+      "eval_f1": 0.5236337736337735,
+      "eval_loss": 0.6975968480110168,
+      "eval_precision": 0.5432110468606819,
+      "eval_recall": 0.5757575757575758,
+      "eval_runtime": 11.48,
+      "eval_samples_per_second": 14.373,
+      "eval_steps_per_second": 0.958,
+      "step": 207
+    },
+    {
+      "epoch": 4.0,
+      "eval_accuracy": 0.6,
+      "eval_f1": 0.5048,
+      "eval_loss": 0.6780073046684265,
+      "eval_precision": 0.5938997821350762,
+      "eval_recall": 0.6,
+      "eval_runtime": 11.4326,
+      "eval_samples_per_second": 14.432,
+      "eval_steps_per_second": 0.962,
+      "step": 276
+    }
+  ],
+  "logging_steps": 200,
+  "max_steps": 345,
+  "num_input_tokens_seen": 0,
+  "num_train_epochs": 5,
+  "save_steps": 500,
+  "total_flos": 4122354102595584.0,
+  "train_batch_size": 16,
+  "trial_name": null,
+  "trial_params": null
+}

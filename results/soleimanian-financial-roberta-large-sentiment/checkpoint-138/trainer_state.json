@@ -1,0 +1,45 @@
+{
+  "best_metric": 0.6181818181818182,
+  "best_model_checkpoint": "./results/soleimanian-financial-roberta-large-sentiment/checkpoint-138",
+  "epoch": 2.0,
+  "eval_steps": 500,
+  "global_step": 138,
+  "is_hyper_param_search": false,
+  "is_local_process_zero": true,
+  "is_world_process_zero": true,
+  "log_history": [
+    {
+      "epoch": 1.0,
+      "eval_accuracy": 0.6,
+      "eval_f1": 0.6025089605734767,
+      "eval_loss": 0.6743155717849731,
+      "eval_precision": 0.607806031933767,
+      "eval_recall": 0.6,
+      "eval_runtime": 11.5027,
+      "eval_samples_per_second": 14.344,
+      "eval_steps_per_second": 0.956,
+      "step": 69
+    },
+    {
+      "epoch": 2.0,
+      "eval_accuracy": 0.6181818181818182,
+      "eval_f1": 0.5995588197129733,
+      "eval_loss": 0.6719573736190796,
+      "eval_precision": 0.6061784511784511,
+      "eval_recall": 0.6181818181818182,
+      "eval_runtime": 11.4654,
+      "eval_samples_per_second": 14.391,
+      "eval_steps_per_second": 0.959,
+      "step": 138
+    }
+  ],
+  "logging_steps": 200,
+  "max_steps": 345,
+  "num_input_tokens_seen": 0,
+  "num_train_epochs": 5,
+  "save_steps": 500,
+  "total_flos": 2061177051297792.0,
+  "train_batch_size": 16,
+  "trial_name": null,
+  "trial_params": null
+}
