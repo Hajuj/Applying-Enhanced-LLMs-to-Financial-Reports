@@ -127,7 +127,7 @@ class CustomTransformerModel:
         test_dataset = TextDataset(test_df[self.column_name], test_df['Label'], self.tokenizer)
 
         training_args = TrainingArguments(
-            output_dir=f'./results/{self.model_name.replace("/", "-")}',
+            output_dir=f'./results/{str(self.adapter_config)}/{self.model_name.replace("/", "-")}',
             num_train_epochs=epochs,
             per_device_train_batch_size=batch_size,
             per_device_eval_batch_size=batch_size,
@@ -205,7 +205,7 @@ class CustomTransformerModel:
         probabilities = torch.softmax(torch.tensor(logits), dim=-1).numpy()
 
         # Save predictions to a CSV file
-        filename = f'{self.model_name.replace("/", "-")}_{str(self.adapter)}_{self.column_name}_{date.strftime("%Y-%m-%d")}_predictions.csv'
+        filename = f'{self.model_name.replace("/", "-")}_{str(self.adapter)}_{self.column_name}_{str(self.adapter_config)}_{date.strftime("%Y-%m-%d")}_predictions.csv'
         predictions_df = pd.DataFrame(probabilities)
         predictions_df.to_csv(f'2. models/predictions/{filename}', index=False)
 

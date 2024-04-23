@@ -1,0 +1,76 @@
+{
+  "best_metric": 0.6121212121212121,
+  "best_model_checkpoint": "./results/<adapters.configuration.adapter_config.UniPELTConfig object at 0x13c81c4a0>/yiyanghkust-finbert-tone/checkpoint-207",
+  "epoch": 4.0,
+  "eval_steps": 500,
+  "global_step": 276,
+  "is_hyper_param_search": false,
+  "is_local_process_zero": true,
+  "is_world_process_zero": true,
+  "log_history": [
+    {
+      "epoch": 1.0,
+      "eval_accuracy": 0.6,
+      "eval_f1": 0.5667801225323349,
+      "eval_loss": 0.7971974015235901,
+      "eval_precision": 0.5820844099913868,
+      "eval_recall": 0.6,
+      "eval_runtime": 4.7791,
+      "eval_samples_per_second": 34.525,
+      "eval_steps_per_second": 2.302,
+      "step": 69
+    },
+    {
+      "epoch": 2.0,
+      "eval_accuracy": 0.503030303030303,
+      "eval_f1": 0.5068956228956228,
+      "eval_loss": 0.7229351997375488,
+      "eval_precision": 0.5179404981344446,
+      "eval_recall": 0.503030303030303,
+      "eval_runtime": 4.3777,
+      "eval_samples_per_second": 37.691,
+      "eval_steps_per_second": 2.513,
+      "step": 138
+    },
+    {
+      "epoch": 2.9,
+      "grad_norm": 3.5546674728393555,
+      "learning_rate": 4.202898550724638e-05,
+      "loss": 1.1772,
+      "step": 200
+    },
+    {
+      "epoch": 3.0,
+      "eval_accuracy": 0.6121212121212121,
+      "eval_f1": 0.615058815058815,
+      "eval_loss": 0.6974498629570007,
+      "eval_precision": 0.6244206773618538,
+      "eval_recall": 0.6121212121212121,
+      "eval_runtime": 4.4133,
+      "eval_samples_per_second": 37.387,
+      "eval_steps_per_second": 2.492,
+      "step": 207
+    },
+    {
+      "epoch": 4.0,
+      "eval_accuracy": 0.6121212121212121,
+      "eval_f1": 0.6121212121212121,
+      "eval_loss": 0.6653540134429932,
+      "eval_precision": 0.6121212121212121,
+      "eval_recall": 0.6121212121212121,
+      "eval_runtime": 4.885,
+      "eval_samples_per_second": 33.777,
+      "eval_steps_per_second": 2.252,
+      "step": 276
+    }
+  ],
+  "logging_steps": 200,
+  "max_steps": 345,
+  "num_input_tokens_seen": 0,
+  "num_train_epochs": 5,
+  "save_steps": 500,
+  "total_flos": 1310972661166080.0,
+  "train_batch_size": 16,
+  "trial_name": null,
+  "trial_params": null
+}

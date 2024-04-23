@@ -1,0 +1,33 @@
+{
+  "best_metric": 0.6242424242424243,
+  "best_model_checkpoint": "./results/<adapters.configuration.adapter_config.ConfigUnion object at 0x345900800>/yiyanghkust-finbert-tone/checkpoint-69",
+  "epoch": 1.0,
+  "eval_steps": 500,
+  "global_step": 69,
+  "is_hyper_param_search": false,
+  "is_local_process_zero": true,
+  "is_world_process_zero": true,
+  "log_history": [
+    {
+      "epoch": 1.0,
+      "eval_accuracy": 0.6242424242424243,
+      "eval_f1": 0.5896331738437002,
+      "eval_loss": 0.8249672651290894,
+      "eval_precision": 0.6148970622253065,
+      "eval_recall": 0.6242424242424243,
+      "eval_runtime": 5.279,
+      "eval_samples_per_second": 31.256,
+      "eval_steps_per_second": 2.084,
+      "step": 69
+    }
+  ],
+  "logging_steps": 200,
+  "max_steps": 345,
+  "num_input_tokens_seen": 0,
+  "num_train_epochs": 5,
+  "save_steps": 500,
+  "total_flos": 327743165291520.0,
+  "train_batch_size": 16,
+  "trial_name": null,
+  "trial_params": null
+}
