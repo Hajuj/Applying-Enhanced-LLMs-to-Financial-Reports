@@ -38,13 +38,13 @@ Use the various text elements to fine-tune different transformer models (maybe m
 - ~~Build custom ROC curves on top of confusion matrix/other evaluation methods and save all metrics~~
 - ~~Show why adapters are useful: no (huge) loss in quality while training time is significantly reduced~~
 	- ~~Use huggingface sst2 to demonstrate (ROC curves + training time)~~
-- Run for analyst note and use as label the moving average (see old project) (Deadline: 22.04.2024)
+- ~~Run for analyst note and use as label the moving average (see old project) (Deadline: 22.04.2024)~~
 ### Prio 3: Features (parallel)
 - Single out best model/adapters, discard efficiency and try to optimize and run for other text columns
 - ~~Finish automated evaluation plots for top $n$ models~~
-- Benchmarking:
-	- Add xgBoost based on sector, author name etc
-	- Add xgBoost based on analysts fairprice (baseline)
+- ~~Benchmarking:~~
+	- ~~Add xgBoost based on sector, author name etc~~
+	- ~~Add xgBoost based on analysts fairprice (baseline)~~
 - Explore with feature attribution methods for the best performing model to gain deeper insights: what part of the input text is the reason for the prediction? (Focus on interpretability and explainable AI) (Use e.g. Captum to find important parts of text that lead to the highest probabilities of classifiers)
 
 ### Report, presentation & Markdown file
