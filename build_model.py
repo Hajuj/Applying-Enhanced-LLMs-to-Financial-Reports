@@ -205,7 +205,7 @@ class CustomTransformerModel:
         probabilities = torch.softmax(torch.tensor(logits), dim=-1).numpy()
 
         # Save predictions to a CSV file
-        filename = f'{self.model_name.replace("/", "-")}_{str(self.adapter)}_{self.column_name}_{str(self.adapter_config).split(" ")[0]}_{date.strftime("%Y-%m-%d")}_predictions.csv'
+        filename = f'{self.model_name.replace("/", "-")}_{str(self.adapter)}_{self.column_name}_{str(self.adapter_config).split(".")[-1].split(" ")[0]}_{date.strftime("%Y-%m-%d")}_predictions.csv'
         predictions_df = pd.DataFrame(probabilities)
         predictions_df.to_csv(f'2. models/predictions/{filename}', index=False)
 

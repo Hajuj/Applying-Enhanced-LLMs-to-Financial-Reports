@@ -72,19 +72,19 @@ combinations = [
 # Load the training and evaluation data
 train_df = pd.read_csv('1. data/final/train.csv')
 dev_df = pd.read_csv('1. data/final/dev.csv')
-test_df = pd.read_csv('1. data/final/test.csv')
+# test_df = pd.read_csv('1. data/final/test.csv')
 
-for model_name, adapter, column_name, adapter_config in combinations:
-    # Create an instance of CustomTransformerModel
-    model = CustomTransformerModel(model_name=model_name, adapter=adapter, column_name=column_name,
-                                   adapter_config=adapter_config)
-
-    # Build the model
-    model.build_model()
-
-    # Train the model
-    # model.train(train_df, dev_df, test_df, epochs=1, batch_size=8, learning_rate=2e-2, seed=42, save_model=False)
-    model.train(train_df, dev_df, test_df, epochs=5, batch_size=16, learning_rate=1e-4, seed=42, save_model=False)
+# for model_name, adapter, column_name, adapter_config in combinations:
+#     # Create an instance of CustomTransformerModel
+#     model = CustomTransformerModel(model_name=model_name, adapter=adapter, column_name=column_name,
+#                                    adapter_config=adapter_config)
+#
+#     # Build the model
+#     model.build_model()
+#
+#     # Train the model
+#     # model.train(train_df, dev_df, test_df, epochs=1, batch_size=8, learning_rate=2e-2, seed=42, save_model=False)
+#     model.train(train_df, dev_df, test_df, epochs=5, batch_size=16, learning_rate=1e-4, seed=42, save_model=False)
 
 test_df = pd.read_csv('1. data/final/test.csv')
 true_labels = test_df['Label']

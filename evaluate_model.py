@@ -37,7 +37,7 @@ class ModelEvaluator:
         for model_name, adapter, column_name, adapter_config in self.combinations:
             # Construct the filename and use regex to allow all dates in the format {date.strftime("%Y-%m-%d")}
             # Construct the filename pattern
-            filename_pattern = f'{model_name.replace("/", "-")}_{str(adapter)}_{column_name}_{str(adapter_config).split(" ")[0]}_*_predictions.csv'
+            filename_pattern = f'{model_name.replace("/", "-")}_{adapter}_{column_name}_{str(adapter_config).split(".")[-1].split(" ")[0]}_*_predictions.csv'
 
             # Find all matching files
             matching_files = glob.glob(f'2. models/predictions/{filename_pattern}')
@@ -67,7 +67,7 @@ class ModelEvaluator:
                 plt.legend(loc="lower right")
                 #filename = f'{model_name.replace("/", "-")}_{str(adapter)}_{column_name}'
                 plt.savefig(
-                    f'3. evaluation/roc_curves/{model_name.replace("/", "-")}_{str(adapter)}_{column_name}_{str(adapter_config).split(" ")[0]}_{date.strftime("%Y-%m-%d")}.png')
+                    f'3. evaluation/roc_curves/{model_name.replace("/", "-")}_{str(adapter)}_{column_name}_{str(adapter_config).split(".")[-1].split(" ")[0]}_{date.strftime("%Y-%m-%d")}.png')
 
         # Save the results to a CSV file    
         # Create a DataFrame with the results
@@ -99,7 +99,13 @@ class ModelEvaluator:
             adapter_config = row['adapter_config']
             column_name = row['column_name']
             date = row['date']
-            filename = f'{model_name.replace("/", "-")}_{adapter}_{column_name}_{str(adapter_config).split(" ")[0]}_{date}_predictions.csv'
+            if 'LoRAConfig' in str(adapter_config):
+                adapter_config_name = 'LoRAConfig'
+            else:
+                # Extracts class name from a string like "<adapters.configuration.adapter_config.ClassName ...>"
+                adapter_config_name = str(adapter_config).split(".")[-1].split(" ")[0]
+            # Create the filename pattern based on the adapter_config_name
+            filename = f'{model_name.replace("/", "-")}_{adapter}_{column_name}_{adapter_config_name}_{date}_predictions.csv'
             predictions_df = pd.read_csv(f'2. models/predictions/{filename}')
             auc_score = roc_auc_score(self.true_labels, predictions_df.iloc[:, 1])
             fpr, tpr, _ = roc_curve(self.true_labels, predictions_df.iloc[:, 1])
