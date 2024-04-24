@@ -37,7 +37,7 @@ class ModelEvaluator:
         for model_name, adapter, column_name, adapter_config in self.combinations:
             # Construct the filename and use regex to allow all dates in the format {date.strftime("%Y-%m-%d")}
             # Construct the filename pattern
-            filename_pattern = f'{model_name.replace("/", "-")}_{str(adapter)}_{column_name}_*_predictions.csv'
+            filename_pattern = f'{model_name.replace("/", "-")}_{str(adapter)}_{column_name}_{str(adapter_config).split(" ")[0]}_*_predictions.csv'
 
             # Find all matching files
             matching_files = glob.glob(f'2. models/predictions/{filename_pattern}')
@@ -67,7 +67,7 @@ class ModelEvaluator:
                 plt.legend(loc="lower right")
                 #filename = f'{model_name.replace("/", "-")}_{str(adapter)}_{column_name}'
                 plt.savefig(
-                    f'3. evaluation/roc_curves/{model_name.replace("/", "-")}_{str(adapter)}_{column_name}_{date.strftime("%Y-%m-%d")}.png')
+                    f'3. evaluation/roc_curves/{model_name.replace("/", "-")}_{str(adapter)}_{column_name}_{str(adapter_config).split(" ")[0]}_{date.strftime("%Y-%m-%d")}.png')
 
         # Save the results to a CSV file    
         # Create a DataFrame with the results
@@ -96,9 +96,10 @@ class ModelEvaluator:
         for index, row in top_models.iterrows():
             model_name = row['model_name']
             adapter = row['adapter']
+            adapter_config = row['adapter_config']
             column_name = row['column_name']
             date = row['date']
-            filename = f'{model_name.replace("/", "-")}_{adapter}_{column_name}_{date}_predictions.csv'
+            filename = f'{model_name.replace("/", "-")}_{adapter}_{column_name}_{str(adapter_config).split(" ")[0]}_{date}_predictions.csv'
             predictions_df = pd.read_csv(f'2. models/predictions/{filename}')
             auc_score = roc_auc_score(self.true_labels, predictions_df.iloc[:, 1])
             fpr, tpr, _ = roc_curve(self.true_labels, predictions_df.iloc[:, 1])
