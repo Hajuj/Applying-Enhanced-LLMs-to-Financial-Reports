@@ -54,22 +54,21 @@ adapter_config_list = [LoRAConfig(), UniPELTConfig(), MAMConfig(), ConfigUnion(L
 
 # List for different input columns, for the best model with best adapterconfig:
 # BullsList, BearsList, ResearchThesisList, MoatAnalysis, RiskAnalysis, CapitalAllocation, Profile, FinancialStrengthText
-combinations = [
-    ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'BullsList', adapter_config_list[2]],
-    ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'BearsList', adapter_config_list[2]],
-    ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'ResearchThesisList', adapter_config_list[2]],
-    ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'MoatAnalysis', adapter_config_list[2]],
-    ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'RiskAnalysis', adapter_config_list[2]],
-    ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'CapitalAllocation', adapter_config_list[2]],
-    ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'Profile', adapter_config_list[2]],
-    ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'FinancialStrengthText', adapter_config_list[2]],
-]
+# combinations = [
+#     ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'BullsList', adapter_config_list[2]],
+#     ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'BearsList', adapter_config_list[2]],
+#     ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'ResearchThesisList', adapter_config_list[2]],
+#     ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'MoatAnalysis', adapter_config_list[2]],
+#     ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'RiskAnalysis', adapter_config_list[2]],
+#     ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'CapitalAllocation', adapter_config_list[2]],
+#     ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'Profile', adapter_config_list[2]],
+#     ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'FinancialStrengthText', adapter_config_list[2]],
+# ]
 
 # List for fine-tuning LLM
-# combinations = [
-#     ["yiyanghkust/finbert-tone", False, 'AnalystNoteList'],
-#     ["nickmuchi/sec-bert-finetuned-finance-classification", False, 'AnalystNoteList'],
-# ]
+combinations = [
+    ["nickmuchi/sec-bert-finetuned-finance-classification", False, 'FinancialStrengthText', adapter_config_list[2]],
+]
 
 # Load the training and evaluation data
 train_df = pd.read_csv('1. data/final/train.csv')

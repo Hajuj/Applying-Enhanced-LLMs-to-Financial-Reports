@@ -1,4 +1,5 @@
 model_name,adapter,adapter_config,column_name,auc_score,date
+nickmuchi/sec-bert-finetuned-finance-classification,False,<adapters.configuration.adapter_config.MAMConfig object at 0x12a3dc8c0>,FinancialStrengthText,0.7465812140262071,2024-04-25
 nickmuchi/sec-bert-finetuned-finance-classification,True,<adapters.configuration.adapter_config.MAMConfig object at 0x343d33200>,FinancialStrengthText,0.7434379719965709,2024-04-25
 nickmuchi/sec-bert-finetuned-finance-classification,True,<adapters.configuration.adapter_config.MAMConfig object at 0x343d33200>,RiskAnalysis,0.7388251622647671,2024-04-25
 nickmuchi/sec-bert-finetuned-finance-classification,True,<adapters.configuration.adapter_config.MAMConfig object at 0x343d33200>,Profile,0.7273135485977874,2024-04-25
@@ -12,8 +13,8 @@ nickmuchi/sec-bert-finetuned-finance-classification,True,<adapters.configuration
 yiyanghkust/finbert-tone,True,<adapters.configuration.adapter_config.ConfigUnion object at 0x355639280>,AnalystNoteList,0.6552639098665143,2024-04-25
 yiyanghkust/finbert-tone,True,<adapters.configuration.adapter_config.UniPELTConfig object at 0x11ff1c260>,AnalystNoteList,0.6492835857451933,2024-04-25
 yiyanghkust/finbert-tone,True,"LoRAConfig(architecture='lora', selfattn_lora=True, intermediate_lora=False, output_lora=False, leave_out=[], r=8, alpha=8, dropout=0.0, attn_matrices=['q', 'v'], composition_mode='add', init_weights='lora', use_gating=False)",AnalystNoteList,0.5909703228966813,2024-04-22
-nickmuchi/sec-bert-finetuned-finance-classification,True,<adapters.configuration.adapter_config.ConfigUnion object at 0x355639280>,AnalystNoteList,0.5864391558149977,2024-04-25
 nickmuchi/sec-bert-finetuned-finance-classification,True,<adapters.configuration.adapter_config.UniPELTConfig object at 0x11ff1c260>,AnalystNoteList,0.5864391558149977,2024-04-25
+nickmuchi/sec-bert-finetuned-finance-classification,True,<adapters.configuration.adapter_config.ConfigUnion object at 0x355639280>,AnalystNoteList,0.5864391558149977,2024-04-25
 nickmuchi/sec-bert-finetuned-finance-classification,True,"LoRAConfig(architecture='lora', selfattn_lora=True, intermediate_lora=False, output_lora=False, leave_out=[], r=8, alpha=8, dropout=0.0, attn_matrices=['q', 'v'], composition_mode='add', init_weights='lora', use_gating=False)",AnalystNoteList,0.5819896313834347,2024-04-22
 distilbert/distilbert-base-uncased-finetuned-sst-2-english,True,"LoRAConfig(architecture='lora', selfattn_lora=True, intermediate_lora=False, output_lora=False, leave_out=[], r=8, alpha=8, dropout=0.0, attn_matrices=['q', 'v'], composition_mode='add', init_weights='lora', use_gating=False)",AnalystNoteList,0.5716414254806711,2024-04-23
 soleimanian/financial-roberta-large-sentiment,True,"LoRAConfig(architecture='lora', selfattn_lora=True, intermediate_lora=False, output_lora=False, leave_out=[], r=8, alpha=8, dropout=0.0, attn_matrices=['q', 'v'], composition_mode='add', init_weights='lora', use_gating=False)",AnalystNoteList,0.5542923623300813,2024-04-23
