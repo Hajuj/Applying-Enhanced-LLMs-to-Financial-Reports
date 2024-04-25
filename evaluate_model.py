@@ -121,6 +121,7 @@ class ModelEvaluator:
             fpr, tpr, _ = roc_curve(self.true_labels, multiple_predictions_df.iloc[:, 1])
             plt.plot(fpr, tpr, label=f'Benchmark (XGBoost) (AUC = {auc_score:.2f})')
 
+        current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         plt.plot([0, 1], [0, 1], 'k--')
         plt.xlim([0.0, 1.0])
         plt.ylim([0.0, 1.05])
@@ -128,5 +129,5 @@ class ModelEvaluator:
         plt.ylabel('True Positive Rate')
         plt.title('Receiver Operating Characteristic')
         plt.legend(loc="lower right")
-        plt.savefig(f'3. evaluation/roc_curves/top_{n}_models.png')
+        plt.savefig(f'3. evaluation/roc_curves/top_{n}_models_{current_time}.png')
         
