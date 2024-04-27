@@ -35,7 +35,7 @@
 \maketitle
 
 \begin{abstract}
-This study examines financial analyst reports from Morningstar, revealing two key findings: firstly, analysts appear to select stocks arbitrarily, and secondly, they provide comprehensive textual justifications that enable informed decisions surpassing mere chance. We employ enhanced large language models to efficiently analyze the textual data, facilitating a broad exploration of various pretrained models to identify the subtle underlying sentiment and extract more value from the reports than the experts themselves. %Describe Goal, data, method and results.
+This study examines financial analyst reports from Morningstar, revealing two key findings: firstly, analysts appear to select stocks arbitrarily, and secondly, they provide comprehensive textual justifications that enable informed decisions surpassing mere chance. We employ enhanced large language models to efficiently analyze the textual data, facilitating a broad exploration of various pre-trained models to identify the subtle underlying sentiment and extract more value from the reports than the experts themselves. %Describe Goal, data, method and results.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -51,6 +51,7 @@ Report and financial market data.
 
 \subsection{Data description}%Jonas
 Where does the report come from? How does it look like and what is the most important information?
+Target group: investors not speculators.
 \begin{itemize}    
     \item \texttt{ParseDate}: The date the information was retrieved.
   \item \texttt{Title}: The title of the analyst report.
@@ -83,7 +84,8 @@ Where does the report come from? How does it look like and what is the most impo
 How do we merge the market data? Where does it come from?
 \subsection{Data Preprocessing}%Jonas
 How do we pre-process the data? What are the challenges?
-Why do we process it that way?
+Why do we process it that way? Target group: investors not speculators.
+
 
 \begin{figure}[h!]
     \centering
@@ -119,11 +121,33 @@ Use the presentation pictures (youtube video) and reproduce the images quickly i
 We want to explore many models and fine-tune them on our data. So we need a more efficient approach: PEFT.
 What are adapters? Why do we use them? How do we use them?
 What is so efficient about it? How does it work?
-Show image from IntSys lecture (incl sources)
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=.65\linewidth]{pictures/PEFT1.png}
+    \caption[PEFT1]{process of PEFT  \cite{Raschka2023}}
+    \label{fig:PEFT1}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=.65\linewidth]{pictures/PEFT2.jpg}
+    \caption[PEFT2]{process of PEFT (detailed) \cite{Raschka2023}}
+    \label{fig:PEFT2}
+\end{figure}   
+
+
+
+
 \subsection{Hugging Face}%Mohamad
 What is Hugging Face? Why do we use it? What are the benefits?
 
+\section{literature}%Jonas
+As described in \cite{Zhao2024}, there are many different applications of LLMs, and specifically for analyst reports they can provide insights into subtle tone and sentiment to add value. But at the moment there is only research on publicly available data such as Reddit \cite{Deng2023}. Furthermore, it has been shown that reports can have a small positive performance in the right market conditions \cite{Su2020}, but it is unclear whether only recommendations themselves can influence markets \cite{Brauer2018} and the reports have no value at all \cite{Panchenko2007}. Thus, the herding factor can have an influence on stock performance \cite{Palmer2018}.
+In \cite{Kim2023} they use LLMs to better interpret and analyze Korean financial analysts' reports.
+However, this paper uses data from widely spread reports (from retail traders to professionals) on globally traded firms. We show that while the analysts can barely perform better than the current market, they provide comprehensive textual justifications that enable informed decisions. We employ enhanced large language models to efficiently analyze the textual data, facilitating a broad exploration of various pre-trained models to identify the subtle underlying sentiment and extract more value from the reports than the experts themselves.
 
+ LLMs to compare the analysts recommendations to an LLM sentiment from the analysts texts. Using 
 \section{Approach}%Jonas
 This is a classification problem based on sentiment scores
 Model building and training and Evaluation pipeline.
