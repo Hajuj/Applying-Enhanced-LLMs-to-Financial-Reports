@@ -1,10 +1,12 @@
 \documentclass[conference]{IEEEtran}
 \IEEEoverridecommandlockouts
+\setlength{\columnsep}{10mm}
 % The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
 \usepackage{graphicx}
+\usepackage{subcaption}
 \usepackage{textcomp}
 \usepackage{xcolor}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
@@ -33,7 +35,7 @@
 \maketitle
 
 \begin{abstract}
-Describe Goal, data, method and results.
+This study examines financial analyst reports from Morningstar, revealing two key findings: firstly, analysts appear to select stocks arbitrarily, and secondly, they provide comprehensive textual justifications that enable informed decisions surpassing mere chance. We employ enhanced large language models to efficiently analyze the textual data, facilitating a broad exploration of various pretrained models to identify the subtle underlying sentiment and extract more value from the reports than the experts themselves. %Describe Goal, data, method and results.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -46,11 +48,66 @@ Motivation and hypothesis \cite{Poth2023,Kokhlikyan2020,Russell2021,Kauermann202
 Why are we doing this and what doe we hope will be the results
 \section{Data} %Jonas
 Report and financial market data.
-Where does the report come from? How does it look like (JSON preview)? What is the most important information?
+
+\subsection{Data description}%Jonas
+Where does the report come from? How does it look like and what is the most important information?
+\begin{itemize}    
+    \item \texttt{ParseDate}: The date the information was retrieved.
+  \item \texttt{Title}: The title of the analyst report.
+  \item \texttt{CompanyName}: The name of the company. 
+  \item \texttt{TickerSymbol}: The ticker symbol (without exchange information) of the underlying stock.
+  \item \texttt{Rating}: The analyst rating of the stock.
+  \item \texttt{ReportDate}: The date of the release of the report. 
+  \item \texttt{AuthorName}: The name of the author of the report. 
+  \item \texttt{Price}: The price of the stock declared in the report.
+  \item \texttt{Currency}: The given currency of the price. 
+  \item \texttt{PriceDate}: The date the price was retrieved from market data (Morningstar).
+  \item \texttt{FairPrice}: The estimated fair price from the analyst.
+  \item \texttt{Uncertainty}: The company's uncertainty quantified in 'Low', 'Medium', 'High' and 'Very High'.
+  \item \texttt{EconomicMoat}: The ability to maintain competitive advantages quantified in 'Narrow' and 'Wide'.
+  \item \texttt{CostAllocation}:  Decisions on investments categorized as 'Poor', 'Standard', and 'Exemplary'.
+  \item \texttt{FinancialStrength}: Rating of the ability to make timely payments and fulfill obligations -- quantified in 'A', 'B', ... 'F'.
+  \item \texttt{AnalystNoteDate}: The date of the analyst note.
+  \item \texttt{AnalystNoteList}: The analyst note.
+  \item \texttt{BullsList}: Arguments in favor of the company.
+  \item \texttt{BearsList}: Arguments against the company.
+  \item \texttt{ResearchThesisDate}: The date of the thesis.
+  \item \texttt{ResearchThesisList}: Objective research thesis.
+  \item \texttt{MoatAnalysis}: Added research on EconomicMoat.
+  \item \texttt{RiskAnalysis}: Company's risk profile. 
+  \item \texttt{CapitalAllocation}: Text on the CostAllocation. 
+  \item \texttt{Profile}: Short text on the company profile.
+  \item \texttt{FinancialStrengthText}: Short text on the financial strength of the company (conclusion).
+\end{itemize}
+
 How do we merge the market data? Where does it come from?
 \subsection{Data Preprocessing}%Jonas
-How do we preprocess the data? What are the challenges?
+How do we pre-process the data? What are the challenges?
 Why do we process it that way?
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}{.33\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{../5. report/pictures/preproccessing1.png}
+        \caption{Archetype}
+        \label{fig:preprocessing1}
+    \end{subfigure}%
+    \begin{subfigure}{.33\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{../5. report/pictures/preproccessing2.png}
+        \caption{Pure luck}
+        \label{fig:preprocessing2}
+    \end{subfigure}%
+    \begin{subfigure}{.33\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{../5. report/pictures/preproccessing3.png}
+        \caption{Bad luck}
+        \label{fig:preprocessing3}
+    \end{subfigure}
+    \caption{Different stock developments as charts: Comparing the archetype of a good investment to spurious spikes (positive and negative). }
+    \label{fig:preprocessing}
+\end{figure}
 
 \section{Foundations} %Mohamad
 What are the foundations of our approach? What is the goal? Sentiment Classification.
@@ -61,42 +118,118 @@ Use the presentation pictures (youtube video) and reproduce the images quickly i
 \subsection{Parameter efficient fine tuning (PEFT)}%Mohamad
 We want to explore many models and fine-tune them on our data. So we need a more efficient approach: PEFT.
 What are adapters? Why do we use them? How do we use them?
-What is so effficient about it? How does it work?
+What is so efficient about it? How does it work?
 Show image from IntSys lecture (incl sources)
 \subsection{Hugging Face}%Mohamad
 What is Hugging Face? Why do we use it? What are the benefits?
 
 
 \section{Approach}%Jonas
+This is a classification problem based on sentiment scores
 Model building and training and Evaluation pipeline.
 Quickly describe own experiment and results as table for SST2.
 
 \subsection{Model selection}%Jonas
 How did we select the models? What are the models?
 (all relevant to sentiment and finance)
+
+Sentiment
+\begin{itemize}
+\item \texttt{kwang123/bert-sentiment-analysis}
+\item \texttt{siebert/sentiment-roberta- large-english}
+\item \texttt{distilbert/distilbert-base- uncased-finetuned-sst-2-english}
+\end{itemize}
+
+Finance
+\begin{itemize}
+\item \texttt{ProsusAI/finbert}
+\item \texttt{yiyanghkust/finbert-tone}
+\item \texttt{bardsai/finance-sentiment-pl-fast}
+\item \texttt{RashidNLP/Finance-Sentiment- Classification}
+\item \texttt{ahmedrachid/FinancialBERT- Sentiment-Analysis}
+\item \texttt{soleimanian/financial- roberta-large-sentiment}
+\item \texttt{nickmuchi/sec-bert-finetuned- finance-classification}
+\item \texttt{nickmuchi/deberta-v3-base- finetuned-finance-text-classification}
+\end{itemize}
+
 \subsection{Adapter configuration}%Mohamad
 How can adapters be configured? What are the options? What is the industry standard for our problem and what did we use?
 \subsection{Exploration to Exploitation}%Jonas
 How do we explore the models? Just run them all on the same configuration and compare them.
+First model against model, then with best models we compare adapter configurations, then we compare text inputs from the report and finally we compare it to directly fine-tuning the model itself.
 How do we exploit the best model? We try to optimize it further and let it run for all the different text columns.
 \subsection{Evaluation} %Jonas
 How do we evaluate the models? What are the metrics? What is the baseline?
 What is ROC (build intuition).
 Why ROC AUC and not F1 score?
 
+In order to validate learned models we compare predictions made from the model with previously separated test data. In this way, we can objectively evaluate them according to their predictive qualities. For this comparison, we utilize these fundamental principles:
+\newline \textit{Sensitivity} or true positive rate ($\mathrm{TPR}$) is derived from the true positives $\mathrm{TP}$,  i.e., the correctly identified positives $\mathrm{P}$ from the test set: 
+$
+\mathrm{TPR}=\frac{\mathrm{TP}}{\mathrm{P}}
+$
+\newline \textit{Specificity} or true negative rate ($\mathrm{TNR}$) is derived from the true negatives $\mathrm{TN}$,  i.e., the correctly identified negatives $\mathrm{N}$ from the test set: 
+$
+\mathrm{TNR}=\frac{\mathrm{TN}}{\mathrm{N}}
+$
+\newline By plotting both the sensitivity and specificity in relation for various threshold values, we obtain the so called Receiver Operating Characteristic (ROC) curve. For the results of both measures 1.0 is the optimum, and if the curve is the diagonal, we observed a random process.  In Figure~\ref{fig:exroc}, we can see some common examples of curves. In order to further summarise these evaluations, we can calculate the Area Under the Curve (AUC) to rank the models. Again, a value of 0.5 indicates a random process.  \cite{Hastie2009}  \cite{Kauermann2021}  \cite{Russell2021}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=.65\linewidth]{pictures/ROC.pdf}
+\caption[ROC explanation]{Exemplary receiver operating curves for  a \textit{good, medium, random} and \textit{inverse} model fit. The perfect score would be 1.0 on each dimension -- specificity and sensitivity.}
+\label{fig:exroc}
+\end{figure}
+
+We furthermore compare the models with classical approaches based on the analysts forecasts themselves and other metrics from the report to create a baseline.
+
+\newpage
 \section{Results}%Jonas
 Show the results of the models.  Show top 5 models and their ROC AUC after initial runs.
-Show the results of the top 5 ROC after optimization.
-\subsection{Models in comparison}%Jonas
-Discuss results and wheather the performance is enough to outperform the analysts.
+First we compare the different models for the same adapter configuration and text input.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=.65\linewidth]{../3. evaluation/roc_curves/experiment1_top_5_models.png}
+    \caption[First Experiment]{First Experiment}
+    \label{fig:Firstexp}
+\end{figure}
+
+
+For the best models we then compare the best adapter configurations found in literature:
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=.65\linewidth]{../3. evaluation/roc_curves/experiment2_top_5_models.png}
+    \caption[Second Experiment]{Second Experiment}
+    \label{fig:Secondexp}
+\end{figure}
+
+Next to \texttt{AnalystNoteList}, we also explore 
+\texttt{BullsList, BearsList, ResearchThesisList, MoatAnalysis, RiskAnalysis, CapitalAllocation, Profile}, and  \texttt{FinancialStrengthText}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=.65\linewidth]{../3. evaluation/roc_curves/top_5_models_2024-04-25_01-52-12.png}
+    \caption[Third Experiment]{Third Experiment}
+    \label{fig:Thirdexp}
+\end{figure}
+
+Finally we use the best found combination to finetune the underlying model directly. This only leads to a small improvement of 0.x AUC but the training time climbed from XX to YY.
+
 \subsection{Benchmarking}%Jonas
 What are our benchmarks? What are the results?
 We use the analysts own predictions as input for a logistic regression model as benchmark.
 And we use all the categorial information from the results and yahoo finance as input for a XGBoost random forest model as benchmark.
 Results: show \texttt{build\_roc} for n=0 and baseline=True
 
+\subsection{Models in comparison}%Jonas
+Discuss results and wheather the performance is enough to outperform the analysts.
+
 \subsection{Insights via CAPTUM}%Mohamad
 What are the models using as input? Use CAPTUM and quickly describe the gradient approach to obtain feature attribution.
+
+
 \subsection{Training analysis}%Mohamad
 Show some plots about runtime and training time. Compare with Loss, Accuracy etc
 
