@@ -220,18 +220,18 @@ In this paper, however, we use data from widely spread reports (from retail trad
 
 \section{Approach}%Jonas
 Our ultimate objective can be interpreted as a binary classification problem based on sentiment analysis. We use the textual data from the reports to predict whether the stock is a good investment or not. In order to do so we compare the performance of different models and configurations to find the best one. We also compare the performance of the models to the analysts' own predictions and other metrics from the report to create a baseline. In order to explore many different models and configurations, we use the parameter efficient fine-tuning approach. We use adapters to fine-tune the models and Hugging Face to access the pre-trained models. Even though literature has shown adapters to be more efficient while retaining the performance of the underlying model, we setup a preliminary experiment with the Stanford Sentiment Treebank v2 (SST2) data set for sentiment classification to validate our approach and compared the efficiency and performance of the models:
-% here a table with results for 
+% here a table with results for
 
 \begin{table}[h!]
     \centering
     \begin{tabular}{lcc}
     \toprule
-     & \textbf{Fine-tuned LLM} & \textbf{Fine-tuned Adapter} \\ 
+     & \textbf{Fine-tuned LLM} & \textbf{Fine-tuned Adapter} \\
      \midrule
-    {Training Runtime} & 1h 58m & \textbf{\textcolor{ForestGreen}{24m}} \\ 
+    {Training Runtime} & 1h 58m & \textbf{\textcolor{ForestGreen}{24m}} \\
     {Evaluating Accuracy} & \textbf{\textcolor{ForestGreen}{0.908}} & 0.902 \\
-    {Evaluation Runtime} & 6.83s & \textbf{\textcolor{ForestGreen}{1.84s}} \\ 
-    {Evaluation Loss} & 0.42 & \textbf{\textcolor{ForestGreen}{0.31}} \\ 
+    {Evaluation Runtime} & 6.83s & \textbf{\textcolor{ForestGreen}{1.84s}} \\
+    {Evaluation Loss} & 0.42 & \textbf{\textcolor{ForestGreen}{0.31}} \\
     \bottomrule
     \end{tabular}
     \caption{Comparison of Fine-tuned LLM and Fine-tuned Adapter}
@@ -242,7 +242,7 @@ Our ultimate objective can be interpreted as a binary classification problem bas
 Therefore, we used PEFT to find the best performing setup and built a automated training and evaluation pipeline to efficiently explore the model landscape of Hugging Face.
 
 \subsection{Model selection}%Jonas
-Since our approach is centered around sentiment classification of financial reports, we allocated the most fitting pre-trained models from both worlds -- sentiment analysis and finance: 
+Since our approach is centered around sentiment classification of financial reports, we allocated the most fitting pre-trained models from both worlds -- sentiment analysis and finance:
 
 
 \noindent
@@ -267,19 +267,37 @@ Since our approach is centered around sentiment classification of financial repo
 \end{itemize}
 
 Among the finance subset, there are also models that are fine-tuned on the task of sentiment classification with finance related text data like the public available SEC filing reports.
+
 \subsection{Adapter configuration}%Mohamad
-How can adapters be configured? What are the options? What is the industry standard for our problem and what did we use?
+Configuring adapters in machine learning models, particularly in Transformer architectures, allows for targeted modifications to model behavior while preserving the bulk of the pre-trained parameters. Adapters offer a flexible approach to fine-tuning, where specific components are added or adjusted to alter the model's functionality for specialized tasks. This section explores various adapter configurations and their applicability to our research.
+
+\textbf{Adapter Configuration Options:} The configuration of adapters can vary widely depending on the desired outcome and the specific model architecture. Common configurations include altering the number of adapter layers, the size of the feed-forward networks, the non-linearity type, and the training strategy. The choice of configuration typically balances between computational efficiency and task-specific performance.
+
+\textbf{Industry Standard and Our Usage:} For the industry, especially in areas involving complex sequence understanding like financial analysis, configurations that offer a good trade-off between performance and computational demand are preferred. In our work, we experimented with several adapter configurations to identify the most effective setup for analyzing financial reports.
+
+\textbf{Adapter Configurations Used in Our Work:}
+\begin{itemize}
+    \item \textbf{LoRAConfig:} LoRA (Low-Rank Adaptation) employs rank decomposition to modify attention and feed-forward layers within a Transformer. By adjusting only a small subset of model parameters, LoRAConfig focuses on the adaptability of the model with minimal computational overhead.
+    \item \textbf{UniPELTConfig:} The Universal Parameter-Efficient Learning of Tasks (UniPELT) is a strategy that integrates different types of parameter-efficient techniques. UniPELTConfig is designed to be flexible across a variety of tasks by leveraging multiple adaptation strategies simultaneously.
+    \item \textbf{MAMConfig:} Model-Agnostic Meta-Learning (MAM) approach configures adapters for fast adaptation to new tasks. This configuration has proven particularly effective in settings where models need to quickly adjust to new data distributions or task requirements.
+    \item \textbf{ConfigUnion (LoRAConfig, PrefixTuningConfig, SeqBnConfig):} This configuration combines LoRA, Prefix Tuning, and Sequence Bucketing strategies. Prefix Tuning involves prepending a sequence of trainable vectors to the input, while Sequence Bucketing adjusts the model based on sequence length. This union aims to leverage the strengths of each individual approach for enhanced overall performance.
+\end{itemize}
+
+\textbf{Performance Evaluation:} In our experiments, MAMConfig emerged as the best-performing configuration. Its effectiveness in adapting to the specific nuances of financial text in Analyst Reports from MorningStar has been particularly noteworthy. MAMConfig's ability to facilitate rapid learning and adaptation without extensive retraining makes it highly suitable for our application, leading to significant improvements in model precision and recall metrics.
+
+In conclusion, the careful selection and configuration of adapters are crucial for optimizing the performance of fine-tuned models in specialized tasks. The diverse configurations we tested underscore the adaptability and potential of using adapters to enhance pre-trained models for specific domains like financial analysis.
+
 \subsection{Exploration and Exploitation}%Jonas
-Since running all possible combinations of configurations is intractable, we assume independence of our various parameters in our experimental setup and base our approach on exploration and exploitation. We explore all possible valid models and configurations and exploit the best ones in the next iteration. First we compare the different models, then we optimize for the best adapter configuration, and after that we search for the best text input. Finally, we compare our PEFT approach to fine-tuning the LLM itself. 
+Since running all possible combinations of configurations is intractable, we assume independence of our various parameters in our experimental setup and base our approach on exploration and exploitation. We explore all possible valid models and configurations and exploit the best ones in the next iteration. First we compare the different models, then we optimize for the best adapter configuration, and after that we search for the best text input. Finally, we compare our PEFT approach to fine-tuning the LLM itself.
 All experiments are performed on the same data, using the same training and test split to ensure comparability, and we use the same evaluation metrics, training parameters and hyperparameters for all models. Everything is run on the same hardware.
 
 \subsection{Evaluation} %Jonas
 In order to validate learned models we compare predictions made from the model with previously separated test data. In this way, we can objectively evaluate them according to their predictive qualities. For this comparison, we utilize these fundamental principles:
-\newline \textit{Sensitivity} or true positive rate ($\mathrm{TPR}$) is derived from the true positives $\mathrm{TP}$,  i.e., the correctly identified positives $\mathrm{P}$ from the test set: 
+\newline \textit{Sensitivity} or true positive rate ($\mathrm{TPR}$) is derived from the true positives $\mathrm{TP}$,  i.e., the correctly identified positives $\mathrm{P}$ from the test set:
 $
 \mathrm{TPR}=\frac{\mathrm{TP}}{\mathrm{P}}
 $
-\newline \textit{Specificity} or true negative rate ($\mathrm{TNR}$) is derived from the true negatives $\mathrm{TN}$,  i.e., the correctly identified negatives $\mathrm{N}$ from the test set: 
+\newline \textit{Specificity} or true negative rate ($\mathrm{TNR}$) is derived from the true negatives $\mathrm{TN}$,  i.e., the correctly identified negatives $\mathrm{N}$ from the test set:
 $
 \mathrm{TNR}=\frac{\mathrm{TN}}{\mathrm{N}}
 $
@@ -291,7 +309,7 @@ $
     \label{fig:exroc}
     \end{figure}
 
-By plotting both the sensitivity and specificity in relation for various threshold values, we obtain the so called Receiver Operating Characteristic (ROC) curve. For the results of both measures 1.0 is the optimum, and if the curve is the diagonal, we observed a random process.  In Figure~\ref{fig:exroc}, we can see some common examples of curves. In order to further summarize these evaluations, we can calculate the Area Under the Curve (AUC) to rank the models. Again, a value of 0.5 indicates a random process.  
+By plotting both the sensitivity and specificity in relation for various threshold values, we obtain the so called Receiver Operating Characteristic (ROC) curve. For the results of both measures 1.0 is the optimum, and if the curve is the diagonal, we observed a random process.  In Figure~\ref{fig:exroc}, we can see some common examples of curves. In order to further summarize these evaluations, we can calculate the Area Under the Curve (AUC) to rank the models. Again, a value of 0.5 indicates a random process.
 The reason we use ROC rather than accuracy, precision, recall and f1 score is that ROC is a more comprehensive metric that provides a more detailed view of model performance. In addition, ROC curves make it easier to compare the performance of different models across all classification thresholds. This also makes it more robust to class imbalance, which is very important for inherently unbalanced data such as financial markets, which often follow trends. It also helps to understand how the performance of the model changes with different classification thresholds, which can be crucial for decision making in different conditions where the cost of false positives and false negatives can vary. \cite{Hastie2009}  \cite{Kauermann2021}  \cite{Russell2021}
 
 
@@ -351,6 +369,15 @@ While there is no overall cutoff value and it highly depends on the specific app
 
 \subsection{Insights via CAPTUM}%Mohamad
 What are the models using as input? Use CAPTUM and quickly describe the gradient approach to obtain feature attribution. \cite{Kokhlikyan2020}
+
+CAPTUM, which derives from the Latin word for "understanding," is a model interpretability library for PyTorch developed by Meta AI. It provides a comprehensive suite of algorithms designed to provide insights into the data features that most influence machine learning models' predictions. This tool is crucial for validating model behaviors, ensuring fairness, and debugging in complex machine learning systems.
+
+\textbf{Captum.AI} offers a range of interpretability methods, but a prominent approach within this library involves gradient-based techniques for feature attribution. These methods compute the gradient of the output with respect to the input features to determine how much each feature contributes to the output prediction. The premise is that the gradient of a feature indicates the direction and magnitude by which a slight change in the feature would alter the model's output.
+
+\textbf{Gradient Approach for Feature Attribution:} The gradient-based methods, such as Integrated Gradients, are particularly popular. This method accumulates gradients along the path from a baseline input (typically representing the absence of a feature) to the actual input, providing a more comprehensive picture of feature importance across different contexts within the input space.
+
+Using CAPTUM, researchers and developers can gain deeper insights into the workings of their models, enabling a clearer understanding of decision-making processes and facilitating improvements in model design and function. In our work, we employ CAPTUM to analyze and validate the feature attributions of our fine-tuned models on financial texts from Analyst Reports by MorningStar, ensuring that our models make decisions based on relevant and justifiable information.
+
 
 
 \subsection{Training analysis}%Mohamad
