@@ -6,26 +6,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.metrics import roc_curve, roc_auc_score
 
-"""
-import pandas as pd
-import glob
-# List of [model_name, adapter, column_name] combinations
-combinations = [
-    ['bert-base-uncased', True, 'Analyst Note', 'adapter_config'],
-    # Add more combinations as needed
-]
-
-# Load the true labels
-eval_df = pd.read_csv('1. data/final/eval.csv')
-true_labels = eval_df['label']
-
-# Create an instance of ModelEvaluator
-evaluator = ModelEvaluator(true_labels, combinations)
-
-# Evaluate the models
-evaluator.evaluate()
-"""
-
 
 class ModelEvaluator:
     def __init__(self, true_labels, combinations):
