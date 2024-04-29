@@ -9,6 +9,7 @@
 \usepackage{subcaption}
 \usepackage{textcomp}
 \usepackage{xcolor}
+\usepackage{hyperref}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
@@ -19,14 +20,14 @@
 
 \author{\IEEEauthorblockN{1\textsuperscript{st} Jonas Gottal }
 \IEEEauthorblockA{\textit{LMU Munich} \\
-\textit{Computer Science}\\
+\textit{Department of Computer Science}\\
 %City, Country \\
 %email address or ORCID
 }
 \and
 \IEEEauthorblockN{2\textsuperscript{nd} Mohamad Hagog}
 \IEEEauthorblockA{\textit{LMU Munich} \\
-\textit{Computer Science}\\
+\textit{Department of Computer Science}\\
 %City, Country \\
 %email address or ORCID
 }
@@ -35,7 +36,7 @@
 \maketitle
 
 \begin{abstract}
-This study examines financial analyst reports from Morningstar, revealing two key findings: firstly, analysts appear to select stocks arbitrarily, and secondly, they provide comprehensive textual justifications that enable informed decisions surpassing mere chance. We employ enhanced large language models to efficiently analyze the textual data, facilitating a broad exploration of various pre-trained models to identify the subtle underlying sentiment and extract more value from the reports than the experts themselves. %Describe Goal, data, method and results.
+This study examines financial analyst reports from Morningstar, revealing two key findings: firstly, analysts appear to select stocks arbitrarily, and secondly, they provide comprehensive textual justifications that enable informed decisions surpassing mere chance. We employ enhanced large language models to efficiently analyze the textual data, facilitating a broad exploration of various pre-trained models to identify the subtle underlying sentiment and extract more value from the reports than the experts themselves. The code is available at \href{https://github.com/trashpanda-ai/Advanced-Analytics-and-Machine-Learning}{github.com/trashpanda-ai}. %Describe Goal, data, method and results.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -43,15 +44,14 @@ LLMs, PEFT, Adapters, Hugging Face, Finance
 \end{IEEEkeywords}
 
 \section{Introduction}
-Motivation and hypothesis \cite{Poth2023,Kokhlikyan2020,Russell2021,Kauermann2021}
+Many search for guidance in financial analyst reports for investment purpose. Especially during the COVID-19 pandemic, the number of retail traders has increased significantly. And Morningstar is one of the most popular platforms for financial reports that are widely used by both retail traders and professionals.
 
-Why are we doing this and what doe we hope will be the results
-\section{Data} %Jonas
-Report and financial market data.
+However, the question arises whether these reports are actually valuable or just an illusion of expertise. In this paper, we investigate the value of analyst reports and whether they can outperform the market. We hypothesize that the reports contain valuable information that can be extracted using enhanced large language models (LLMs) to outperform the market.
+\section{Data} %Jonas %Report and financial market data.
+Financial analysts provide detailed reports on single companies (equities), detailing their current situation and future prospects. These reports are based on a variety of factors, including their financial strength, economic moat and cost allocation. The reports also contain a rating and a fair price estimate. 
 
 \subsection{Data description}%Jonas
-Where does the report come from? How does it look like and what is the most important information?
-Target group: investors not speculators.
+The data is retrieved from \href{https://www.morningstar.co.uk/uk/}{Morningstar} and contains the following columns:
 \begin{itemize}    
     \item \texttt{ParseDate}: The date the information was retrieved.
   \item \texttt{Title}: The title of the analyst report.
@@ -80,12 +80,11 @@ Target group: investors not speculators.
   \item \texttt{Profile}: Short text on the company profile.
   \item \texttt{FinancialStrengthText}: Short text on the financial strength of the company (conclusion).
 \end{itemize}
+The most important information for the application of LLMs is the textual data -- starting with \texttt{AnalystNoteList}, which we expect to have the most effective content due to its subjective tone. We also analyze more objective texts like \texttt{BullsList} and \texttt{BearsList} as well as \texttt{ResearchThesisList}, \texttt{MoatAnalysis}, \texttt{RiskAnalysis}, \texttt{CapitalAllocation}, \texttt{Profile} and \texttt{FinancialStrengthText}.
+Since the target group of financial analyst reports is investors, we focus on the long term perspective and not on short-term speculation. Therefore, we look at the stock price development over a longer period. The data is retrieved from Yahoo Finance and contains the following columns: \texttt{Date, Open, High, Low, Close, Adj Close} and \texttt{Volume}. We base our target variable for the sentiment analysis on the \texttt{Adjusted Close} price.
 
-How do we merge the market data? Where does it come from?
 \subsection{Data Preprocessing}%Jonas
-How do we pre-process the data? What are the challenges?
-Why do we process it that way? Target group: investors not speculators.
-
+Since we care about investment and not speculation, we pre-process the data to remove spurious spikes and other noise. We focus on the archetype of a good investment as shown in Figure~\ref{fig:preprocessing1} and ignore spurious spikes as shown in Figure~\ref{fig:preprocessing2} and Figure~\ref{fig:preprocessing3}. This means we consider the average performance within a certain time period -- here the maximum amount since the last report was released: 120 days. Inspired by the commonly used moving averages in mathematical finance \cite{Hull2021}, the preprocessing is done by calculating the average stock price over 120 days since publication and comparing it to the stock price at the time of the report. If the average stock price is higher\footnote{A sideway movement within a 2\% margin is not classified as ``higher''.} than the price at time of release, we label it as a good investment, otherwise as a bad investment. This is our binary target variable for the following analysis.
 
 \begin{figure}[h!]
     \centering
@@ -121,6 +120,7 @@ Use the presentation pictures (youtube video) and reproduce the images quickly i
 We want to explore many models and fine-tune them on our data. So we need a more efficient approach: PEFT.
 What are adapters? Why do we use them? How do we use them?
 What is so efficient about it? How does it work?
+\cite{Poth2023}
 
 \begin{figure}[h!]
     \centering
@@ -143,11 +143,12 @@ What is so efficient about it? How does it work?
 What is Hugging Face? Why do we use it? What are the benefits?
 
 \section{literature}%Jonas
-As described in \cite{Zhao2024}, there are many different applications of LLMs, and specifically for analyst reports they can provide insights into subtle tone and sentiment to add value. But at the moment there is only research on publicly available data such as Reddit \cite{Deng2023}. Furthermore, it has been shown that reports can have a small positive performance in the right market conditions \cite{Su2020}, but it is unclear whether only recommendations themselves can influence markets \cite{Brauer2018} and the reports have no value at all \cite{Panchenko2007}. Thus, the herding factor can have an influence on stock performance \cite{Palmer2018}.
-In \cite{Kim2023} they use LLMs to better interpret and analyze Korean financial analysts' reports.
-However, this paper uses data from widely spread reports (from retail traders to professionals) on globally traded firms. We show that while the analysts can barely perform better than the current market, they provide comprehensive textual justifications that enable informed decisions. We employ enhanced large language models to efficiently analyze the textual data, facilitating a broad exploration of various pre-trained models to identify the subtle underlying sentiment and extract more value from the reports than the experts themselves.
 
- LLMs to compare the analysts recommendations to an LLM sentiment from the analysts texts. Using 
+As described in \cite{Zhao2024}, there are many different applications of LLMs, and specifically for analyst reports they can provide insights into subtle tone and sentiment to add value. However, at the moment there is only research on publicly available data such as Reddit \cite{Deng2023}. Furthermore, it has been shown that reports may have a small positive performance in the right market conditions \cite{Su2020}, but it is unclear whether only recommendations themselves can influence markets \cite{Brauer2018} and reports have no value at all \cite{Panchenko2007}. Thus, the herding factor may have an impact on stock performance \cite{Palmer2018}.
+In \cite{Kim2023} they use LLMs to better interpret and analyze Korean financial analysts' reports.
+In this paper, however, we use data from widely spread reports (from retail traders to professionals) on globally traded firms. We show that while analysts can barely outperform the current market, they provide comprehensive textual justifications that enable informed decisions. We use enhanced large language models to efficiently analyze the textual data, allowing a broad exploration of different pre-trained models to identify the subtle underlying sentiment and extract more value from the reports than the experts themselves.
+
+
 \section{Approach}%Jonas
 This is a classification problem based on sentiment scores
 Model building and training and Evaluation pipeline.
@@ -196,7 +197,7 @@ $
 $
 \mathrm{TNR}=\frac{\mathrm{TN}}{\mathrm{N}}
 $
-\newline By plotting both the sensitivity and specificity in relation for various threshold values, we obtain the so called Receiver Operating Characteristic (ROC) curve. For the results of both measures 1.0 is the optimum, and if the curve is the diagonal, we observed a random process.  In Figure~\ref{fig:exroc}, we can see some common examples of curves. In order to further summarise these evaluations, we can calculate the Area Under the Curve (AUC) to rank the models. Again, a value of 0.5 indicates a random process.  \cite{Hastie2009}  \cite{Kauermann2021}  \cite{Russell2021}
+\newline By plotting both the sensitivity and specificity in relation for various threshold values, we obtain the so called Receiver Operating Characteristic (ROC) curve. For the results of both measures 1.0 is the optimum, and if the curve is the diagonal, we observed a random process.  In Figure~\ref{fig:exroc}, we can see some common examples of curves. In order to further summarize these evaluations, we can calculate the Area Under the Curve (AUC) to rank the models. Again, a value of 0.5 indicates a random process.  \cite{Hastie2009}  \cite{Kauermann2021}  \cite{Russell2021} 
 
 \begin{figure}[h!]
 \centering
@@ -209,6 +210,17 @@ We furthermore compare the models with classical approaches based on the analyst
 
 \newpage
 \section{Results}%Jonas
+TBD
+
+\subsection{Benchmarking}%Jonas
+What are our benchmarks? What are the results?
+We use the analysts own predictions as input for a logistic regression model as benchmark.
+And we use all the categorical information from the results and yahoo finance as input for a XGBoost random forest model as benchmark.
+Results: show \texttt{build\_roc} for n=0 and baseline=True
+
+\subsection{Models in comparison}%Jonas
+Discuss results and weather the performance is enough to outperform the analysts.
+
 Show the results of the models.  Show top 5 models and their ROC AUC after initial runs.
 First we compare the different models for the same adapter configuration and text input.
 
@@ -229,8 +241,7 @@ For the best models we then compare the best adapter configurations found in lit
     \label{fig:Secondexp}
 \end{figure}
 
-Next to \texttt{AnalystNoteList}, we also explore 
-\texttt{BullsList, BearsList, ResearchThesisList, MoatAnalysis, RiskAnalysis, CapitalAllocation, Profile}, and  \texttt{FinancialStrengthText}.
+Next to \texttt{AnalystNoteList} we also explore \texttt{BullsList, BearsList, ResearchThesisList, MoatAnalysis, RiskAnalysis, CapitalAllocation, Profile}, and  \texttt{FinancialStrengthText}.
 
 \begin{figure}[h!]
     \centering
@@ -239,7 +250,7 @@ Next to \texttt{AnalystNoteList}, we also explore
     \label{fig:Thirdexp}
 \end{figure}
 
-Finally we use the best found combination to finetune the underlying model directly. This only leads to a small improvement of 0.x AUC but the training time climbed from XX to YY.
+Finally we use the best found combination to fine-tune the underlying model directly. This only leads to a small improvement of 0.x AUC but the training time climbed from XX to YY.
 
 \begin{figure}[h!]
     \centering
@@ -248,17 +259,10 @@ Finally we use the best found combination to finetune the underlying model direc
     \label{fig:Fourthexp}
 \end{figure}
 
-\subsection{Benchmarking}%Jonas
-What are our benchmarks? What are the results?
-We use the analysts own predictions as input for a logistic regression model as benchmark.
-And we use all the categorial information from the results and yahoo finance as input for a XGBoost random forest model as benchmark.
-Results: show \texttt{build\_roc} for n=0 and baseline=True
-
-\subsection{Models in comparison}%Jonas
-Discuss results and wheather the performance is enough to outperform the analysts.
+While there is no overall cutoff value and it highly depends on the specific application, with values above 0.7 \cite{Hosmer2013}, we reached a robust predictive quality.
 
 \subsection{Insights via CAPTUM}%Mohamad
-What are the models using as input? Use CAPTUM and quickly describe the gradient approach to obtain feature attribution.
+What are the models using as input? Use CAPTUM and quickly describe the gradient approach to obtain feature attribution. \cite{Kokhlikyan2020}
 
 
 \subsection{Training analysis}%Mohamad
