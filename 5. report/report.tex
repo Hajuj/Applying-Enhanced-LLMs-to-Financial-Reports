@@ -114,14 +114,65 @@ Since we care about investment and not speculation, we pre-process the data to r
 The final data (1586 reports) is split into a training, development and test set with a ratio of 70:10:20 (1103, 165, 318). The training set is used to train the models, the development set to optimize the hyperparameters and the test set to evaluate the models.
 \section{Foundations} %Mohamad
 What are the foundations of our approach? What is the goal? Sentiment Classification.
+
 \subsection{Transformer models}%Mohamad
-What are transformer models? 
-Build an intuition on self-attention and multi-head attention. 
-Use the presentation pictures (youtube video) and reproduce the images quickly in a sketch style on iPad.
-\subsection{Parameter efficient fine tuning (PEFT)}%Mohamad
-We want to explore many models and fine-tune them on our data. So we need a more efficient approach: PEFT.
-What are adapters? Why do we use them? How do we use them?
-What is so efficient about it? How does it work?
+Transformer models are a class of deep learning architectures that have revolutionized the field of natural language processing (NLP). These models, based on the encoder-decoder architecture, leverage self-attention mechanisms to process sequences of data in parallel and capture complex dependencies across the sequence. The encoder maps an input sequence of symbol representations $(x_1, \ldots, x_n)$ to a continuous representation $\mathbf{z}=(z_1, \ldots, z_n)$. The decoder generates an output sequence $(y_1, \ldots, y_m)$ from $\mathbf{z}$, using a method that is inherently auto-regressive, processing previous symbols to generate the next.
+
+The backbone of the Transformer is the self-attention mechanism in both the encoder and decoder stacks, which allows each position in the sequence to attend to all positions in the previous layer of the model. Each encoder and decoder layer consists of multi-head self-attention mechanisms followed by position-wise fully connected feed-forward networks. Residual connections and layer normalization are employed around each sub-layer to facilitate the training of deep networks. Formally, each layer output can be described as:
+\[
+\text{Layer Output} = \text{LayerNorm}(x + \operatorname{Sublayer}(x))
+\]
+where $\operatorname{Sublayer}(x)$ represents the operations within the sub-layer itself.
+
+\textbf{Self-attention} allows the model to weigh the importance of different words in the sequence irrespective of their positional distances. The attention function can be described as mapping a query and a set of key-value pairs to an output, where the output is a weighted sum of the values. The weight assigned to each value is computed by a compatibility function of the query with the corresponding key. The scaled dot-product attention is computed as:
+\[
+\operatorname{Attention}(Q, K, V) = \operatorname{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
+\]
+where $Q$, $K$, and $V$ are the matrices representing queries, keys, and values, respectively, and $d_k$ is the dimensionality of the keys.
+
+\textbf{Multi-head attention}, a pivotal extension of the basic attention mechanism, projects the queries, keys, and values multiple times with different, learned linear transformations to allow the model to attend to information from different representation subspaces jointly:
+\[
+\begin{aligned}
+\operatorname{MultiHead}(Q, K, V) &= \operatorname{Concat}(\operatorname{head}_1, \ldots, \operatorname{head}_h) W^O \\
+\text{where head} &= \operatorname{Attention}(QW_i^Q, KW_i^K, VW_i^V)
+\end{aligned}
+\]
+Here, $W_i^Q$, $W_i^K$, and $W_i^V$ are parameter matrices for different heads, and $W^O$ is the output projection matrix.
+
+Furthermore, the model incorporates \textbf{position-wise feed-forward networks} in each layer, consisting of two linear transformations with a ReLU activation in between:
+\[
+\operatorname{FFN}(x) = \max(0, xW_1 + b_1)W_2 + b_2
+\]
+
+Positional encodings are added to input embeddings to give the model access to the position of the tokens in the sequence. This is crucial since the model lacks recurrence or convolution:
+\[
+\begin{aligned}
+PE_{(pos, 2i)} &= \sin\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right) \\
+PE_{(pos, 2i+1)} &= \cos\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right)
+\end{aligned}
+\]
+where $pos$ is the position and $i$ is the dimension.
+
+\subsection{Parameter efficient fine-tuning (PEFT)}%Mohamad
+In the landscape of machine learning, particularly in fine-tuning large pre-trained models across various tasks, the demand for computational efficiency and scalability necessitates innovative approaches. Parameter Efficient Fine-Tuning (PEFT) addresses this challenge by enabling the adaptation of large models to specific tasks without the need to update all model parameters, thus conserving computational resources and enhancing the feasibility of exploring multiple models.
+
+\textbf{Adapters} are central to the PEFT strategy. An adapter is a small neural network module inserted between the layers of a pre-existing model, such as a Transformer. Typically, these adapters consist of a down-projection that reduces the dimensionality of the layer output, a non-linear activation function, and an up-projection that restores the dimensionality to its original size. The formal structure of an adapter can be expressed as:
+\[
+\operatorname{Adapter}(x) = x + U(\sigma(D(x)))
+\]
+where $x$ is the input to the adapter, $D$ represents the down-projection, $\sigma$ is a non-linear activation function (e.g., ReLU), and $U$ is the up-projection.
+
+The use of adapters offers a significant advantage in that only the parameters within these modules need to be updated during fine-tuning, leaving the vast majority of the pre-trained model's parameters frozen. This is particularly advantageous for several reasons:
+\begin{itemize}
+    \item \textbf{Computational Efficiency:} Since only a small fraction of the overall parameters are updated, the computational overhead is greatly reduced compared to full model fine-tuning.
+    \item \textbf{Preservation of Pre-trained Knowledge:} By keeping most of the original model parameters unchanged, the risk of catastrophic forgetting is minimized, thus preserving the knowledge that the model has acquired during its initial extensive training.
+    \item \textbf{Scalability:} Adapters allow for quick adaptation to multiple tasks without the need for extensive retraining, making it feasible to fine-tune large models on a wide range of tasks, even with limited computational resources.
+\end{itemize}
+
+PEFT, by employing adapters, achieves efficient transfer learning by introducing only a modest number of trainable parameters per task. This allows for rapid experimentation and adaptation across diverse tasks, which is crucial in practical scenarios where deploying multiple specialized models is required. Additionally, adapters are often designed to be easily plug-and-play, meaning they can be inserted or removed from the model architecture with minimal adjustments, further enhancing the flexibility and utility of this approach.
+
+Overall, Parameter Efficient Fine-Tuning through the use of adapters presents a practical and effective solution to the challenge of fine-tuning large-scale models in a resource-constrained environment. This methodology not only accelerates the adaptation process but also ensures that the intrinsic capabilities of the underlying model are retained and effectively utilized across various tasks.
+
 \cite{Poth2023}
 
 \begin{figure}[h!]
@@ -136,13 +187,29 @@ What is so efficient about it? How does it work?
     \includegraphics[width=.65\linewidth]{pictures/PEFT2.jpg}
     \caption[PEFT2]{process of PEFT (detailed) \cite{Raschka2023}}
     \label{fig:PEFT2}
-\end{figure}   
+\end{figure}
 
 
 
 
 \subsection{Hugging Face}%Mohamad
-What is Hugging Face? Why do we use it? What are the benefits?
+Hugging Face is a pivotal platform in the field of natural language processing and machine learning, providing an extensive repository of pre-trained models along with tools for training, fine-tuning, and deploying models across various tasks. The platform is renowned for its implementation of state-of-the-art models, including those based on Transformer architectures like BERT, GPT, and their derivatives.
+
+\textbf{Why Use Hugging Face?} The primary appeal of Hugging Face lies in its comprehensive ecosystem that simplifies the deployment of machine learning models. Here are several reasons why it is widely used:
+\begin{itemize}
+    \item \textbf{Accessibility of Pre-trained Models:} Hugging Face offers access to thousands of pre-trained models which are easily adaptable to a broad range of tasks without the need from scratch training.
+    \item \textbf{Ease of Integration:} The platform supports various programming languages and frameworks, including Python, PyTorch, and TensorFlow, enabling seamless integration into existing projects.
+    \item \textbf{Community and Support:} With a robust community of developers and researchers, Hugging Face facilitates collaboration and sharing of best practices, contributing to the continual improvement and extension of its model offerings.
+\end{itemize}
+
+\textbf{Benefits in Practical Applications:} Utilizing Hugging Face allows developers and researchers to reduce the time and resources required for model development dramatically. Specifically, the platform provides functionalities for:
+\begin{itemize}
+    \item \textbf{Fine-Tuning Pre-trained Models:} Users can fine-tune models on specific datasets, which is essential for tailoring the model's responses to the nuances of particular domains or tasks.
+    \item \textbf{Experimentation:} The ease of accessing and modifying different models promotes rapid prototyping and experimentation, a valuable feature in the fast-evolving field of AI.
+    \item \textbf{Deployment:} Hugging Face also offers solutions for easy deployment of trained models, which is beneficial for bringing AI applications to production.
+\end{itemize}
+
+\textbf{Application in Our Work:} In our research, we leverage Hugging Face to fine-tune pre-trained models specifically for analyzing Analyst Reports from MorningStar. This involves adapting state-of-the-art NLP models to comprehend and interpret complex financial texts, which is critical for extracting actionable insights and automating parts of the financial analysis process. The ability to fine-tune and deploy models efficiently with Hugging Face accelerates our research and application development, enabling a focused approach on model performance and application-specific adjustments rather than infrastructure and model maintenance.
 
 \section{literature}%Jonas
 
