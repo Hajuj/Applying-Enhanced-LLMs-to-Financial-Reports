@@ -6,9 +6,10 @@
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
 \usepackage{graphicx}
+\usepackage{booktabs}
 \usepackage{subcaption}
 \usepackage{textcomp}
-\usepackage{xcolor}
+\usepackage[dvipsnames]{xcolor}
 \usepackage{hyperref}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
@@ -151,15 +152,31 @@ In this paper, however, we use data from widely spread reports (from retail trad
 
 
 \section{Approach}%Jonas
-classification problem based on sentiment analysis. 
-Quickly describe own experiment and results as table for SST2.
+Our ultimate objective can be interpreted as a binary classification problem based on sentiment analysis. We use the textual data from the reports to predict whether the stock is a good investment or not. In order to do so we compare the performance of different models and configurations to find the best one. We also compare the performance of the models to the analysts' own predictions and other metrics from the report to create a baseline. In order to explore many different models and configurations, we use the parameter efficient fine-tuning approach. We use adapters to fine-tune the models and Hugging Face to access the pre-trained models. Even though literature has shown adapters to be more efficient while retaining the performance of the underlying model, we setup a preliminary experiment with the Stanford Sentiment Treebank v2 (SST2) data set for sentiment classification to validate our approach and compared the efficiency and performance of the models:
+% here a table with results for 
 
-Model building and training and Evaluation pipeline.
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{lcc}
+    \toprule
+     & \textbf{Fine-tuned LLM} & \textbf{Fine-tuned Adapter} \\ 
+     \midrule
+    \textbf{Training Runtime} & 1h 58m & \textbf{\textcolor{ForestGreen}{24m}} \\ 
+    \textbf{Evaluating Accuracy} & \textbf{\textcolor{ForestGreen}{0.908}} & 0.902 \\
+    \textbf{Evaluation Runtime} & 6.83s & \textbf{\textcolor{ForestGreen}{1.84s}} \\ 
+    \textbf{Evaluation Loss} & 0.42 & \textbf{\textcolor{ForestGreen}{0.31}} \\ 
+    \bottomrule
+    \end{tabular}
+    \caption{Comparison of Fine-tuned LLM and Fine-tuned Adapter}
+    \label{tab:comparison}
+    \end{table}
 
+
+Therefore, we use PEFT to find the best performing setup and built a automated training and evaluation pipeline to efficiently explore the model landscape of Hugging Face.
 
 \subsection{Model selection}%Jonas
-How did we select the models? What are the models?
-(all relevant to sentiment and finance)
+Since our approach is centered around sentiment classification of financial reports, we allocated the most fitting pre-trained models from both worlds -- sentiment analysis and finance: 
+
 
 \noindent
 \textbf{Sentiment:}
@@ -182,18 +199,14 @@ How did we select the models? What are the models?
 \item \texttt{nickmuchi/deberta-v3-base- finetuned-finance-text-classification}
 \end{itemize}
 
+Among the finance subset, there are also models that are fine-tuned on the task of sentiment classification with finance related text data like the public available SEC filing reports.
 \subsection{Adapter configuration}%Mohamad
 How can adapters be configured? What are the options? What is the industry standard for our problem and what did we use?
 \subsection{Exploration and Exploitation}%Jonas
-Since running all possible combinations of configurations is intractable, we assume our performance is stable among its category and base our approach on  exploration and exploitation. We explore all possible valid models and configurations and exploit the best ones in the next iteration. First we compare the various different models, then we optimize for the best adapter configuration and finally we search the best text input. In the end we compare our efficient approach to fine-tuning the LLM itself. 
-All experiments are conducted on the same data and the same training and test split to ensure comparability. furthermore, we use the same evaluation metrics, training parameters and hyperparameters for all models. Everything is executed on the same hardware to ensure comparability.
-(learning rate: 0.0001, batch size: 16,	num epochs: 5)
+Since running all possible combinations of configurations is intractable, we assume independence of our various parameters in our experimental setup and base our approach on exploration and exploitation. We explore all possible valid models and configurations and exploit the best ones in the next iteration. First we compare the different models, then we optimise for the best adapter configuration, and after that we search for the best text input. Finally, we compare our PEFT approach to fine-tuning the LLM itself. 
+All experiments are performed on the same data, using the same training and test split to ensure comparability, and we use the same evaluation metrics, training parameters and hyperparameters for all models. Everything is run on the same hardware.
 
 \subsection{Evaluation} %Jonas
-How do we evaluate the models? What are the metrics? What is the baseline?
-What is ROC (build intuition).
-Why ROC AUC and not F1 score?
-
 In order to validate learned models we compare predictions made from the model with previously separated test data. In this way, we can objectively evaluate them according to their predictive qualities. For this comparison, we utilize these fundamental principles:
 \newline \textit{Sensitivity} or true positive rate ($\mathrm{TPR}$) is derived from the true positives $\mathrm{TP}$,  i.e., the correctly identified positives $\mathrm{P}$ from the test set: 
 $
@@ -203,22 +216,26 @@ $
 $
 \mathrm{TNR}=\frac{\mathrm{TN}}{\mathrm{N}}
 $
-\newline By plotting both the sensitivity and specificity in relation for various threshold values, we obtain the so called Receiver Operating Characteristic (ROC) curve. For the results of both measures 1.0 is the optimum, and if the curve is the diagonal, we observed a random process.  In Figure~\ref{fig:exroc}, we can see some common examples of curves. In order to further summarize these evaluations, we can calculate the Area Under the Curve (AUC) to rank the models. Again, a value of 0.5 indicates a random process.  \cite{Hastie2009}  \cite{Kauermann2021}  \cite{Russell2021} 
 
 \begin{figure}[h!]
-\centering
-\includegraphics[width=.85\linewidth]{pictures/ROC.pdf}
-\caption[ROC explanation]{Exemplary receiver operating curves for  a \textit{good, medium, random} and \textit{inverse} model fit. The perfect score would be 1.0 on each dimension -- specificity and sensitivity.}
-\label{fig:exroc}
-\end{figure}
+    \centering
+    \includegraphics[width=.85\linewidth]{pictures/ROC.pdf}
+    \caption[ROC explanation]{Exemplary receiver operating curves for  a \textit{good, medium, random} and \textit{inverse} model fit. The perfect score would be 1.0 on each dimension -- specificity and sensitivity.}
+    \label{fig:exroc}
+    \end{figure}
+
+By plotting both the sensitivity and specificity in relation for various threshold values, we obtain the so called Receiver Operating Characteristic (ROC) curve. For the results of both measures 1.0 is the optimum, and if the curve is the diagonal, we observed a random process.  In Figure~\ref{fig:exroc}, we can see some common examples of curves. In order to further summarize these evaluations, we can calculate the Area Under the Curve (AUC) to rank the models. Again, a value of 0.5 indicates a random process.  
+The reason we use ROC rather than accuracy, precision, recall and f1 score is that ROC is a more comprehensive metric that provides a more detailed view of model performance. In addition, ROC curves make it easier to compare the performance of different models across all classification thresholds. This also makes it more robust to class imbalance, which is very important for inherently unbalanced data such as financial markets, which often follow trends. It also helps to understand how the performance of the model changes with different classification thresholds, which can be crucial for decision making in different conditions where the cost of false positives and false negatives can vary. \cite{Hastie2009}  \cite{Kauermann2021}  \cite{Russell2021}
+
+
+
+\section{Results}%Jonas
+In this section we present the results of our experiments. We compare the models with classical approaches based on the analysts' forecasts themselves and other metrics from the report to establish a baseline. We present the results of our model training in three steps: First, we compare the different models, then we optimize the best adapter configuration, and finally we search for the text input that provides the highest predictive power. We also directly fine-tune the underlying model to see if PEFT loses significant predictive power. We also use feature attribution via CAPTUM to gain insight into the models and provide an overview of training time, runtime and number of parameters.
+
+\subsection{Benchmarking}%Jonas
 
 We furthermore compare the models with classical approaches based on the analysts forecasts themselves and other metrics from the report to create a baseline.
 
-\newpage
-\section{Results}%Jonas
-TBD
-
-\subsection{Benchmarking}%Jonas
 What are our benchmarks? What are the results?
 We use the analysts own predictions as input for a logistic regression model as benchmark.
 And we use all the categorical information from the results and yahoo finance as input for a XGBoost random forest model as benchmark.
