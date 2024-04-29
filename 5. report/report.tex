@@ -161,10 +161,10 @@ Our ultimate objective can be interpreted as a binary classification problem bas
     \toprule
      & \textbf{Fine-tuned LLM} & \textbf{Fine-tuned Adapter} \\ 
      \midrule
-    \textbf{Training Runtime} & 1h 58m & \textbf{\textcolor{ForestGreen}{24m}} \\ 
-    \textbf{Evaluating Accuracy} & \textbf{\textcolor{ForestGreen}{0.908}} & 0.902 \\
-    \textbf{Evaluation Runtime} & 6.83s & \textbf{\textcolor{ForestGreen}{1.84s}} \\ 
-    \textbf{Evaluation Loss} & 0.42 & \textbf{\textcolor{ForestGreen}{0.31}} \\ 
+    {Training Runtime} & 1h 58m & \textbf{\textcolor{ForestGreen}{24m}} \\ 
+    {Evaluating Accuracy} & \textbf{\textcolor{ForestGreen}{0.908}} & 0.902 \\
+    {Evaluation Runtime} & 6.83s & \textbf{\textcolor{ForestGreen}{1.84s}} \\ 
+    {Evaluation Loss} & 0.42 & \textbf{\textcolor{ForestGreen}{0.31}} \\ 
     \bottomrule
     \end{tabular}
     \caption{Comparison of Fine-tuned LLM and Fine-tuned Adapter}
@@ -172,7 +172,7 @@ Our ultimate objective can be interpreted as a binary classification problem bas
     \end{table}
 
 
-Therefore, we use PEFT to find the best performing setup and built a automated training and evaluation pipeline to efficiently explore the model landscape of Hugging Face.
+Therefore, we used PEFT to find the best performing setup and built a automated training and evaluation pipeline to efficiently explore the model landscape of Hugging Face.
 
 \subsection{Model selection}%Jonas
 Since our approach is centered around sentiment classification of financial reports, we allocated the most fitting pre-trained models from both worlds -- sentiment analysis and finance: 
@@ -203,7 +203,7 @@ Among the finance subset, there are also models that are fine-tuned on the task 
 \subsection{Adapter configuration}%Mohamad
 How can adapters be configured? What are the options? What is the industry standard for our problem and what did we use?
 \subsection{Exploration and Exploitation}%Jonas
-Since running all possible combinations of configurations is intractable, we assume independence of our various parameters in our experimental setup and base our approach on exploration and exploitation. We explore all possible valid models and configurations and exploit the best ones in the next iteration. First we compare the different models, then we optimise for the best adapter configuration, and after that we search for the best text input. Finally, we compare our PEFT approach to fine-tuning the LLM itself. 
+Since running all possible combinations of configurations is intractable, we assume independence of our various parameters in our experimental setup and base our approach on exploration and exploitation. We explore all possible valid models and configurations and exploit the best ones in the next iteration. First we compare the different models, then we optimize for the best adapter configuration, and after that we search for the best text input. Finally, we compare our PEFT approach to fine-tuning the LLM itself. 
 All experiments are performed on the same data, using the same training and test split to ensure comparability, and we use the same evaluation metrics, training parameters and hyperparameters for all models. Everything is run on the same hardware.
 
 \subsection{Evaluation} %Jonas
@@ -233,19 +233,19 @@ The reason we use ROC rather than accuracy, precision, recall and f1 score is th
 In this section we present the results of our experiments. We compare the models with classical approaches based on the analysts' forecasts themselves and other metrics from the report to establish a baseline. We present the results of our model training in three steps: First, we compare the different models, then we optimize the best adapter configuration, and finally we search for the text input that provides the highest predictive power. We also directly fine-tune the underlying model to see if PEFT loses significant predictive power. We also use feature attribution via CAPTUM to gain insight into the models and provide an overview of training time, runtime and number of parameters.
 
 \subsection{Benchmarking}%Jonas
+In order to evaluate our models accurately, we first create a benchmark based on the analysts' own predictions. We use the analysts' \texttt{FairPrice} to create binary predictions and use them  as input for a logistic regression model as a first benchmark. We also use all the categorical (and ordinal) information from the reports as input for an gradient boosted tree model (XGBoost) as a benchmark: \texttt{Rating, AuthorName, Uncertainty, EconomicMoat, CostAllocation, FinancialStrength, Sector, Exchange, Prediction}. We assume that certain authors might be better than others, and that the uncertainty, economic moat, cost allocation and financial strength might be valid indicators of a firms success. We also assume that the sector and exchange might have an impact on the stock performance. We use the same training and test split as for the LLMs and the same evaluation metrics. The results are shown in Figure~\ref{fig:Zeroexp}.
 
-We furthermore compare the models with classical approaches based on the analysts forecasts themselves and other metrics from the report to create a baseline.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=.85\linewidth]{../3. evaluation/roc_curves/Zero Experiment.png}
+    \caption[First Experiment]{Benchmark Experiment}
+    \label{fig:Zeroexp}
+\end{figure}
 
-What are our benchmarks? What are the results?
-We use the analysts own predictions as input for a logistic regression model as benchmark.
-And we use all the categorical information from the results and yahoo finance as input for a XGBoost random forest model as benchmark.
-Results: show \texttt{build\_roc} for n=0 and baseline=True
+The results show that neither the analysts nor the XGBoost model can outperform randomness -- it only reproduces the current distribution of the market (trend following). This is a strong indication that the reports themselves may not contain any valuable information.
 
 \subsection{Models in comparison}%Jonas
-Discuss results and weather the performance is enough to outperform the analysts.
-
-Show the results of the models.  Show top 5 models and their ROC AUC after initial runs.
-First we compare the different models for the same adapter configuration and text input.
+Our approach assumes that all changes in our experiments are independent and that the results are comparable. As first step we compare the different models on the same adapter configurations and text inputs to find the best one.
 
 \begin{figure}[h!]
     \centering
@@ -253,9 +253,7 @@ First we compare the different models for the same adapter configuration and tex
     \caption[First Experiment]{First Experiment}
     \label{fig:Firstexp}
 \end{figure}
-
-
-For the best models we then compare the best adapter configurations found in literature:
+We continue for the two best models (both trained on financial sentiment data) and compare the best adapter configurations found in literature:
 
 \begin{figure}[h!]
     \centering
@@ -264,7 +262,7 @@ For the best models we then compare the best adapter configurations found in lit
     \label{fig:Secondexp}
 \end{figure}
 
-Next to \texttt{AnalystNoteList} we also explore \texttt{BullsList, BearsList, ResearchThesisList, MoatAnalysis, RiskAnalysis, CapitalAllocation, Profile}, and  \texttt{FinancialStrengthText}.
+Next to \texttt{AnalystNoteList} we also explore \texttt{BullsList, BearsList, ResearchThesisList, MoatAnalysis, RiskAnalysis, CapitalAllocation, Profile}, and  \texttt{FinancialStrengthText} as input data. We find that \texttt{FinancialStrengthText} as a concise summary provides the best predictive power.
 
 \begin{figure}[h!]
     \centering
@@ -273,7 +271,7 @@ Next to \texttt{AnalystNoteList} we also explore \texttt{BullsList, BearsList, R
     \label{fig:Thirdexp}
 \end{figure}
 
-Finally we use the best found combination to fine-tune the underlying model directly. This only leads to a small improvement of 0.0031 AUC and the training time was the same but the number of parameters could drastically increased from 23 mn to 110 mn.
+Finally, we use the best combination found to directly fine tune the underlying model. This leads to only a small improvement of 0.0031 AUC and the training time was roughly the same, but the number of parameters could be drastically decreased from 110 million to 23 million.
 
 \begin{figure}[h!]
     \centering
