@@ -25,7 +25,7 @@
 %email address or ORCID
 }
 \and
-\IEEEauthorblockN{2\textsuperscript{nd} Mohamad Hagog}
+\IEEEauthorblockN{2\textsuperscript{nd} Mohamad Hgog}
 \IEEEauthorblockA{\textit{LMU Munich} \\
 \textit{Department of Computer Science}\\
 %City, Country \\
@@ -110,6 +110,7 @@ Since we care about investment and not speculation, we pre-process the data to r
     \label{fig:preprocessing}
 \end{figure}
 
+The final data (1586 reports) is split into a training, development and test set with a ratio of 70:10:20 (1103, 165, 318). The training set is used to train the models, the development set to optimize the hyperparameters and the test set to evaluate the models.
 \section{Foundations} %Mohamad
 What are the foundations of our approach? What is the goal? Sentiment Classification.
 \subsection{Transformer models}%Mohamad
@@ -150,22 +151,26 @@ In this paper, however, we use data from widely spread reports (from retail trad
 
 
 \section{Approach}%Jonas
-This is a classification problem based on sentiment scores
-Model building and training and Evaluation pipeline.
+classification problem based on sentiment analysis. 
 Quickly describe own experiment and results as table for SST2.
+
+Model building and training and Evaluation pipeline.
+
 
 \subsection{Model selection}%Jonas
 How did we select the models? What are the models?
 (all relevant to sentiment and finance)
 
-Sentiment
+\noindent
+\textbf{Sentiment:}
 \begin{itemize}
 \item \texttt{kwang123/bert-sentiment-analysis}
 \item \texttt{siebert/sentiment-roberta- large-english}
 \item \texttt{distilbert/distilbert-base- uncased-finetuned-sst-2-english}
 \end{itemize}
 
-Finance
+\noindent
+\textbf{Finance:}
 \begin{itemize}
 \item \texttt{ProsusAI/finbert}
 \item \texttt{yiyanghkust/finbert-tone}
@@ -179,10 +184,11 @@ Finance
 
 \subsection{Adapter configuration}%Mohamad
 How can adapters be configured? What are the options? What is the industry standard for our problem and what did we use?
-\subsection{Exploration to Exploitation}%Jonas
-How do we explore the models? Just run them all on the same configuration and compare them.
-First model against model, then with best models we compare adapter configurations, then we compare text inputs from the report and finally we compare it to directly fine-tuning the model itself.
-How do we exploit the best model? We try to optimize it further and let it run for all the different text columns.
+\subsection{Exploration and Exploitation}%Jonas
+Since running all possible combinations of configurations is intractable, we assume our performance is stable among its category and base our approach on  exploration and exploitation. We explore all possible valid models and configurations and exploit the best ones in the next iteration. First we compare the various different models, then we optimize for the best adapter configuration and finally we search the best text input. In the end we compare our efficient approach to fine-tuning the LLM itself. 
+All experiments are conducted on the same data and the same training and test split to ensure comparability. furthermore, we use the same evaluation metrics, training parameters and hyperparameters for all models. Everything is executed on the same hardware to ensure comparability.
+(learning rate: 0.0001, batch size: 16,	num epochs: 5)
+
 \subsection{Evaluation} %Jonas
 How do we evaluate the models? What are the metrics? What is the baseline?
 What is ROC (build intuition).
@@ -250,7 +256,7 @@ Next to \texttt{AnalystNoteList} we also explore \texttt{BullsList, BearsList, R
     \label{fig:Thirdexp}
 \end{figure}
 
-Finally we use the best found combination to fine-tune the underlying model directly. This only leads to a small improvement of 0.x AUC but the training time climbed from XX to YY.
+Finally we use the best found combination to fine-tune the underlying model directly. This only leads to a small improvement of 0.0031 AUC and the training time was the same but the number of parameters could drastically increased from 23 mn to 110 mn.
 
 \begin{figure}[h!]
     \centering
