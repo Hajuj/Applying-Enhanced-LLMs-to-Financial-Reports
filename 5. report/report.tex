@@ -11,6 +11,8 @@
 \usepackage{textcomp}
 \usepackage[dvipsnames]{xcolor}
 \usepackage{hyperref}
+\usepackage{float}
+
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
@@ -47,7 +49,7 @@ LLMs, PEFT, Adapters, Hugging Face, Finance
 \section{Introduction}
 Many search for guidance in financial analyst reports for investment purpose. Especially during the COVID-19 pandemic, the number of retail traders has increased significantly. And Morningstar is one of the most popular platforms for financial reports that are widely used by both retail traders and professionals.
 
-However, the question arises whether these reports are actually valuable or just an illusion of expertise. In this paper, we investigate the value of analyst reports and whether they can outperform the market. We hypothesize that the reports contain valuable information that can be extracted using enhanced large language models (LLMs) to outperform the market.
+However, the question arises whether these reports are actually valuable or just an illusion of expertise. In this paper, we investigate the value of analyst reports and whether they can outperform the market. We hypothesize that the reports contain valuable information that can be extracted using enhanced large language models (LLMs) to outperform the analysts and even the market.
 \section{Data} %Jonas %Report and financial market data.
 Financial analysts provide detailed reports on single companies (equities), detailing their current situation and future prospects. These reports are based on a variety of factors, including their financial strength, economic moat and cost allocation. The reports also contain a rating and a fair price estimate. 
 
@@ -82,10 +84,10 @@ The data is retrieved from \href{https://www.morningstar.co.uk/uk/}{Morningstar}
   \item \texttt{FinancialStrengthText}: Short text on the financial strength of the company (conclusion).
 \end{itemize}
 The most important information for the application of LLMs is the textual data -- starting with \texttt{AnalystNoteList}, which we expect to have the most effective content due to its subjective tone. We also analyze more objective texts like \texttt{BullsList} and \texttt{BearsList} as well as \texttt{ResearchThesisList}, \texttt{MoatAnalysis}, \texttt{RiskAnalysis}, \texttt{CapitalAllocation}, \texttt{Profile} and \texttt{FinancialStrengthText}.
-Since the target group of financial analyst reports is investors, we focus on the long term perspective and not on short-term speculation. Therefore, we look at the stock price development over a longer period. The data is retrieved from Yahoo Finance and contains the following columns: \texttt{Date, Open, High, Low, Close, Adj Close} and \texttt{Volume}. We base our target variable for the sentiment analysis on the \texttt{Adjusted Close} price.
+Since the target group of financial analyst reports is investors, we focus on the long term perspective and not on short-term speculation. Therefore, we look at the stock price development over a longer period. The data is retrieved from Yahoo Finance and contains the following columns: \texttt{Date, Open, High, Low, Close, Adjusted Close} and \texttt{Volume}. We base our target variable for the sentiment analysis on the \texttt{Adjusted Close} price.
 
 \subsection{Data Preprocessing}%Jonas
-Since we care about investment and not speculation, we pre-process the data to remove spurious spikes and other noise. We focus on the archetype of a good investment as shown in Figure~\ref{fig:preprocessing1} and ignore spurious spikes as shown in Figure~\ref{fig:preprocessing2} and Figure~\ref{fig:preprocessing3}. This means we consider the average performance within a certain time period -- here the maximum amount since the last report was released: 120 days. Inspired by the commonly used moving averages in mathematical finance \cite{Hull2021}, the preprocessing is done by calculating the average stock price over 120 days since publication and comparing it to the stock price at the time of the report. If the average stock price is higher\footnote{A sideway movement within a 2\% margin is not classified as ``higher''.} than the price at time of release, we label it as a good investment, otherwise as a bad investment. This is our binary target variable for the following analysis.
+Since we care about investing and not speculation, we pre-process the data to remove spurious spikes and other noise. We focus on the archetype of a good investment as shown in Figure~\ref{fig:preprocessing1} and ignore spurious spikes as shown in Figure~\ref{fig:preprocessing2} and Figure~\ref{fig:preprocessing3}. This means we consider the average performance within a certain time period -- here the maximum amount since the last report was released: 120 days. Inspired by the commonly used moving averages in mathematical finance \cite{Hull2021}, the preprocessing is done by calculating the average stock price over 120 days since publication and comparing it to the stock price at the time of the report. If the average stock price is higher\footnote{A sideway movement within a 2\% margin is not classified as ``higher''.} than the price at time of release, we label it as a good investment, otherwise as a bad investment. This is our binary target variable for the following analysis.
 
 \begin{figure}[h!]
     \centering
@@ -111,9 +113,9 @@ Since we care about investment and not speculation, we pre-process the data to r
     \label{fig:preprocessing}
 \end{figure}
 
-The final data (1586 reports) is split into a training, development and test set with a ratio of 70:10:20 (1103, 165, 318). The training set is used to train the models, the development set to optimize the hyperparameters and the test set to evaluate the models.
+The final data (1586 reports) is split into a training, development and test set with a ratio of 70:10:20 (1103, 165, 318). The training set is used to train the models, the development set to optimize the hyperparameters and the test set to evaluate the models. 
 \section{Foundations} %Mohamad
-What are the foundations of our approach? What is the goal? Sentiment Classification.
+What are the foundations of our approach? What is the goal? Sentiment Classification. \cite{Vaswani2023}
 
 \subsection{Transformer models}%Mohamad
 Transformer models are a class of deep learning architectures that have revolutionized the field of natural language processing (NLP). These models, based on the encoder-decoder architecture, leverage self-attention mechanisms to process sequences of data in parallel and capture complex dependencies across the sequence. The encoder maps an input sequence of symbol representations $(x_1, \ldots, x_n)$ to a continuous representation $\mathbf{z}=(z_1, \ldots, z_n)$. The decoder generates an output sequence $(y_1, \ldots, y_m)$ from $\mathbf{z}$, using a method that is inherently auto-regressive, processing previous symbols to generate the next.
@@ -213,13 +215,13 @@ Hugging Face is a pivotal platform in the field of natural language processing a
 
 \section{literature}%Jonas
 
-As described in \cite{Zhao2024}, there are many different applications of LLMs, and specifically for analyst reports they can provide insights into subtle tone and sentiment to add value. However, at the moment there is only research on publicly available data such as Reddit \cite{Deng2023}. Furthermore, it has been shown that reports may have a small positive performance in the right market conditions \cite{Su2020}, but it is unclear whether only recommendations themselves can influence markets \cite{Brauer2018} and reports have no value at all \cite{Panchenko2007}. Thus, the herding factor may have an impact on stock performance \cite{Palmer2018}.
+As described in \cite{Zhao2024}, there are many different applications of LLMs, and specifically for analyst reports they can provide insights into subtle tone and sentiment to add value. However, at the moment there is only research based on   data created by consumers, such as Reddit \cite{Deng2023}. Furthermore, it has been shown that reports may have a small positive performance in the right market conditions \cite{Su2020}, but it is unclear whether only recommendations themselves can influence markets \cite{Brauer2018} and reports have no value at all \cite{Panchenko2007}. Thus, the herding factor may have an impact on stock performance \cite{Palmer2018}.
 In \cite{Kim2023} they use LLMs to better interpret and analyze Korean financial analysts' reports.
 In this paper, however, we use data from widely spread reports (from retail traders to professionals) on globally traded firms. We show that while analysts can barely outperform the current market, they provide comprehensive textual justifications that enable informed decisions. We use enhanced large language models to efficiently analyze the textual data, allowing a broad exploration of different pre-trained models to identify the subtle underlying sentiment and extract more value from the reports than the experts themselves.
 
 
 \section{Approach}%Jonas
-Our ultimate objective can be interpreted as a binary classification problem based on sentiment analysis. We use the textual data from the reports to predict whether the stock is a good investment or not. In order to do so we compare the performance of different models and configurations to find the best one. We also compare the performance of the models to the analysts' own predictions and other metrics from the report to create a baseline. In order to explore many different models and configurations, we use the parameter efficient fine-tuning approach. We use adapters to fine-tune the models and Hugging Face to access the pre-trained models. Even though literature has shown adapters to be more efficient while retaining the performance of the underlying model, we setup a preliminary experiment with the Stanford Sentiment Treebank v2 (SST2) data set for sentiment classification to validate our approach and compared the efficiency and performance of the models:
+Our ultimate objective can be interpreted as a binary classification problem based on sentiment analysis. We use the textual data from the reports to predict whether the stock is a good investment or not. In order to do so we compare the performance of different models and configurations to find the best one. We also compare the performance of the models to the analysts' own predictions and other metrics from the report to create a benchmark. In order to explore many different models and configurations, we use the parameter efficient fine-tuning approach. We use adapters to fine-tune the models and Hugging Face to access the pre-trained models. Even though literature has shown adapters to be more efficient while retaining the performance of the underlying model, we setup a preliminary experiment with the Stanford Sentiment Treebank v2 (SST2) data set for sentiment classification to validate our approach and compared the efficiency and performance of the models:
 % here a table with results for
 
 \begin{table}[h!]
@@ -266,7 +268,7 @@ Since our approach is centered around sentiment classification of financial repo
 \item \texttt{nickmuchi/deberta-v3-base- finetuned-finance-text-classification}
 \end{itemize}
 
-Among the finance subset, there are also models that are fine-tuned on the task of sentiment classification with finance related text data like the public available SEC filing reports.
+Within the financial subset, there are also models fine-tuned to the task of sentiment classification on financial text data, such as publicly available SEC filings.
 
 \subsection{Adapter configuration}%Mohamad
 Configuring adapters in machine learning models, particularly in Transformer architectures, allows for targeted modifications to model behavior while preserving the bulk of the pre-trained parameters. Adapters offer a flexible approach to fine-tuning, where specific components are added or adjusted to alter the model's functionality for specialized tasks. This section explores various adapter configurations and their applicability to our research.
@@ -288,7 +290,7 @@ Configuring adapters in machine learning models, particularly in Transformer arc
 In conclusion, the careful selection and configuration of adapters are crucial for optimizing the performance of fine-tuned models in specialized tasks. The diverse configurations we tested underscore the adaptability and potential of using adapters to enhance pre-trained models for specific domains like financial analysis.
 
 \subsection{Exploration and Exploitation}%Jonas
-Since running all possible combinations of configurations is intractable, we assume independence of our various parameters in our experimental setup and base our approach on exploration and exploitation. We explore all possible valid models and configurations and exploit the best ones in the next iteration. First we compare the different models, then we optimize for the best adapter configuration, and after that we search for the best text input. Finally, we compare our PEFT approach to fine-tuning the LLM itself.
+Since running all possible combinations of configurations is intractable, we assume independence of our various parameters in our experimental setup and base our approach on exploration and exploitation. We explore all possible valid models and configurations and exploit the best ones in the next iteration. First, we compare the different models, then we optimize for the best adapter configuration, and after that we search for the best text input. Finally, we compare our PEFT approach to fine-tuning the LLM itself.
 All experiments are performed on the same data, using the same training and test split to ensure comparability, and we use the same evaluation metrics, training parameters and hyperparameters for all models. Everything is run on the same hardware.
 
 \subsection{Evaluation} %Jonas
@@ -310,46 +312,48 @@ $
     \end{figure}
 
 By plotting both the sensitivity and specificity in relation for various threshold values, we obtain the so called Receiver Operating Characteristic (ROC) curve. For the results of both measures 1.0 is the optimum, and if the curve is the diagonal, we observed a random process.  In Figure~\ref{fig:exroc}, we can see some common examples of curves. In order to further summarize these evaluations, we can calculate the Area Under the Curve (AUC) to rank the models. Again, a value of 0.5 indicates a random process.
-The reason we use ROC rather than accuracy, precision, recall and f1 score is that ROC is a more comprehensive metric that provides a more detailed view of model performance. In addition, ROC curves make it easier to compare the performance of different models across all classification thresholds. This also makes it more robust to class imbalance, which is very important for inherently unbalanced data such as financial markets, which often follow trends. It also helps to understand how the performance of the model changes with different classification thresholds, which can be crucial for decision making in different conditions where the cost of false positives and false negatives can vary. \cite{Hastie2009}  \cite{Kauermann2021}  \cite{Russell2021}
+The reason we use ROC rather than accuracy, precision, recall and f1 scores is that ROC is a more comprehensive metric that provides a more detailed view of model performance. In addition, ROC curves make it easier to compare the performance of different models across all classification thresholds. This also makes it more robust to class imbalance, which is very important for inherently unbalanced data such as financial markets, which often follow trends and alternate between bear and bull markets. It also helps to understand how the performance of the model changes with different classification thresholds, which can be crucial for decision making in different conditions where the cost of false positives and false negatives can vary. \cite{Hastie2009}  \cite{Kauermann2021}  \cite{Russell2021}
 
 
 
 \section{Results}%Jonas
-In this section we present the results of our experiments. We compare the models with classical approaches based on the analysts' forecasts themselves and other metrics from the report to establish a baseline. We present the results of our model training in three steps: First, we compare the different models, then we optimize the best adapter configuration, and finally we search for the text input that provides the highest predictive power. We also directly fine-tune the underlying model to see if PEFT loses significant predictive power. We also use feature attribution via CAPTUM to gain insight into the models and provide an overview of training time, runtime and number of parameters.
+In this section we present the results of our experiments. We compare the models with classical approaches based on the analysts' forecasts themselves and other metrics from the report to establish a benchmark. We present the results of our model training in three steps: First, we compare the different models, then we optimize the best adapter configuration, and finally we search for the text input that provides the highest predictive power. We also directly fine-tune the underlying model to see if PEFT loses significant predictive power. Furthermore, we use feature attribution via CAPTUM to gain insight into the models and provide an overview of training time, accuracy and number of parameters.
 
 \subsection{Benchmarking}%Jonas
-In order to evaluate our models accurately, we first create a benchmark based on the analysts' own predictions. We use the analysts' \texttt{FairPrice} to create binary predictions and use them  as input for a logistic regression model as a first benchmark. We also use all the categorical (and ordinal) information from the reports as input for an gradient boosted tree model (XGBoost) as a benchmark: \texttt{Rating, AuthorName, Uncertainty, EconomicMoat, CostAllocation, FinancialStrength, Sector, Exchange, Prediction}. We assume that certain authors might be better than others, and that the uncertainty, economic moat, cost allocation and financial strength might be valid indicators of a firms success. We also assume that the sector and exchange might have an impact on the stock performance. We use the same training and test split as for the LLMs and the same evaluation metrics. The results are shown in Figure~\ref{fig:Zeroexp}.
+In order to evaluate our models accurately, we first create a benchmark based on the analysts' own predictions. We use the analysts' \texttt{FairPrice} to create binary predictions and use them  as input for a logistic regression model as a first benchmark. We also use all the categorical (and ordinal) information from the reports as input for an gradient boosted tree model (XGBoost \cite{Russell2021}) as a benchmark: \texttt{Rating}, \texttt{AuthorName}, \texttt{Uncertainty}, \texttt{EconomicMoat}, \texttt{CostAllocation}, \texttt{FinancialStrength}, \texttt{Sector}, \texttt{Exchange}, \texttt{Prediction}. We assume that certain authors might be better than others, and that the uncertainty, economic moat, cost allocation and financial strength might be valid indicators of a firms success. We also assume that the sector and exchange might have an impact on the stock performance. We use the same training and test split as for the LLMs and the same evaluation metrics. The results are shown in Figure~\ref{fig:Zeroexp}.
 
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
     \includegraphics[width=.85\linewidth]{../3. evaluation/roc_curves/Zero Experiment.png}
-    \caption[First Experiment]{Benchmark Experiment}
+    \caption[First Experiment]{Benchmark Experiment: a diagonal line represents a random process. For financial markets it means reproducing the current distribution (following the trend).}
     \label{fig:Zeroexp}
 \end{figure}
 
 The results show that neither the analysts nor the XGBoost model can outperform randomness -- it only reproduces the current distribution of the market (trend following). This is a strong indication that the reports themselves may not contain any valuable information.
 
-\subsection{Models in comparison}%Jonas
-Our approach assumes that all changes in our experiments are independent and that the results are comparable. As first step we compare the different models on the same adapter configurations and text inputs to find the best one.
 
-\begin{figure}[h!]
+\subsection{Models in comparison}%Jonas
+Our approach assumes that all changes in our experiments are independent so that the results are comparable. As first step we compare the different models on the same adapter configurations and text inputs to find the best one.
+
+\begin{figure}[H]
     \centering
     \includegraphics[width=.85\linewidth]{../3. evaluation/roc_curves/First Experiment.png}
     \caption[First Experiment]{First Experiment}
     \label{fig:Firstexp}
 \end{figure}
+
 We continue for the two best models (both trained on financial sentiment data) and compare the best adapter configurations found in literature:
 
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
     \includegraphics[width=.85\linewidth]{../3. evaluation/roc_curves/Second Experiment.png}
     \caption[Second Experiment]{Second Experiment}
     \label{fig:Secondexp}
 \end{figure}
 
-Next to \texttt{AnalystNoteList} we also explore \texttt{BullsList, BearsList, ResearchThesisList, MoatAnalysis, RiskAnalysis, CapitalAllocation, Profile}, and  \texttt{FinancialStrengthText} as input data. We find that \texttt{FinancialStrengthText} as a concise summary provides the best predictive power.
+Next to \texttt{AnalystNoteList} we also explore  \texttt{CapitalAllocation}, \texttt{BullsList}, \texttt{BearsList}, \texttt{MoatAnalysis}, \texttt{ResearchThesisList},  \texttt{Risk Analysis}, \texttt{Profile}, and  \texttt{FinancialStrengthText} as input data. We find that \texttt{FinancialStrengthText} as a concise summary provides the best predictive power.
 
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
     \includegraphics[width=.85\linewidth]{../3. evaluation/roc_curves/Third Experiment.png}
     \caption[Third Experiment]{Third Experiment}
@@ -358,7 +362,7 @@ Next to \texttt{AnalystNoteList} we also explore \texttt{BullsList, BearsList, R
 
 Finally, we use the best combination found to directly fine tune the underlying model. This leads to only a small improvement of 0.0031 AUC and the training time was roughly the same, but the number of parameters could be drastically decreased from 110 million to 23 million.
 
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
     \includegraphics[width=.85\linewidth]{../3. evaluation/roc_curves/Fourth Experiment.png}
     \caption[Fourth Experiment]{Fourth Experiment}
@@ -383,20 +387,22 @@ Using CAPTUM, researchers and developers can gain deeper insights into the worki
 \subsection{Training analysis}%Mohamad
 Show some plots about runtime and training time. Compare with Loss, Accuracy etc
 
-\begin{figure}[h!]
+\begin{figure}[!h]
     \centering
     \includegraphics[width=.85\linewidth]{pictures/number_params_vs_accuracy.png}
     \caption{Number of parameters vs. Accuracy, clustered by adapter configuration}
 \end{figure}
 
-\begin{figure}[h!]
+\begin{figure}[!h]
     \centering
     \includegraphics[width=.85\linewidth]{pictures/training_time_vs_accuracy.png}
     \caption{Training time vs. Accuracy,  clustered by adapter configuration}
 \end{figure}
 
 \section{Conclusion}
-Wrap it up and discuss the results. What are the implications? What are the limitations?
+The results show that neither the analysts nor the XGBoost model, which is based on the hard facts in the report, can beat randomness. They only reproduce the current distribution -- i.e. they follow the market trend. However, we have also found that the reports themselves contain valuable information that can be extracted. But to do so, we need LLMs that are fine-tuned to large amounts of financial data. By using Hugging Face's easily accessible models, we have shown that we can extract more value from the reports than the experts themselves.
+
+
 \bibliographystyle{IEEEtran}
 \bibliography{report}
 
