@@ -1,4 +1,4 @@
-adapters==0.1.2
+adapters
 datasets==2.18.0
 huggingface-hub==0.22.2
 numpy==1.26.4
