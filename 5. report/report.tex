@@ -120,7 +120,7 @@ Our research efficiently leverages the capabilities of LLMs by utilizing Transfo
 
 Utilizing LLMs, including those based on Transformer architectures, has demonstrated unparalleled success in understanding and generating human-like text. Their ability to capture deep linguistic and semantic nuances makes them ideal for complex NLP tasks like sentiment analysis. However, the computational intensity of training such models from scratch demands significant resources \cite{wolf2020huggingfaces}.
 
-To efficiently handle LLMs, we use the efficient Transformer architecture and models provided by Hugging Face \cite{wolf2020huggingfaces}. We also implement Adapters, which offer a parameter-efficient way to fine-tune pre-trained models on domain-specific tasks \cite{pfeiffer2020adapterhub}. By inserting small, trainable modules within the Transformer layers, we can tailor the model's responses to the subtleties of financial language without overhauling the entire network architecture. This approach significantly reduces the computational overhead and facilitates quicker iterations and refinements.
+To efficiently handle LLMs, we use the  Transformer architecture and models provided by Hugging Face \cite{wolf2020huggingfaces}. We also implement Adapters, which offer a parameter-efficient way to fine-tune pre-trained models on domain-specific tasks \cite{pfeiffer2020adapterhub}. By inserting small, trainable modules within the Transformer layers, we can tailor the model's responses to the subtleties of financial language without overhauling the entire network architecture. This approach significantly reduces the computational overhead and facilitates quicker iterations and refinements.
 
 Our research aims to classify the sentiment expressed in Analyst Reports from MorningStar accurately. Analyzing the sentiment, we can extract meaningful insights about market trends and investor perceptions, which are crucial for making informed financial decisions. Sentiment classification in this context involves determining the polarity of the text—whether it conveys a positive, negative, or neutral sentiment—which can significantly influence investment strategies and business outcomes.
 
@@ -332,7 +332,7 @@ In this section we present the results of our experiments. We compare the models
 \subsection{Benchmarking}%Jonas
 In order to evaluate our models accurately, we first create a benchmark based on the analysts' own predictions. We use the analysts' \texttt{FairPrice} to create binary predictions and use them  as input for a logistic regression model as a first benchmark. We also use all the categorical (and ordinal) information from the reports as input for an gradient boosted tree model (XGBoost \cite{Russell2021}) as a benchmark: \texttt{Rating}, \texttt{AuthorName}, \texttt{Uncertainty}, \texttt{EconomicMoat}, \texttt{CostAllocation}, \texttt{FinancialStrength}, \texttt{Sector}, \texttt{Exchange}, \texttt{Prediction}. We assume that certain authors might be better than others, and that the uncertainty, economic moat, cost allocation and financial strength might be valid indicators of a firms success. We also assume that the sector and exchange might have an impact on the stock performance. We use the same training and test split as for the LLMs and the same evaluation metrics. The results are shown in Figure~\ref{fig:Zeroexp}.
 
-\begin{figure}[H]
+\begin{figure}[!h]
     \centering
     \includegraphics[width=.85\linewidth]{../3. evaluation/roc_curves/Zero Experiment.png}
     \caption[First Experiment]{Benchmark Experiment: a diagonal line represents a random process. For financial markets it means reproducing the current distribution (following the trend).}
@@ -345,7 +345,7 @@ The results show that neither the analysts nor the XGBoost model can outperform 
 \subsection{Models in comparison}%Jonas
 Our approach assumes that all changes in our experiments are independent so that the results are comparable. As first step we compare the different models on the same adapter configurations and text inputs to find the best one.
 
-\begin{figure}[H]
+\begin{figure}[!h]
     \centering
     \includegraphics[width=.85\linewidth]{../3. evaluation/roc_curves/First Experiment.png}
     \caption[First Experiment]{First Experiment}
@@ -354,25 +354,25 @@ Our approach assumes that all changes in our experiments are independent so that
 
 We continue for the two best models (both trained on financial sentiment data) and compare the best adapter configurations found in literature:
 
-\begin{figure}[H]
+\begin{figure}[!h]
     \centering
     \includegraphics[width=.85\linewidth]{../3. evaluation/roc_curves/Second Experiment.png}
     \caption[Second Experiment]{Second Experiment}
     \label{fig:Secondexp}
 \end{figure}
 
-Next to \texttt{AnalystNoteList} we also explore  \texttt{CapitalAllocation}, \texttt{BullsList}, \texttt{BearsList}, \texttt{MoatAnalysis}, \texttt{ResearchThesisList},  \texttt{Risk Analysis}, \texttt{Profile}, and  \texttt{FinancialStrengthText} as input data. We find that \texttt{FinancialStrengthText} as a concise summary provides the best predictive power.
+Next to \texttt{AnalystNoteList} we also explore  \texttt{CapitalAllocation}, \texttt{BullsList}, \texttt{BearsList}, \texttt{MoatAnalysis}, \texttt{ResearchThesisList},  \texttt{Risk Analysis}, \texttt{Profile}, and  \texttt{FinancialStrengthText} as input data. We find that \texttt{FinancialStrengthText} as a concise summary provides the best predictive power, as shown in Figure~\ref{fig:Thirdexp}.
 
-\begin{figure}[H]
+\begin{figure}[!h]
     \centering
     \includegraphics[width=.85\linewidth]{../3. evaluation/roc_curves/Third Experiment.png}
     \caption[Third Experiment]{Third Experiment}
     \label{fig:Thirdexp}
 \end{figure}
 
-Finally, we use the best combination found to directly fine tune the underlying model. This leads to only a small improvement of 0.0048 AUC and the training time was slightly higher (from ~480 sec to 520 sec), but the number of parameters could be drastically decreased from 110 million to 23 million.
+Finally, we use the best combination found to directly fine tune the underlying model. This leads to only a small improvement of 0.0048 AUC and the training time was slightly higher (from ~480 sec to 520 sec), but the number of parameters could be drastically decreased from 110 million to 23 million. The results are shown in Figure~\ref{fig:Fourthexp}.
 
-\begin{figure}[H]
+\begin{figure}[!h]
     \centering
     \includegraphics[width=.85\linewidth]{../3. evaluation/roc_curves/Fourth Experiment.png}
     \caption[Fourth Experiment]{Final Result.}
@@ -381,16 +381,16 @@ Finally, we use the best combination found to directly fine tune the underlying 
 
 While there is no overall cutoff value and it highly depends on the specific application, with values above 0.7 \cite{Hosmer2013}, we reached a robust predictive quality.
 
-\subsection{Insights via CAPTUM}%Mohamad
+\subsection{Insights via Captum}%Mohamad
 Captum, derived from the Latin word for "understanding," is an interpretability library developed by Meta AI for the PyTorch framework \cite{paszke2019pytorch}. It features several algorithms to identify data feature contributions. It helps validate model behavior, ensure fairness, and debug complex machine learning applications \cite{Kokhlikyan2020}.
 
 A key method in Captum for feature attribution is the \textit{Layer Integrated Gradients}, which extends the Integrated Gradients \cite{sundararajan2017axiomatic} approach. This method is particularly adept at handling models with deep architectures, such as BERT \cite{devlin2019bert}, by attributing importance to input features relative to a specific layer's output, thus offering more granular insight \cite{sundararajan2017axiomatic}.
 
 In our project, we utilize Captum to analyze and validate the feature attributions of our fine-tuned models on financial texts from MorningStar analyst reports. This ensures that our models' predictive decisions are based on relevant and justifiable data, fostering trust and transparency in automated financial analysis.
 
-The first case (see \ref{fig:high1}) showcases an input where the model's prediction of financial strength was substantially higher. This text highlights a high financial position characterized by a high level of cash reserves, no debt, and a positive free cash flow, indicating strong financial health and operational efficiency.
+The first case (see Figure~\ref{fig:high1}) showcases an input where the model's prediction of financial strength was substantially higher. This text highlights a high financial position characterized by a high level of cash reserves, no debt, and a positive free cash flow, indicating strong financial health and operational efficiency.
 
-In contrast, the second plot (see \ref{fig:low3}) corresponds to an input scenario where the model's prediction of financial strength was at its lowest. The text discusses significant concerns about a company's ability to meet near-term obligations due to a notable increase in its debt-equity ratio and a sharp decline in interest coverage ratios.
+In contrast, the second plot (see Figure~\ref{fig:low3}) corresponds to an input scenario where the model's prediction of financial strength was at its lowest. The text discusses significant concerns about a company's ability to meet near-term obligations due to a notable increase in its debt-equity ratio and a sharp decline in interest coverage ratios.
 
 These contrasting scenarios underscore the effectiveness of Captum in providing meaningful insights into how specific features in the text influence the model's output, thus assisting in understanding the underlying reasons behind model predictions.
 
@@ -414,11 +414,11 @@ These contrasting scenarios underscore the effectiveness of Captum in providing 
 \subsection{Training analysis}%Mohamad
 Training analysis involves systematically evaluating model performance metrics across different configurations to optimize accuracy, computational efficiency, and effectiveness. In our work, we analyze the impact of various Adapter configurations on Transformer-based models dedicated to sentiment classification tasks within the financial domain.
 
-\textbf{Number of Parameters vs. Accuracy:} The first plot \ref{fig:param_acc} in our analysis illustrates the relationship between the number of parameters in different Adapter configurations and the achieved accuracy. The configurations exhibit diverse accuracies; notably, MAMConfig, which possesses a higher parameter count, tends to achieve greater accuracy. On the other hand, configurations like LoRAConfig and UniPELTConfig show a broad spread in results, highlighting their varying effectiveness dependent on specific implementation and training data nuances.
+\textbf{Number of Parameters vs. Accuracy:} The first plot in Figure~\ref{fig:param_acc} in our analysis illustrates the relationship between the number of parameters in different Adapter configurations and the achieved accuracy. The configurations exhibit diverse accuracies; notably, MAMConfig, which possesses a higher parameter count, tends to achieve greater accuracy. On the other hand, configurations like LoRAConfig and UniPELTConfig show a broad spread in results, highlighting their varying effectiveness dependent on specific implementation and training data nuances.
 
-\textbf{Training Time vs. Accuracy:} The second plot \ref{fig:time_acc} correlates the training time with accuracy, shedding light on the computational efficiency of each Adapter configuration. Here, MAMConfig configurations demonstrate high accuracy but require longer training times, which may not be feasible in scenarios necessitating rapid model deployment. Conversely, ConfigUnion presents a compromise, offering a balanced trade-off between training duration and accuracy, suggesting its potential suitability for practical applications.
+\textbf{Training Time vs. Accuracy:} The second plot in Figure~\ref{fig:time_acc} correlates the training time with accuracy, shedding light on the computational efficiency of each Adapter configuration. Here, MAMConfig configurations demonstrate high accuracy but require longer training times, which may not be feasible in scenarios necessitating rapid model deployment. Conversely, ConfigUnion presents a compromise, offering a balanced trade-off between training duration and accuracy, suggesting its potential suitability for practical applications.
 
-\textbf{Model Accuracy with LoRA Adapter Configuration:} The third plot \ref{fig:models_lora_acc} displays the accuracies achieved by different models using the LoRA Adapter configuration. While models such as "yiyanghkust/finbert-tone" and "nickmuchi/sec-bert-finetuned-finance-classification" exhibit high accuracies, they do not consistently outperform in all training metrics, suggesting that accuracy alone might not reliably indicate a model's effectiveness in real-world applications.
+\textbf{Model Accuracy with LoRA Adapter Configuration:} The third plot in Figure~\ref{fig:models_lora_acc} displays the accuracies achieved by different models using the LoRA Adapter configuration. While models such as "yiyanghkust/finbert-tone" and "nickmuchi/sec-bert-finetuned-finance-classification" exhibit high accuracies, they do not consistently outperform in all training metrics, suggesting that accuracy alone might not reliably indicate a model's effectiveness in real-world applications.
 
 Given that high accuracy during training does not invariably predict superior real-world performance, our selection of optimal models was guided by additional metrics, including the AUC scores. This approach ensures the final model selection performs well in different contexts and aligns with practical needs.
 
