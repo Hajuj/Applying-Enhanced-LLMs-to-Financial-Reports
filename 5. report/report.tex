@@ -165,39 +165,43 @@ PE_{(pos, 2i+1)} &= \cos\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right)
 \]
 where $pos$ is the position and $i$ is the dimension.
 
-\subsection{Parameter efficient fine-tuning (PEFT)}%Mohamad
-In the landscape of machine learning, particularly in fine-tuning large pre-trained models across various tasks, the demand for computational efficiency and scalability necessitates innovative approaches. Parameter Efficient Fine-Tuning (PEFT) addresses this challenge by enabling the adaptation of large models to specific tasks without the need to update all model parameters, thus conserving computational resources and enhancing the feasibility of exploring multiple models.
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=.85\linewidth]{pictures/transformer_architecture.png}
+    \caption{Transformer model architecture \cite{Vaswani2023}.}
+\end{figure}
 
-\textbf{Adapters} are central to the PEFT strategy. An adapter is a small neural network module inserted between the layers of a pre-existing model, such as a Transformer. Typically, these adapters consist of a down-projection that reduces the dimensionality of the layer output, a non-linear activation function, and an up-projection that restores the dimensionality to its original size. The formal structure of an adapter can be expressed as:
+\subsection{Parameter efficient fine-tuning (PEFT)}%Mohamad
+When fine-tuning large pre-trained models for various tasks, computational efficiency and scalability require innovative approaches. Parameter-efficient fine-tuning (PEFT) addresses this challenge by enabling the adaptation of large models to specific tasks without the need to update all model parameters. Thus, PEFT conserves computational resources and enhances the feasibility of exploring multiple models \cite{pfeiffer2020adapterhub}.
+
+\textbf{Adapters} are central to the PEFT strategy. An adapter is a small neural network module inserted between the layers of a pre-existing model, such as a Transformer. As illustrated in Figure \ref{fig:PEFT1}, the adapter modifies the Transformer block by inserting additional neural network layers that allow for fine-tuning on specific tasks with minimal updates to the overall model parameters.
+
+Typically, these adapters consist of a down-projection that reduces the dimensionality of the layer output, a non-linear activation function, and an up-projection that restores the dimensionality to its original size \cite{pfeiffer2020adapterhub}. The formal structure of an adapter, shown in Figure \ref{fig:PEFT2}, can be expressed as:
 \[
-\operatorname{Adapter}(x) = x + U(\sigma(D(x)))
+\operatorname{Adapter}(x) = x + U(\sigma(D(x))),
 \]
 where $x$ is the input to the adapter, $D$ represents the down-projection, $\sigma$ is a non-linear activation function (e.g., ReLU), and $U$ is the up-projection.
 
-The use of adapters offers a significant advantage in that only the parameters within these modules need to be updated during fine-tuning, leaving the vast majority of the pre-trained model's parameters frozen. This is particularly advantageous for several reasons:
+Adapters offer a significant advantage in that only the parameters within these modules need to be updated during fine-tuning, leaving the vast majority of the pre-trained model's parameters frozen. This is particularly advantageous for several reasons:
 \begin{itemize}
-    \item \textbf{Computational Efficiency:} Since only a small fraction of the overall parameters are updated, the computational overhead is greatly reduced compared to full model fine-tuning.
+    \item \textbf{Computational Efficiency:} Since only a small fraction of the overall parameters are updated, the computational overhead is significantly reduced compared to full model fine-tuning.
     \item \textbf{Preservation of Pre-trained Knowledge:} By keeping most of the original model parameters unchanged, the risk of catastrophic forgetting is minimized, thus preserving the knowledge that the model has acquired during its initial extensive training.
     \item \textbf{Scalability:} Adapters allow for quick adaptation to multiple tasks without the need for extensive retraining, making it feasible to fine-tune large models on a wide range of tasks, even with limited computational resources.
 \end{itemize}
-
-PEFT, by employing adapters, achieves efficient transfer learning by introducing only a modest number of trainable parameters per task. This allows for rapid experimentation and adaptation across diverse tasks, which is crucial in practical scenarios where deploying multiple specialized models is required. Additionally, adapters are often designed to be easily plug-and-play, meaning they can be inserted or removed from the model architecture with minimal adjustments, further enhancing the flexibility and utility of this approach.
-
-Overall, Parameter Efficient Fine-Tuning through the use of adapters presents a practical and effective solution to the challenge of fine-tuning large-scale models in a resource-constrained environment. This methodology not only accelerates the adaptation process but also ensures that the intrinsic capabilities of the underlying model are retained and effectively utilized across various tasks.
 
 \cite{Poth2023}
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=.65\linewidth]{pictures/PEFT1.png}
-    \caption[PEFT1]{process of PEFT  \cite{Raschka2023}}
+    \caption[PEFT1]{Process of PEFT \cite{Raschka2023}.}
     \label{fig:PEFT1}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=.65\linewidth]{pictures/PEFT2.jpg}
-    \caption[PEFT2]{process of PEFT (detailed) \cite{Raschka2023}}
+    \caption[PEFT2]{Process of PEFT (detailed) \cite{Raschka2023}.}
     \label{fig:PEFT2}
 \end{figure}
 
@@ -205,23 +209,23 @@ Overall, Parameter Efficient Fine-Tuning through the use of adapters presents a 
 
 
 \subsection{Hugging Face}%Mohamad
-Hugging Face is a pivotal platform in the field of natural language processing and machine learning, providing an extensive repository of pre-trained models along with tools for training, fine-tuning, and deploying models across various tasks. The platform is renowned for its implementation of state-of-the-art models, including those based on Transformer architectures like BERT, GPT, and their derivatives.
+Hugging Face is an essential platform in NLP and machine learning. It provides an extensive repository of pre-trained models and tools for training, fine-tuning, and deploying models across various tasks \cite{wolf2020huggingfaces}. The platform is renowned for implementing state-of-the-art models based on Transformer architectures like BERT \cite{devlin2019bert}, GPT \cite{brown2020language}, and their derivatives.
 
-\textbf{Why Use Hugging Face?} The primary appeal of Hugging Face lies in its comprehensive ecosystem that simplifies the deployment of machine learning models. Here are several reasons why it is widely used:
+\textbf{Why Use Hugging Face?} The primary appeal of Hugging Face lies in its comprehensive ecosystem that simplifies the deployment of machine learning models. There are several reasons why it is widely used:
 \begin{itemize}
-    \item \textbf{Accessibility of Pre-trained Models:} Hugging Face offers access to thousands of pre-trained models which are easily adaptable to a broad range of tasks without the need from scratch training.
-    \item \textbf{Ease of Integration:} The platform supports various programming languages and frameworks, including Python, PyTorch, and TensorFlow, enabling seamless integration into existing projects.
+    \item \textbf{Accessibility of Pre-trained Models:} Hugging Face offers access to thousands of pre-trained models that are easily adaptable to a broad range of tasks without the need for scratch training.
+    \item \textbf{Ease of Integration:} The platform supports various programming languages and frameworks, including Python, PyTorch \cite{paszke2019pytorch}, and TensorFlow \cite{tensorflow2015-whitepaper}, enabling seamless integration into existing projects.
     \item \textbf{Community and Support:} With a robust community of developers and researchers, Hugging Face facilitates collaboration and sharing of best practices, contributing to the continual improvement and extension of its model offerings.
 \end{itemize}
 
-\textbf{Benefits in Practical Applications:} Utilizing Hugging Face allows developers and researchers to reduce the time and resources required for model development dramatically. Specifically, the platform provides functionalities for:
+\textbf{Benefits in Practical Applications:} Utilizing Hugging Face allows us to reduce the time and resources required for model development dramatically. Specifically, the platform provides functionalities for:
 \begin{itemize}
     \item \textbf{Fine-Tuning Pre-trained Models:} Users can fine-tune models on specific datasets, which is essential for tailoring the model's responses to the nuances of particular domains or tasks.
     \item \textbf{Experimentation:} The ease of accessing and modifying different models promotes rapid prototyping and experimentation, a valuable feature in the fast-evolving field of AI.
     \item \textbf{Deployment:} Hugging Face also offers solutions for easy deployment of trained models, which is beneficial for bringing AI applications to production.
 \end{itemize}
 
-\textbf{Application in Our Work:} In our research, we leverage Hugging Face to fine-tune pre-trained models specifically for analyzing Analyst Reports from MorningStar. This involves adapting state-of-the-art NLP models to comprehend and interpret complex financial texts, which is critical for extracting actionable insights and automating parts of the financial analysis process. The ability to fine-tune and deploy models efficiently with Hugging Face accelerates our research and application development, enabling a focused approach on model performance and application-specific adjustments rather than infrastructure and model maintenance.
+\textbf{Application in Our Work:} In our project, we leverage Hugging Face to fine-tune pre-trained models specifically for analyzing Analyst Reports from MorningStar. This involves adapting state-of-the-art Transformer models \cite{wolf2020huggingfaces} to comprehend and interpret complex financial texts, which is critical for extracting actionable insights and automating parts of the financial analysis process. The ability to fine-tune and deploy models efficiently with Hugging Face accelerates our research and application development, enabling a focused approach to model performance and application-specific adjustments rather than infrastructure and model maintenance.
 
 \section{literature}%Jonas
 
@@ -281,23 +285,19 @@ Since our approach is centered around sentiment classification of financial repo
 Within the financial subset, there are also models fine-tuned to the task of sentiment classification on financial text data, such as publicly available SEC filings.
 
 \subsection{Adapter configuration}%Mohamad
-Configuring adapters in machine learning models, particularly in Transformer architectures, allows for targeted modifications to model behavior while preserving the bulk of the pre-trained parameters. Adapters offer a flexible approach to fine-tuning, where specific components are added or adjusted to alter the model's functionality for specialized tasks. This section explores various adapter configurations and their applicability to our research.
+Configuring adapters for machine learning models, particularly in Transformer architectures, allows for targeted modifications to model behavior while preserving the bulk of the pre-trained parameters. Adapters offer a flexible approach to fine-tuning, where specific components are added or adjusted to alter the model's functionality for specialized tasks \cite{pfeiffer2020adapterhub}.
 
-\textbf{Adapter Configuration Options:} The configuration of adapters can vary widely depending on the desired outcome and the specific model architecture. Common configurations include altering the number of adapter layers, the size of the feed-forward networks, the non-linearity type, and the training strategy. The choice of configuration typically balances between computational efficiency and task-specific performance.
+\textbf{Adapter Configuration Options:} The configuration of adapters can vary widely depending on the desired outcome and the specific model architecture. Common configurations include altering the number of adapter layers, the size of the feed-forward networks, the non-linearity type, and the training strategy. The choice of configuration typically balances between computational efficiency and task-specific performance \cite{min2023recent}.
 
 \textbf{Industry Standard and Our Usage:} For the industry, especially in areas involving complex sequence understanding like financial analysis, configurations that offer a good trade-off between performance and computational demand are preferred. In our work, we experimented with several adapter configurations to identify the most effective setup for analyzing financial reports.
 
 \textbf{Adapter Configurations Used in Our Work:}
 \begin{itemize}
-    \item \textbf{LoRAConfig:} LoRA (Low-Rank Adaptation) employs rank decomposition to modify attention and feed-forward layers within a Transformer. By adjusting only a small subset of model parameters, LoRAConfig focuses on the adaptability of the model with minimal computational overhead.
-    \item \textbf{UniPELTConfig:} The Universal Parameter-Efficient Learning of Tasks (UniPELT) is a strategy that integrates different types of parameter-efficient techniques. UniPELTConfig is designed to be flexible across a variety of tasks by leveraging multiple adaptation strategies simultaneously.
-    \item \textbf{MAMConfig:} Model-Agnostic Meta-Learning (MAM) approach configures adapters for fast adaptation to new tasks. This configuration has proven particularly effective in settings where models need to quickly adjust to new data distributions or task requirements.
-    \item \textbf{ConfigUnion (LoRAConfig, PrefixTuningConfig, SeqBnConfig):} This configuration combines LoRA, Prefix Tuning, and Sequence Bucketing strategies. Prefix Tuning involves prepending a sequence of trainable vectors to the input, while Sequence Bucketing adjusts the model based on sequence length. This union aims to leverage the strengths of each individual approach for enhanced overall performance.
+    \item \textbf{LoRAConfig:} LoRA (Low-Rank Adaptation) employs rank decomposition to modify attention and feed-forward layers within a Transformer. By adjusting only a small subset of model parameters, LoRAConfig focuses on the adaptability of the model with minimal computational overhead \cite{hu2021lora}.
+    \item \textbf{UniPELTConfig:} The Unified Framework for Parameter-Efficient Language Model Tuning (UniPELT) is a framework that combines various parameter-efficient techniques as sub-modules. UniPELTConfig eliminates the need for model selection by optimizing sub-module activation based on their contribution to the task, ensuring consistently high performance while maintaining model efficiency \cite{mao2022unipelt}.
+    \item \textbf{MAMConfig:} The Mix-And-Match (MAM) adapter optimizes attention sub-layers efficiently. It adapts to new tasks quickly with fewer parameters updated and achieves comparable results to full fine-tuning. MAM adapter has strong performance in adjusting to new data distributions and task requirements, making it an optimal choice for rapid deployment scenarios \cite{he2022unified}.
+    \item \textbf{ConfigUnion (LoRAConfig, PrefixTuningConfig, SeqBnConfig):} This configuration combines LoRA, Prefix Tuning \cite{li2021prefixtuning}, and Sequence Bucketing strategies \cite{pfeiffer2020madx}. Prefix Tuning involves prepending a sequence of trainable vectors to the input, while Sequence Bucketing adjusts the model based on sequence length. This union aims to leverage the strengths of each individual approach for enhanced overall performance \cite{pfeiffer2020adapterhub}.
 \end{itemize}
-
-\textbf{Performance Evaluation:} In our experiments, MAMConfig emerged as the best-performing configuration. Its effectiveness in adapting to the specific nuances of financial text in Analyst Reports from MorningStar has been particularly noteworthy. MAMConfig's ability to facilitate rapid learning and adaptation without extensive retraining makes it highly suitable for our application, leading to significant improvements in model precision and recall metrics.
-
-In conclusion, the careful selection and configuration of adapters are crucial for optimizing the performance of fine-tuned models in specialized tasks. The diverse configurations we tested underscore the adaptability and potential of using adapters to enhance pre-trained models for specific domains like financial analysis.
 
 \subsection{Exploration and Exploitation}%Jonas
 Since running all possible combinations of configurations is intractable, we assume independence of our various parameters in our experimental setup and base our approach on exploration and exploitation. We explore all possible valid models and configurations and exploit the best ones in the next iteration. First, we compare the different models, then we optimize for the best adapter configuration, and after that we search for the best text input. Finally, we compare our PEFT approach to fine-tuning the LLM itself.
@@ -334,7 +334,7 @@ In order to evaluate our models accurately, we first create a benchmark based on
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.85\linewidth]{../3. evaluation/roc_curves/Zero Experiment.png}
+    \includegraphics[width=.85\linewidth]{roc_curves/Zero Experiment.png}
     \caption[First Experiment]{Benchmark Experiment: a diagonal line represents a random process. For financial markets it means reproducing the current distribution (following the trend).}
     \label{fig:Zeroexp}
 \end{figure}
@@ -347,7 +347,7 @@ Our approach assumes that all changes in our experiments are independent so that
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.85\linewidth]{../3. evaluation/roc_curves/First Experiment.png}
+    \includegraphics[width=.85\linewidth]{roc_curves/First Experiment.png}
     \caption[First Experiment]{First Experiment}
     \label{fig:Firstexp}
 \end{figure}
@@ -356,7 +356,7 @@ We continue for the two best models (both trained on financial sentiment data) a
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.85\linewidth]{../3. evaluation/roc_curves/Second Experiment.png}
+    \includegraphics[width=.85\linewidth]{roc_curves/Second Experiment.png}
     \caption[Second Experiment]{Second Experiment}
     \label{fig:Secondexp}
 \end{figure}
@@ -365,7 +365,7 @@ Next to \texttt{AnalystNoteList} we also explore  \texttt{CapitalAllocation}, \t
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.85\linewidth]{../3. evaluation/roc_curves/Third Experiment.png}
+    \includegraphics[width=.85\linewidth]{roc_curves/Third Experiment.png}
     \caption[Third Experiment]{Third Experiment}
     \label{fig:Thirdexp}
 \end{figure}
@@ -374,7 +374,7 @@ Finally, we use the best combination found to directly fine tune the underlying 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.85\linewidth]{../3. evaluation/roc_curves/Fourth Experiment.png}
+    \includegraphics[width=.85\linewidth]{roc_curves/Fourth Experiment.png}
     \caption[Fourth Experiment]{Final Result.}
     \label{fig:Fourthexp}
 \end{figure}
@@ -382,31 +382,65 @@ Finally, we use the best combination found to directly fine tune the underlying 
 While there is no overall cutoff value and it highly depends on the specific application, with values above 0.7 \cite{Hosmer2013}, we reached a robust predictive quality.
 
 \subsection{Insights via CAPTUM}%Mohamad
-What are the models using as input? Use CAPTUM and quickly describe the gradient approach to obtain feature attribution. \cite{Kokhlikyan2020}
+Captum, derived from the Latin word for "understanding," is an interpretability library developed by Meta AI for the PyTorch framework \cite{paszke2019pytorch}. It features several algorithms to identify data feature contributions. It helps validate model behavior, ensure fairness, and debug complex machine learning applications \cite{Kokhlikyan2020}.
 
-CAPTUM, which derives from the Latin word for "understanding," is a model interpretability library for PyTorch developed by Meta AI. It provides a comprehensive suite of algorithms designed to provide insights into the data features that most influence machine learning models' predictions. This tool is crucial for validating model behaviors, ensuring fairness, and debugging in complex machine learning systems.
+A key method in Captum for feature attribution is the \textit{Layer Integrated Gradients}, which extends the Integrated Gradients \cite{sundararajan2017axiomatic} approach. This method is particularly adept at handling models with deep architectures, such as BERT \cite{devlin2019bert}, by attributing importance to input features relative to a specific layer's output, thus offering more granular insight \cite{sundararajan2017axiomatic}.
 
-\textbf{Captum.AI} offers a range of interpretability methods, but a prominent approach within this library involves gradient-based techniques for feature attribution. These methods compute the gradient of the output with respect to the input features to determine how much each feature contributes to the output prediction. The premise is that the gradient of a feature indicates the direction and magnitude by which a slight change in the feature would alter the model's output.
+In our project, we utilize Captum to analyze and validate the feature attributions of our fine-tuned models on financial texts from MorningStar analyst reports. This ensures that our models' predictive decisions are based on relevant and justifiable data, fostering trust and transparency in automated financial analysis.
 
-\textbf{Gradient Approach for Feature Attribution:} The gradient-based methods, such as Integrated Gradients, are particularly popular. This method accumulates gradients along the path from a baseline input (typically representing the absence of a feature) to the actual input, providing a more comprehensive picture of feature importance across different contexts within the input space.
+The first case (see \ref{fig:high1}) showcases an input where the model's prediction of financial strength was substantially higher. This text highlights a high financial position characterized by a high level of cash reserves, no debt, and a positive free cash flow, indicating strong financial health and operational efficiency.
 
-Using CAPTUM, researchers and developers can gain deeper insights into the workings of their models, enabling a clearer understanding of decision-making processes and facilitating improvements in model design and function. In our work, we employ CAPTUM to analyze and validate the feature attributions of our fine-tuned models on financial texts from Analyst Reports by MorningStar, ensuring that our models make decisions based on relevant and justifiable information.
+In contrast, the second plot (see \ref{fig:low3}) corresponds to an input scenario where the model's prediction of financial strength was at its lowest. The text discusses significant concerns about a company's ability to meet near-term obligations due to a notable increase in its debt-equity ratio and a sharp decline in interest coverage ratios.
+
+These contrasting scenarios underscore the effectiveness of Captum in providing meaningful insights into how specific features in the text influence the model's output, thus assisting in understanding the underlying reasons behind model predictions.
+
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=.85\linewidth]{pictures/high_1.png}
+    \caption{Text input from Analyst Report indicating high financial strength prediction.}
+    \label{fig:high1}
+\end{figure}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=.85\linewidth]{pictures/low_3.png}
+    \caption{Text input from Analyst Report indicating low financial strength prediction.}
+    \label{fig:low3}
+\end{figure}
 
 
 
 \subsection{Training analysis}%Mohamad
-Show some plots about runtime and training time. Compare with Loss, Accuracy etc
+Training analysis involves systematically evaluating model performance metrics across different configurations to optimize accuracy, computational efficiency, and effectiveness. In our work, we analyze the impact of various Adapter configurations on Transformer-based models dedicated to sentiment classification tasks within the financial domain.
+
+\textbf{Number of Parameters vs. Accuracy:} The first plot \ref{fig:param_acc} in our analysis illustrates the relationship between the number of parameters in different Adapter configurations and the achieved accuracy. The configurations exhibit diverse accuracies; notably, MAMConfig, which possesses a higher parameter count, tends to achieve greater accuracy. On the other hand, configurations like LoRAConfig and UniPELTConfig show a broad spread in results, highlighting their varying effectiveness dependent on specific implementation and training data nuances.
+
+\textbf{Training Time vs. Accuracy:} The second plot \ref{fig:time_acc} correlates the training time with accuracy, shedding light on the computational efficiency of each Adapter configuration. Here, MAMConfig configurations demonstrate high accuracy but require longer training times, which may not be feasible in scenarios necessitating rapid model deployment. Conversely, ConfigUnion presents a compromise, offering a balanced trade-off between training duration and accuracy, suggesting its potential suitability for practical applications.
+
+\textbf{Model Accuracy with LoRA Adapter Configuration:} The third plot \ref{fig:models_lora_acc} displays the accuracies achieved by different models using the LoRA Adapter configuration. While models such as "yiyanghkust/finbert-tone" and "nickmuchi/sec-bert-finetuned-finance-classification" exhibit high accuracies, they do not consistently outperform in all training metrics, suggesting that accuracy alone might not reliably indicate a model's effectiveness in real-world applications.
+
+Given that high accuracy during training does not invariably predict superior real-world performance, our selection of optimal models was guided by additional metrics, including the AUC scores. This approach ensures the final model selection performs well in different contexts and aligns with practical needs.
 
 \begin{figure}[!h]
     \centering
     \includegraphics[width=.85\linewidth]{pictures/number_params_vs_accuracy.png}
-    \caption{Number of parameters vs. Accuracy, clustered by adapter configuration}
+    \caption{Number of parameters vs. Accuracy, clustered by adapter configuration.}
+    \label{fig:param_acc}
 \end{figure}
 
 \begin{figure}[!h]
     \centering
     \includegraphics[width=.85\linewidth]{pictures/training_time_vs_accuracy.png}
-    \caption{Training time vs. Accuracy,  clustered by adapter configuration}
+    \caption{Training time vs. Accuracy,  clustered by adapter configuration.}
+    \label{fig:time_acc}
+\end{figure}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=.85\linewidth]{pictures/accuracy_lora.png}
+    \caption{All models and their corresponding accuracy on LoRA adapter configuration.}
+    \label{fig:models_lora_acc}
 \end{figure}
 
 \section{Conclusion}
