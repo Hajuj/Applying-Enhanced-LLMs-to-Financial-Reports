@@ -25,14 +25,14 @@
 \IEEEauthorblockA{\textit{LMU Munich} \\
 \textit{Department of Computer Science}\\
 %City, Country \\
-%email address or ORCID
+jonas.gottal@campus.lmu.de
 }
 \and
 \IEEEauthorblockN{2\textsuperscript{nd} Mohamad Hgog}
 \IEEEauthorblockA{\textit{LMU Munich} \\
 \textit{Department of Computer Science}\\
 %City, Country \\
-%email address or ORCID
+m.hgog@campus.lmu.de
 }
 }
 
@@ -54,7 +54,7 @@ However, the question arises whether these reports are actually valuable or just
 Financial analysts provide detailed reports on single companies (equities), detailing their current situation and future prospects. These reports are based on a variety of factors, including their financial strength, economic moat and cost allocation. The reports also contain a rating and a fair price estimate. 
 
 \subsection{Data description}%Jonas
-The data is retrieved from \href{https://www.morningstar.co.uk/uk/}{Morningstar} and contains the following columns:
+The data is retrieved from \href{https://www.Morningstar.co.uk/uk/}{Morningstar} and contains the following columns:
 \begin{itemize}    
     \item \texttt{ParseDate}: The date the information was retrieved.
   \item \texttt{Title}: The title of the analyst report.
@@ -122,7 +122,7 @@ Utilizing LLMs, including those based on Transformer architectures, has demonstr
 
 To efficiently handle LLMs, we use the  Transformer architecture and models provided by Hugging Face \cite{wolf2020huggingfaces}. We also implement Adapters, which offer a parameter-efficient way to fine-tune pre-trained models on domain-specific tasks \cite{pfeiffer2020adapterhub}. By inserting small, trainable modules within the Transformer layers, we can tailor the model's responses to the subtleties of financial language without overhauling the entire network architecture. This approach significantly reduces the computational overhead and facilitates quicker iterations and refinements.
 
-Our research aims to classify the sentiment expressed in Analyst Reports from MorningStar accurately. Analyzing the sentiment, we can extract meaningful insights about market trends and investor perceptions, which are crucial for making informed financial decisions. Sentiment classification in this context involves determining the polarity of the text—whether it conveys a positive, negative, or neutral sentiment—which can significantly influence investment strategies and business outcomes.
+Our research aims to classify the sentiment expressed in Analyst Reports from Morningstar accurately. Analyzing the sentiment, we can extract meaningful insights about market trends and investor perceptions, which are crucial for making informed financial decisions. Sentiment classification in this context involves determining the polarity of the text—whether it conveys a positive, negative, or neutral sentiment—which can significantly influence investment strategies and business outcomes.
 
 \subsection{Transformer models}%Mohamad
 Transformer models are a class of deep learning architectures that have revolutionized the field of natural language processing (NLP). Based on the encoder-decoder architecture, these models leverage self-attention mechanisms to process data sequences in parallel and capture complex dependencies across the sequence \cite{Vaswani2023} \cite{wolf2020huggingfaces}. The encoder maps an input sequence of symbol representations $(x_1, \ldots, x_n)$ to a continuous representation $\mathbf{z}=(z_1, \ldots, z_n)$. The decoder generates an output sequence $(y_1, \ldots, y_m)$ from $\mathbf{z}$, using an inherently auto-regressive method, processing previous symbols to generate the next \cite{Vaswani2023}.
@@ -225,7 +225,7 @@ Hugging Face is an essential platform in NLP and machine learning. It provides a
     \item \textbf{Deployment:} Hugging Face also offers solutions for easy deployment of trained models, which is beneficial for bringing AI applications to production.
 \end{itemize}
 
-\textbf{Application in Our Work:} In our project, we leverage Hugging Face to fine-tune pre-trained models specifically for analyzing Analyst Reports from MorningStar. This involves adapting state-of-the-art Transformer models \cite{wolf2020huggingfaces} to comprehend and interpret complex financial texts, which is critical for extracting actionable insights and automating parts of the financial analysis process. The ability to fine-tune and deploy models efficiently with Hugging Face accelerates our research and application development, enabling a focused approach to model performance and application-specific adjustments rather than infrastructure and model maintenance.
+\textbf{Application in Our Work:} In our project, we leverage Hugging Face to fine-tune pre-trained models specifically for analyzing Analyst Reports from Morningstar. This involves adapting state-of-the-art Transformer models \cite{wolf2020huggingfaces} to comprehend and interpret complex financial texts, which is critical for extracting actionable insights and automating parts of the financial analysis process. The ability to fine-tune and deploy models efficiently with Hugging Face accelerates our research and application development, enabling a focused approach to model performance and application-specific adjustments rather than infrastructure and model maintenance.
 
 \section{literature}%Jonas
 
@@ -386,7 +386,7 @@ Captum, derived from the Latin word for "understanding," is an interpretability 
 
 A key method in Captum for feature attribution is the \textit{Layer Integrated Gradients}, which extends the \textit{Integrated Gradients} approach \cite{sundararajan2017axiomatic}. This method is particularly adept at handling models with deep architectures, such as BERT \cite{devlin2019bert}, by attributing importance to input features relative to a specific layer's output, thus offering more granular insight \cite{sundararajan2017axiomatic}.
 
-In our project, we utilize Captum (as in the tutorial \cite{captum2023bert}) to analyze and validate the feature attributions of our fine-tuned models on financial texts from MorningStar analyst reports. This ensures that our models' predictive decisions are based on relevant and justifiable data, fostering trust and transparency in automated financial analysis.
+In our project, we utilize Captum (as in the tutorial \cite{captum2023bert}) to analyze and validate the feature attributions of our fine-tuned models on financial texts from Morningstar analyst reports. This ensures that our models' predictive decisions are based on relevant and justifiable data, fostering trust and transparency in automated financial analysis.
 
 The first case (see Figure~\ref{fig:high1}) showcases an input where the model's prediction of financial strength was substantially higher. This text highlights a high financial position characterized by a high level of cash reserves, no debt, and a positive free cash flow, indicating strong financial health and operational efficiency.
 

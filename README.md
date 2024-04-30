@@ -1,60 +1,69 @@
 # Advanced-Analytics-and-Machine-Learning
 University project on Advanced Analytics and Machine Learning (AAML) with the goal of outperforming financial analysts via NLP using their own texts.
 
-# Approach
-## Data
-Analyst reports from Morningstar: contain both a subjective analyst report (text) on a stock and a quantifiable forecast (numeric)
-## Scope 
-Use the various text elements to fine-tune different transformer models (maybe modify some parts with adapters from https://docs.adapterhub.ml) and compare to the predictive qualities from the analysts themselves. 
+# Outperforming Morningstar Analysts: Applying Enhanced LLMs to Financial Reports
 
-## List of models
-[How to configure the adapters](https://github.com/adapter-hub/adapters/blob/main/notebooks/07_Complex_Adapter_Configuration.ipynb)
-### Finance
-- https://huggingface.co/nickmuchi/sec-bert-finetuned-finance-classification
-- https://huggingface.co/ProsusAI/finbert
-- https://huggingface.co/ahmedrachid/FinancialBERT-Sentiment-Analysis
-- https://huggingface.co/yiyanghkust/finbert-tone
-- https://huggingface.co/nickmuchi/deberta-v3-base-finetuned-finance-text-classification
-- https://huggingface.co/soleimanian/financial-roberta-large-sentiment
-- https://huggingface.co/bardsai/finance-sentiment-pl-fast
-- https://huggingface.co/RashidNLP/Finance-Sentiment-Classification
+This repository is dedicated to the research paper "Outperforming Morningstar Analysts: Applying Enhanced LLMs to Financial Reports," authored by Jonas Gottal and Mohamad Hgog from LMU Munich's Department of Computer Science. This study analyzes financial analyst reports from Morningstar, employing Large Language Models (LLMs) to extract insights that typically surpass the predictive accuracy of human analysts.
 
-### Sentiment
-- https://huggingface.co/siebert/sentiment-roberta-large-english
-- https://huggingface.co/kwang123/bert-sentiment-analysis
-- https://huggingface.co/distilbert/distilbert-base-uncased-finetuned-sst-2-english
+## Abstract
+This study examines financial analyst reports from Morningstar, revealing two key findings: firstly, analysts appear to select stocks arbitrarily, and secondly, they provide comprehensive textual justifications that enable informed decisions surpassing mere chance. We employ enhanced large language models to efficiently analyze the textual data, facilitating a broad exploration of various pre-trained models to identify the subtle underlying sentiment and extract more value from the reports than the experts themselves.
 
-## ToDos
-### Prio 1: Basic Model Pipeline (ensemble)
-- ~~Incorporate an easy swap of text fields (and include multiple text fields at once)~~
-- ~~Incorporate an easy swap of huggingface models (Bert, FinBERT, ...)~~
-- ~~Incorporate an easy way to include adapters [Adapterhub](https://adapterhub.ml)~~
-- ~~Save all models (if fine-tuned) and basic metrics (training times, etc)~~
-- ~~Data Preprocessing: non-deterministic reproducible train test split (Deadline: 17.04.2024)~~
-- ~~Incorporate current version of Jupyter Notebook in python code and update requirements if necessary +~~ ~~Debug with distilbert and adapter and make sure all exports, files and models are saved in a organized manner (incl predictions as probabilities for ROC curves)~~ (Deadline: 20.04.2024)
-- ~~Create a list of potential models/adapters that could be used for financial texts/classification of sentiment (Deadline: 21.04.2024)~~
+## Repository Structure
+```
+/Advanced-Analytics-and-Machine-Learning
+|-- data/                # Raw and processed datasets from Morningstar
+|-- models/              # Pre-trained models and adapter configurations
+|-- evaluation/          # Scripts and notebooks for model evaluation
+|-- presentation/        # Slides and other materials for presentations
+|-- report/              # LaTeX source files for the research paper
+|-- notebooks/           # Jupyter notebooks with data analysis and model training
+|-- requirements.txt     # Project dependencies
+|-- README.md            # Repository documentation
+|-- LICENSE              # License details
+|-- build_model.py       # Script to build models
+|-- evaluate_model.py    # Script to evaluate models
+|-- run.py               # Main script to run analyses
+```
 
-### Prio 2: Automated Evaluation (parallel)
-- ~~Build custom ROC curves on top of confusion matrix/other evaluation methods and save all metrics~~
-- ~~Show why adapters are useful: no (huge) loss in quality while training time is significantly reduced~~
-	- ~~Use huggingface sst2 to demonstrate (ROC curves + training time)~~
-- ~~Run for analyst note and use as label the moving average (see old project) (Deadline: 22.04.2024)~~
-### Prio 3: Features (parallel)
-- Single out best model/adapters, discard efficiency and try to optimize and run for other text columns
-- ~~Finish automated evaluation plots for top $n$ models~~
-- ~~Benchmarking:~~
-	- ~~Add xgBoost based on sector, author name etc~~
-	- ~~Add xgBoost based on analysts fairprice (baseline)~~
-- Explore with feature attribution methods for the best performing model to gain deeper insights: what part of the input text is the reason for the prediction? (Focus on interpretability and explainable AI) (Use e.g. Captum to find important parts of text that lead to the highest probabilities of classifiers)
+## Approach:
+### Objective: 
+The study aims to evaluate the value of financial analyst reports from Morningstar by using enhanced Large Language Models (LLMs) to analyze the textual data within these reports.
 
-### Report, presentation & Markdown file
-- Explain data set
-- Explain transformers and adapters
-- ROC/Evaluation
-- Visualize Training/inference times
-- Visualize important input features
-- ...
+1. Data and Preprocessing: We utilized financial reports from Morningstar, which included detailed information about stocks such as ratings, prices, analyst notes, and other key financial indicators. The data was preprocessed by removing noise and normalizing figures to create a clean dataset for analysis.
+1. Model Implementation: The study leveraged the Transformer architecture and its variants, primarily sourced from Hugging Face. We utilized parameter-efficient techniques such as Adapters for fine-tuning pre-trained models specifically to the domain of financial texts, which helps in managing computational resources effectively.
+1. Fine-Tuning Strategy: The fine-tuning involved using adapters and Transformer models to analyze sentiment and subtle cues within financial texts. Different configurations of adapters were tested to find the most efficient setup that retained the effectiveness of the underlying model without extensive retraining.
+1. Experimental Design: Our methodology included testing various models and configurations independently, assuming parameter independence to facilitate comparability. We explored different text inputs from the reports to determine which sections carried the most predictive power regarding stock performance.
 
-### Prio 4: If lots of time
-- Build portfolio backtesting: Returns, Sharpe Ratio and max draw down and include weights based on normalized probabilities for portfolio
-- Show why adapters are useful: Use various models and compare with the same model incl dedicated adapter
+
+## Results:
+1. Model Performance: The results indicated that traditional financial analyst reports and models like XGBoost could not outperform randomness, suggesting they might not contain actionable insights on their own. However, when applying advanced LLMs to the textual data, our models could extract meaningful information that surpassed traditional analysis methods.
+![Zero Experiment ROC Curve](https://github.com/trashpanda-ai/Advanced-Analytics-and-Machine-Learning/blob/ddd31424ede190bffc22f1d5721c70d4357f0181/3.%20evaluation/roc_curves/Zero%20Experiment.png?raw=true)
+
+1. Best Inputs and Configurations: The best results were obtained using text from the "FinancialStrengthText" section of the reports, indicating that summaries of financial strength were highly predictive. Adapters, particularly those in certain configurations, proved to be effective in enhancing model performance with less computational overhead.
+![First Experiment ROC Curve](https://github.com/trashpanda-ai/Advanced-Analytics-and-Machine-Learning/blob/2498a56414612f90eb08d9548abb8667f38b35a9/3.%20evaluation/roc_curves/First%20Experiment.png?raw=true)
+![Second Experiment ROC Curve](https://github.com/trashpanda-ai/Advanced-Analytics-and-Machine-Learning/blob/2498a56414612f90eb08d9548abb8667f38b35a9/3.%20evaluation/roc_curves/Second%20Experiment.png?raw=true)
+![Third Experiment ROC Curve](https://github.com/trashpanda-ai/Advanced-Analytics-and-Machine-Learning/blob/2498a56414612f90eb08d9548abb8667f38b35a9/3.%20evaluation/roc_curves/Third%20Experiment.png?raw=true)
+
+1. Comparative Analysis: Finally, we directly fine-tuned the underlying model with our best adapter setup, which only slightly improved the AUC but significantly reduced the model's complexity and resource usage.
+![Fourth Experiment ROC Curve](https://github.com/trashpanda-ai/Advanced-Analytics-and-Machine-Learning/blob/71bd69a88764a5958010c133096a41c742edb5e4/3.%20evaluation/roc_curves/Fourth%20Experiment.png?raw=true)
+1. Insights via Interpretability: Using tools like Captum, we provided insights into which features were most influential in the model predictions, aiding in the interpretability and trustworthiness of our machine learning solutions.
+![Positive Result](https://github.com/trashpanda-ai/Advanced-Analytics-and-Machine-Learning/blob/5da765c6771ffc825dc7bd39d4c6f4b7d4096a4b/5.%20report/pictures/high_1.png?raw=true)
+
+![Negative Result](https://github.com/trashpanda-ai/Advanced-Analytics-and-Machine-Learning/blob/5da765c6771ffc825dc7bd39d4c6f4b7d4096a4b/5.%20report/pictures/low_3.png?raw=true)
+
+
+Overall, our research demonstrated that employing advanced machine learning techniques, specifically tailored LLMs, on financial texts could significantly outperform traditional methods used by financial analysts, providing a more robust tool for financial decision-making.
+
+## Installation and Usage
+To set up and run the analysis, follow these steps:
+```bash
+git clone https://github.com/trashpanda-ai/Advanced-Analytics-and-Machine-Learning.git
+cd Advanced-Analytics-and-Machine-Learning
+pip install -r requirements.txt
+python run.py
+```
+
+For more detailed instructions on running specific parts of the analysis or models, refer to the documentation within each folder. Please note that ```adapters``` (0.1.2) and ```transformers``` sometimes throw warnings during the install process and may need to be repeated.
+
+## License
+This project is distributed under the MIT License. See the `LICENSE` file for more information.
