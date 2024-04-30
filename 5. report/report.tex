@@ -114,31 +114,30 @@ Since we care about investing and not speculation, we pre-process the data to re
 \end{figure}
 
 The final data (1586 reports) is split into a training, development and test set with a ratio of 70:10:20 (1103, 165, 318). The training set is used to train the models, the development set to optimize the hyperparameters and the test set to evaluate the models. 
+
 \section{Foundations} %Mohamad
-Our research efficiently leverages the capabilities of LLMs by utilizing Transformers and Adapters, primarily sourced from Hugging Face. This approach is fundamentally driven by the need to process extensive textual data accurately and efficiently, particularly focusing on sentiment classification within financial texts.
+Our research efficiently leverages the capabilities of LLMs by utilizing Transformers and Adapters, primarily sourced from Hugging Face \cite{wolf2020huggingfaces}. This approach is fundamentally driven by the need to process extensive textual data accurately and efficiently, particularly focusing on sentiment classification within financial texts.
 
-\textbf{Utilizing Large Language Models:} LLMs, including those based on Transformer architectures, have demonstrated unparalleled success in understanding and generating human-like text. Their ability to capture deep linguistic and semantic nuances makes them ideal for complex NLP tasks like sentiment analysis. However, the computational intensity of training such models from scratch demands significant resources.
+Utilizing LLMs, including those based on Transformer architectures, has demonstrated unparalleled success in understanding and generating human-like text. Their ability to capture deep linguistic and semantic nuances makes them ideal for complex NLP tasks like sentiment analysis. However, the computational intensity of training such models from scratch demands significant resources \cite{wolf2020huggingfaces}.
 
-\textbf{Efficiency through Transformers and Adapters:} To address the challenges associated with the scale of LLMs, our methodology incorporates the Transformer architecture, known for its efficiency in handling sequential data without the need for recurrent processing. The Transformer models, accessible via Hugging Face, provide a robust framework we adapt to our specific needs.
+To efficiently handle LLMs, we use the efficient Transformer architecture and models provided by Hugging Face \cite{wolf2020huggingfaces}. We also implement Adapters, which offer a parameter-efficient way to fine-tune pre-trained models on domain-specific tasks \cite{pfeiffer2020adapterhub}. By inserting small, trainable modules within the Transformer layers, we can tailor the model's responses to the subtleties of financial language without overhauling the entire network architecture. This approach significantly reduces the computational overhead and facilitates quicker iterations and refinements.
 
-\textbf{Adapters in Transformers:} Adapters offer a parameter-efficient way to fine-tune pre-trained models on domain-specific tasks. By inserting small, trainable modules within the Transformer layers, we can tailor the model's responses to the subtleties of financial language without overhauling the entire network architecture. This approach significantly reduces the computational overhead and facilitates quicker iterations and refinements.
-
-\textbf{Goal: Sentiment Classification:} Our research aims to classify the sentiment expressed in Analyst Reports from MorningStar accurately. Analyzing the sentiment, we can extract meaningful insights about market trends and investor perceptions, which are crucial for making informed financial decisions. Sentiment classification in this context involves determining the polarity of the text—whether it conveys a positive, negative, or neutral sentiment—which can significantly influence investment strategies and business outcomes.
-
-Using Transformers equipped with Adapters aligns with our objective to implement a scalable and efficient solution for sentiment analysis. This setup not only leverages the advanced capabilities of LLMs but also ensures that our model is finely attuned to the nuances of the specific dataset, thus enhancing the accuracy and reliability of the sentiment classification. \cite{Vaswani2023}
+Our research aims to classify the sentiment expressed in Analyst Reports from MorningStar accurately. Analyzing the sentiment, we can extract meaningful insights about market trends and investor perceptions, which are crucial for making informed financial decisions. Sentiment classification in this context involves determining the polarity of the text—whether it conveys a positive, negative, or neutral sentiment—which can significantly influence investment strategies and business outcomes.
 
 \subsection{Transformer models}%Mohamad
-Transformer models are a class of deep learning architectures that have revolutionized the field of natural language processing (NLP). These models, based on the encoder-decoder architecture, leverage self-attention mechanisms to process sequences of data in parallel and capture complex dependencies across the sequence. The encoder maps an input sequence of symbol representations $(x_1, \ldots, x_n)$ to a continuous representation $\mathbf{z}=(z_1, \ldots, z_n)$. The decoder generates an output sequence $(y_1, \ldots, y_m)$ from $\mathbf{z}$, using a method that is inherently auto-regressive, processing previous symbols to generate the next.
+Transformer models are a class of deep learning architectures that have revolutionized the field of natural language processing (NLP). Based on the encoder-decoder architecture, these models leverage self-attention mechanisms to process data sequences in parallel and capture complex dependencies across the sequence \cite{Vaswani2023} \cite{wolf2020huggingfaces}. The encoder maps an input sequence of symbol representations $(x_1, \ldots, x_n)$ to a continuous representation $\mathbf{z}=(z_1, \ldots, z_n)$. The decoder generates an output sequence $(y_1, \ldots, y_m)$ from $\mathbf{z}$, using an inherently auto-regressive method, processing previous symbols to generate the next \cite{Vaswani2023}.
 
-The backbone of the Transformer is the self-attention mechanism in both the encoder and decoder stacks, which allows each position in the sequence to attend to all positions in the previous layer of the model. Each encoder and decoder layer consists of multi-head self-attention mechanisms followed by position-wise fully connected feed-forward networks. Residual connections and layer normalization are employed around each sub-layer to facilitate the training of deep networks. Formally, each layer output can be described as:
+Figure \ref{fig:transformer_architecture} provides a detailed view of the Transformer architecture, illustrating both the encoder and decoder components.
+
+The backbone of the Transformer is the self-attention mechanism in both the encoder and decoder stacks, which allows each position in the sequence to attend to all positions in the previous layer of the model. Each encoder and decoder layer consists of multi-head self-attention mechanisms followed by position-wise fully connected feed-forward networks. Residual connections and layer normalization are employed around each sub-layer to facilitate the training of deep networks \cite{Vaswani2023}. Formally, each layer output can be described as:
 \[
-\text{Layer Output} = \text{LayerNorm}(x + \operatorname{Sublayer}(x))
+\text{Layer Output} = \text{LayerNorm}(x + \operatorname{Sublayer}(x)),
 \]
 where $\operatorname{Sublayer}(x)$ represents the operations within the sub-layer itself.
 
-\textbf{Self-attention} allows the model to weigh the importance of different words in the sequence irrespective of their positional distances. The attention function can be described as mapping a query and a set of key-value pairs to an output, where the output is a weighted sum of the values. The weight assigned to each value is computed by a compatibility function of the query with the corresponding key. The scaled dot-product attention is computed as:
+\textbf{Self-attention} allows the model to weigh the importance of different words in the sequence irrespective of their positional distances. The attention function can be described as mapping a query and a set of key-value pairs to an output, where the output is a weighted sum of the values. A compatibility function of the query with the corresponding key computes the weight assigned to each value. The scaled dot-product attention is computed as:
 \[
-\operatorname{Attention}(Q, K, V) = \operatorname{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
+\operatorname{Attention}(Q, K, V) = \operatorname{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V,
 \]
 where $Q$, $K$, and $V$ are the matrices representing queries, keys, and values, respectively, and $d_k$ is the dimensionality of the keys.
 
@@ -146,12 +145,12 @@ where $Q$, $K$, and $V$ are the matrices representing queries, keys, and values,
 \[
 \begin{aligned}
 \operatorname{MultiHead}(Q, K, V) &= \operatorname{Concat}(\operatorname{head}_1, \ldots, \operatorname{head}_h) W^O \\
-\text{where head} &= \operatorname{Attention}(QW_i^Q, KW_i^K, VW_i^V)
+\text{where head} &= \operatorname{Attention}(QW_i^Q, KW_i^K, VW_i^V).
 \end{aligned}
 \]
 Here, $W_i^Q$, $W_i^K$, and $W_i^V$ are parameter matrices for different heads, and $W^O$ is the output projection matrix.
 
-Furthermore, the model incorporates \textbf{position-wise feed-forward networks} in each layer, consisting of two linear transformations with a ReLU activation in between:
+Furthermore, the model incorporates \textbf{position-wise feed-forward networks} in each layer, consisting of two linear transformations with a ReLU \cite{agarap2019deep} activation in between:
 \[
 \operatorname{FFN}(x) = \max(0, xW_1 + b_1)W_2 + b_2
 \]
@@ -160,7 +159,7 @@ Positional encodings are added to input embeddings to give the model access to t
 \[
 \begin{aligned}
 PE_{(pos, 2i)} &= \sin\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right) \\
-PE_{(pos, 2i+1)} &= \cos\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right)
+PE_{(pos, 2i+1)} &= \cos\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right),
 \end{aligned}
 \]
 where $pos$ is the position and $i$ is the dimension.
@@ -168,7 +167,8 @@ where $pos$ is the position and $i$ is the dimension.
 \begin{figure}[!h]
     \centering
     \includegraphics[width=.85\linewidth]{pictures/transformer_architecture.png}
-    \caption{Transformer model architecture \cite{Vaswani2023}.}
+    \caption{The architecture of a Transformer model, showing the flow from input through the encoder and decoder to the output \cite{Vaswani2023}.}
+    \label{fig:transformer_architecture}
 \end{figure}
 
 \subsection{Parameter efficient fine-tuning (PEFT)}%Mohamad
@@ -334,7 +334,7 @@ In order to evaluate our models accurately, we first create a benchmark based on
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.85\linewidth]{roc_curves/Zero Experiment.png}
+    \includegraphics[width=.85\linewidth]{../3. evaluation/roc_curves/Zero Experiment.png}
     \caption[First Experiment]{Benchmark Experiment: a diagonal line represents a random process. For financial markets it means reproducing the current distribution (following the trend).}
     \label{fig:Zeroexp}
 \end{figure}
@@ -347,7 +347,7 @@ Our approach assumes that all changes in our experiments are independent so that
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.85\linewidth]{roc_curves/First Experiment.png}
+    \includegraphics[width=.85\linewidth]{../3. evaluation/roc_curves/First Experiment.png}
     \caption[First Experiment]{First Experiment}
     \label{fig:Firstexp}
 \end{figure}
@@ -356,7 +356,7 @@ We continue for the two best models (both trained on financial sentiment data) a
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.85\linewidth]{roc_curves/Second Experiment.png}
+    \includegraphics[width=.85\linewidth]{../3. evaluation/roc_curves/Second Experiment.png}
     \caption[Second Experiment]{Second Experiment}
     \label{fig:Secondexp}
 \end{figure}
@@ -365,7 +365,7 @@ Next to \texttt{AnalystNoteList} we also explore  \texttt{CapitalAllocation}, \t
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.85\linewidth]{roc_curves/Third Experiment.png}
+    \includegraphics[width=.85\linewidth]{../3. evaluation/roc_curves/Third Experiment.png}
     \caption[Third Experiment]{Third Experiment}
     \label{fig:Thirdexp}
 \end{figure}
@@ -374,7 +374,7 @@ Finally, we use the best combination found to directly fine tune the underlying 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.85\linewidth]{roc_curves/Fourth Experiment.png}
+    \includegraphics[width=.85\linewidth]{../3. evaluation/roc_curves/Fourth Experiment.png}
     \caption[Fourth Experiment]{Final Result.}
     \label{fig:Fourthexp}
 \end{figure}
