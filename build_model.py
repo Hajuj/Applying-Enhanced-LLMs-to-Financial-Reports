@@ -24,30 +24,6 @@ from transformers import (
     set_seed
 )
 
-""" # Load the training and evaluation data
-
-# List of [model_name, adapter(bool), column_name] combinations
-combinations = [
-    ['bert-base-uncased', True, 'Analyst Note', 'adapter_config'],
-    # Add more combinations as needed
-]
-
-# Load the training and evaluation data
-train_df = pd.read_csv('1. data/final/train.csv')
-eval_df = pd.read_csv('1. data/final/eval.csv')
-
-for model_name, adapter, column_name in combinations:
-    # Create an instance of CustomTransformerModel
-    model = CustomTransformerModel(model_name=model_name, adapter=adapter, column_name=column_name)
-
-    # Build the model
-    model.build_model()
-
-    # Train the model
-    model.train(train_df, eval_df, epochs=3, batch_size=32, learning_rate=2e-5, seed=42, save_model=False)
-
-"""
-
 
 class TextDataset(Dataset):
     def __init__(self, texts, labels, tokenizer, max_length=512):

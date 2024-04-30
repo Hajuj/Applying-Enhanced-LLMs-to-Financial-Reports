@@ -65,8 +65,9 @@ adapter_config_list = [LoRAConfig(), UniPELTConfig(), MAMConfig(), ConfigUnion(L
 #     ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'FinancialStrengthText', adapter_config_list[2]],
 # ]
 
-# List for fine-tuning LLM
+# List for fine-tuning LLM and adapter
 combinations = [
+    ["nickmuchi/sec-bert-finetuned-finance-classification", True, 'FinancialStrengthText', adapter_config_list[2]],
     ["nickmuchi/sec-bert-finetuned-finance-classification", False, 'FinancialStrengthText', adapter_config_list[2]],
 ]
 
@@ -84,7 +85,6 @@ for model_name, adapter, column_name, adapter_config in combinations:
     model.build_model()
 
     # Train the model
-    # model.train(train_df, dev_df, test_df, epochs=1, batch_size=8, learning_rate=2e-2, seed=42, save_model=False)
     model.train(train_df, dev_df, test_df, epochs=5, batch_size=16, learning_rate=1e-4, seed=42, save_model=False)
 
 test_df = pd.read_csv('1. data/final/test.csv')
