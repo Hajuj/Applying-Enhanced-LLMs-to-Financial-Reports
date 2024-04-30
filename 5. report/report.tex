@@ -115,7 +115,17 @@ Since we care about investing and not speculation, we pre-process the data to re
 
 The final data (1586 reports) is split into a training, development and test set with a ratio of 70:10:20 (1103, 165, 318). The training set is used to train the models, the development set to optimize the hyperparameters and the test set to evaluate the models. 
 \section{Foundations} %Mohamad
-What are the foundations of our approach? What is the goal? Sentiment Classification. \cite{Vaswani2023}
+Our research efficiently leverages the capabilities of LLMs by utilizing Transformers and Adapters, primarily sourced from Hugging Face. This approach is fundamentally driven by the need to process extensive textual data accurately and efficiently, particularly focusing on sentiment classification within financial texts.
+
+\textbf{Utilizing Large Language Models:} LLMs, including those based on Transformer architectures, have demonstrated unparalleled success in understanding and generating human-like text. Their ability to capture deep linguistic and semantic nuances makes them ideal for complex NLP tasks like sentiment analysis. However, the computational intensity of training such models from scratch demands significant resources.
+
+\textbf{Efficiency through Transformers and Adapters:} To address the challenges associated with the scale of LLMs, our methodology incorporates the Transformer architecture, known for its efficiency in handling sequential data without the need for recurrent processing. The Transformer models, accessible via Hugging Face, provide a robust framework we adapt to our specific needs.
+
+\textbf{Adapters in Transformers:} Adapters offer a parameter-efficient way to fine-tune pre-trained models on domain-specific tasks. By inserting small, trainable modules within the Transformer layers, we can tailor the model's responses to the subtleties of financial language without overhauling the entire network architecture. This approach significantly reduces the computational overhead and facilitates quicker iterations and refinements.
+
+\textbf{Goal: Sentiment Classification:} Our research aims to classify the sentiment expressed in Analyst Reports from MorningStar accurately. Analyzing the sentiment, we can extract meaningful insights about market trends and investor perceptions, which are crucial for making informed financial decisions. Sentiment classification in this context involves determining the polarity of the text—whether it conveys a positive, negative, or neutral sentiment—which can significantly influence investment strategies and business outcomes.
+
+Using Transformers equipped with Adapters aligns with our objective to implement a scalable and efficient solution for sentiment analysis. This setup not only leverages the advanced capabilities of LLMs but also ensures that our model is finely attuned to the nuances of the specific dataset, thus enhancing the accuracy and reliability of the sentiment classification. \cite{Vaswani2023}
 
 \subsection{Transformer models}%Mohamad
 Transformer models are a class of deep learning architectures that have revolutionized the field of natural language processing (NLP). These models, based on the encoder-decoder architecture, leverage self-attention mechanisms to process sequences of data in parallel and capture complex dependencies across the sequence. The encoder maps an input sequence of symbol representations $(x_1, \ldots, x_n)$ to a continuous representation $\mathbf{z}=(z_1, \ldots, z_n)$. The decoder generates an output sequence $(y_1, \ldots, y_m)$ from $\mathbf{z}$, using a method that is inherently auto-regressive, processing previous symbols to generate the next.
