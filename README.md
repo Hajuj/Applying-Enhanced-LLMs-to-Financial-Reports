@@ -3,7 +3,7 @@ University project on Advanced Analytics and Machine Learning (AAML) with the go
 
 # Outperforming Morningstar Analysts: Applying Enhanced LLMs to Financial Reports
 
-This repository is dedicated to the research paper "Outperforming Morningstar Analysts: Applying Enhanced LLMs to Financial Reports," authored by Jonas Gottal and Mohamad Hgog from LMU Munich's Department of Computer Science. This study analyzes financial analyst reports from Morningstar, employing Large Language Models (LLMs) to extract insights that typically surpass the predictive accuracy of human analysts.
+This repository is dedicated to the research paper "Outperforming Morningstar Analysts: Applying Enhanced LLMs to Financial Reports," authored by Jonas Gottal and Mohamad Hagog from LMU Munich's Department of Computer Science. This study analyzes financial analyst reports from Morningstar, employing Large Language Models (LLMs) to extract insights that typically surpass the predictive accuracy of human analysts.
 
 ## Abstract
 This study examines financial analyst reports from Morningstar, revealing two key findings: firstly, analysts appear to select stocks arbitrarily, and secondly, they provide comprehensive textual justifications that enable informed decisions surpassing mere chance. We employ enhanced large language models to efficiently analyze the textual data, facilitating a broad exploration of various pre-trained models to identify the subtle underlying sentiment and extract more value from the reports than the experts themselves.
